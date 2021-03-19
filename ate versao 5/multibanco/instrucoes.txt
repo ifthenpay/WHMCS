@@ -1,0 +1,86 @@
+1. Realizar o upload da pasta modules para a raiz do seu servidor
+
+2. Activar e configurar o módulo de pagamento na área de administração em SETUP > Payments > Payment Gateways
+
+3. Depois de preencher com os dados fornecidos no momento da adesão e clicar no botão para o WHMCS os guardar 
+
+NOTA: o módulo é conhecido pelo nome de Pagamentos por Multibanco
+
+NOTA2: Se desejar que a referência multibanco apareça no documento que segue em anexo faça um dos seguintes passos (De notar que se fez alguma alteração ao seu ficheiro invoicepdf.tpl estas terão de ser aplicadas ao nosso ficheiro ou então siga o passo 1 caso contrário siga o passo 2):
+
+PASSO 1. Se não poder substituir o ficheiro invoicepdf.tpl faça o seguinte:
+	a) vá à pasta templates/portal
+	b) faça uma cópia de segurança do ficheiro invoicepdf.tpl
+	c) abra o ficheiro num editor de texto
+	d) procure as seguintes linhas:
+		# Notes
+		if ($notes) {
+			$pdf->Ln(5);
+			$pdf->SetFont('freesans','',8);
+			$pdf->MultiCell(170,5,$_LANG["invoicesnotes"].": $notes");
+		}
+	e) a seguir a estas cole o seguinte código
+		#pagamento multibanco
+		$table = "tblmultibanco";
+		$fields = "entidade,referencia,valor";
+		$where = array("orderid"=>$invoicenum,"nomepag"=>$paymentmethod);
+		$result = select_query($table,$fields,$where);
+		$data = mysql_fetch_array($result);
+
+		if(sizeof($data)>2){
+			$entidade = $data['entidade'];
+			$referencia = $data['referencia'];
+			$valor = $data['valor'];
+
+			$pdf->Ln(5);
+			$tblhtml = '<div style="  line-height: 5px;">
+
+				<table border="0" cellpadding="0" cellspacing="0" width="110px" >
+					<tbody>
+						<tr>
+							<td valign="top" style="border-bottom: solid 1px #222; padding-top: 5px; padding-bottom: 5px;">
+								<img src="https://ifthenpay.com/img/logo_mb.png" border="0">
+							</td>
+							<td valign="middle" width="100%" style="padding-left: 10px; border-bottom: solid 1px #222; padding-top: 5px; padding-bottom: 5px; ">
+								Pagamento por Multibanco
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="left" style="border-bottom: solid 1px #222; padding-top: 2px; padding-bottom: 2px;">
+
+								<strong>Entidade:</strong>
+							</td>
+							<td valign="top" align="right" style="border-bottom: solid 1px #222; padding-top: 2px; padding-bottom: 2px; ">
+								'.$entidade.'
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="left" style="border-bottom: solid 1px #222; padding-top: 2px; padding-bottom: 2px;">
+								<strong>Refer&ecirc;ncia:</strong>
+							</td>
+							<td valign="top" align="right" style="border-bottom: solid 1px #222; padding-top: 2px; padding-bottom: 2px;">
+								'.substr($referencia, 0, 3).' '.substr($referencia, 3, 3).' '.substr($referencia, 6, 3).'
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" align="left" style="border-bottom: solid 1px #222; padding-top: 2px; padding-bottom: 2px; ">
+								<strong>Valor:</strong>
+							</td>
+							<td valign="top" align="right" style="border-bottom: solid 1px #222; padding-top: 2px; padding-bottom: 2px; ">
+								&euro;&nbsp;'.$valor.'
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>';
+
+			$pdf->writeHTML($tblhtml, true, false, false, false, '');
+		}
+	
+	f) agora as referências multibanco já devem aparecer nos pdfs
+	
+PASSO 2. Se poder substituir o ficheiro invoicepdf.tpl faça o seguinte:
+	a) vá à pasta templates/portal e renomeie o ficheiro invoicepdf.tpl  para invoivepdf_old.tpl
+	b) faça upload do invoicepdf.tpl fornecido pela Ifthen.
+	
+NOTA3:  Se já tinha o módulo antigo com callback e vai actualizar para este anote primeiro a chave anti-phishing que colocou no ficheiro multibanco.php presente na pasta modules/gateway/callback e somente depois substitui os ficheiros por estes.
