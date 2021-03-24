@@ -94,7 +94,7 @@ class Utility
     public function getOrderById(string $orderId): array
     {
         $order = Capsule::table('tblorders')
-            ->where('id', $orderId)->first();
+            ->where('invoiceid', $orderId)->first();
         return $order ? $this->convertObjectToarray($order) : [];
     }
 
