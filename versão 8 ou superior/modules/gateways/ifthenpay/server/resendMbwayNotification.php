@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['CONTEXT_DOCUMENT_ROOT'] . explode("modules/gateways/ifthenpay", $_SERVER['SCRIPT_NAME'], 2)[0] . 'init.php');
+require_once(__DIR__ . '/../../../../init.php');
 
 define("CLIENTAREA", true);
 

@@ -13,9 +13,7 @@ use WHMCS\Module\Gateway\ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\StrategyFactory;
 
-require_once($_SERVER['CONTEXT_DOCUMENT_ROOT'] . explode(
-    strpos($_SERVER['SCRIPT_NAME'], 'viewinvoice')  ? 'viewinvoice.php' : 'cart.php', $_SERVER['SCRIPT_NAME'], 2)[0] . 'init.php');
-
+require_once(__DIR__ . '/../../../../../../init.php');
 
 class IfthenpayStrategy
 {
