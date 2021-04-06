@@ -95,6 +95,9 @@ class Utility
     {
         $order = Capsule::table('tblorders')
             ->where('invoiceid', $orderId)->first();
+        if (empty($order) || is_null($order)) {
+            $order = Capsule::table('tblinvoices')->where('id', $orderId)->first();
+        }
         return $order ? $this->convertObjectToarray($order) : [];
     }
 
