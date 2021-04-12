@@ -48,9 +48,13 @@ add_hook('ClientAreaPageCart', 1, function($vars) use ($ifthenpayModuleApp) {
     return $ifthenpayModuleApp->getHooks('clientCheckoutHook', $vars)->execute();
 });
 
-add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($ifthenpayModuleApp, $gateway) {
+add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($ifthenpayModuleApp, $gateway, $utility) {
     if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod'])) {
-        $vars['notes'] = $ifthenpayModuleApp->setPaymentMethod($vars['paymentmethod'])->getHooks('clientCheckoutConfirmHook', $vars)->execute();
+        $systemUrl = $utility->getSystemUrl();
+        $vars['notes'] .='<link rel="stylesheet" href="'. $utility->getCssUrl() . '/ifthenpayViewInvoice.css">
+        <script type="text/javascript">var systemUrl="'. $systemUrl . '"</script>
+        <script src="'. $utility->getJsUrl() . '/invoiceViewPage.js" type="text/javascript"></script>';
+        $vars['notes'] .= $ifthenpayModuleApp->setPaymentMethod($vars['paymentmethod'])->getHooks('clientCheckoutConfirmHook', $vars)->execute();
         return $vars;
     }
 });

@@ -18,7 +18,7 @@ class MbwayBase extends PaymentBase
     protected function setGatewayBuilderData(): void
     {
         $this->gatewayBuilder->setMbwayKey($this->whmcsGatewaySettings['mbwayKey']);
-        $this->gatewayBuilder->setTelemovel($_POST['mbwayPhoneNumber']);
+        $this->gatewayBuilder->setTelemovel($_POST['mbwayPhoneNumber'] ? $_POST['mbwayPhoneNumber'] : $_COOKIE['mbwayPhoneNumber']);
     }
 
     protected function saveToDatabase(): void

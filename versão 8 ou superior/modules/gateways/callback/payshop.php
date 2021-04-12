@@ -13,45 +13,5 @@ $ioc->makeWith(Router::class, [
     'requestData' => $_GET
 ])->init(function() use($ioc, $whmcs) {
     return $ioc->make(CallbackStrategy::class)->setWhmcs($whmcs)->execute('offline', 'payshop');
-    /*$whmcs->load_function('gateway');
-    $whmcs->load_function('invoice');
-    $GATEWAY = getGatewayVariables('multibanco');
-
-    if( !$GATEWAY["type"] ) {
-        exit( "Module Not Activated" );
-    }
-    $_GET['payment'] = 'payshop';
-    $paymentData = $ioc->make(CallbackData::class)->setRequest($_GET)->execute();
-
-    if (empty($paymentData)) {
-        logTransaction($GATEWAY['name'], $_GET, 'Pagamento não encontrado');
-    } else {
-        try {
-            $utility = $ioc->make(Utility::class);
-            $order = $utility->getOrderById($paymentData['order_id']);
-            $ioc->make(CallbackValidate::class)
-            ->setHttpRequest($_GET)
-            ->setOrder($order)
-            ->setConfigurationChaveAntiPhishing($GATEWAY['chaveAntiPhishing'])
-            ->setPaymentDataFromDb($paymentData)
-            ->validate();
-
-            $transid = $paymentData['id_transacao'] . $paymentData['telemovel'] . $paymentData['order_id'];
-            $amount = $_GET['valor'];
-            
-            $invoiceid = checkCbInvoiceID($paymentData['order_id'], $GATEWAY['name']); # Checks invoice ID is a valid invoice number or ends processing
-
-            checkCbTransID($transid); # Checks transaction number isn't already in the database and ends processing if it does
-
-            # Successful
-            addInvoicePayment($invoiceid, $transid, $amount, $fee, $gatewaymodule); # Apply Payment to Invoice: invoiceid, transactionid, amount paid, fees, modulename
-            $utility->saveIfthenpayPayment('ifthenpay_payshop', $paymentData['id']);
-            logTransaction($GATEWAY["name"], $paymentData, 'Sucesso: pagamento realizado com sucesso');
-            
-            
-        } catch (\Throwable $th) {
-            logTransaction($GATEWAY['name'], $_GET, 'Error processing callback - ' . $th->getMessage());
-        }
-    }*/
 });
 

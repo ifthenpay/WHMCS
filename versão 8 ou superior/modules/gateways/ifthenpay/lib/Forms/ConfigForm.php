@@ -177,6 +177,9 @@ abstract class ConfigForm
 
     protected function addToOptions(): void
     {
+        $this->options = [
+            'default' => 'Choose Entity'
+        ];
         foreach ($this->ifthenpayGateway->getEntidadeSubEntidade($this->paymentMethod) as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $key2 => $value2) {
@@ -257,11 +260,10 @@ abstract class ConfigForm
                 $ifthenpayCallback->make($this->paymentMethod, $this->utility->getCallbackControllerUrl($this->paymentMethod), $activateCallback);
 
                 if (empty($this->callbackData) || !$this->activatedCallback) {
-                    $this->activatedCallback = true;
+                    $this->activatedCallback = $activateCallback;
                     $this->saveCallback($ifthenpayCallback->getUrlCallback(), $ifthenpayCallback->getChaveAntiPhishing(), $activateCallback);
                 }               
             }
-            
         } catch (\Throwable $th) {
             throw $th;
         }
