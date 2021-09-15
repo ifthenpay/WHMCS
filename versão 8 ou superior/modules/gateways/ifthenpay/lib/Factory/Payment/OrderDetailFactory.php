@@ -26,6 +26,8 @@ class OrderDetailFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->smartyDefaultData
             );
             case 'mbway':
@@ -35,7 +37,10 @@ class OrderDetailFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
-                    $this->smartyDefaultData
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
+                    $this->smartyDefaultData,
+                    $this->tokenExtra
                 );
             case 'payshop':
                 return new PayshopOrderDetail(
@@ -44,15 +49,19 @@ class OrderDetailFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
-            case 'ccard':
+            case 'ccard' || 'credit card (ifthenpay)':
                 return new CCardOrderDetail(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->token,
                     $this->status,
                     $this->smartyDefaultData

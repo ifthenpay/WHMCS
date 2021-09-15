@@ -16,45 +16,53 @@ use WHMCS\Module\Gateway\Ifthenpay\Forms\ConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\Callback;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpaySql;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\ifthenpay\Forms\CCardConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\MbwayConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpayUpgrade;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\PayshopConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\MultibancoConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
 class IfthenpayConfigFormFactory extends Factory
 {
     private $gatewayVars;
     private $gateway; 
     private $gatewayDataBuilder; 
-    private $utility; 
+    private $configGatewaysRepository; 
+    private $utility;
     private $callback;
     private $ifthenpaySql;
     private $ifthenpayUpgrade;
     private $smarty;
+    private $ifthenpayLogger;
 
 	public function __construct(
         Container $ioc,
         array $gatewayVars,
         Gateway $gateway, 
         GatewayDataBuilder $gatewayDataBuilder, 
-        Utility $utility, 
+        ConfigGatewaysRepositoryInterface $configGatewaysRepository,
+        Utility $utility,
         Callback $callback,
         IfthenpaySql $ifthenpaySql,
         IfthenpayUpgrade $ifthenpayUpgrade,
-        Smarty $smarty
+        Smarty $smarty,
+        IfthenpayLogger $ifthenpayLogger
     )
 	{
         parent::__construct($ioc);
         $this->gatewayVars = $gatewayVars;
         $this->gateway = $gateway;
         $this->gatewayDataBuilder = $gatewayDataBuilder;
+        $this->configGatewaysRepository = $configGatewaysRepository;
         $this->utility = $utility;
         $this->callback = $callback;
         $this->ifthenpaySql = $ifthenpaySql;
         $this->ifthenpayUpgrade = $ifthenpayUpgrade;
         $this->smarty = $smarty;
+        $this->ifthenpayLogger = $ifthenpayLogger;
 	}
     
     public function build(
@@ -66,11 +74,13 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayVars,
                     $this->gateway,
                     $this->gatewayDataBuilder,
+                    $this->configGatewaysRepository,
                     $this->utility,
                     $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
-                    $this->smarty
+                    $this->smarty,
+                    $this->ifthenpayLogger
                 );
             case 'mbway':
                 return new MbwayConfigForm(
@@ -78,11 +88,13 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayVars,
                     $this->gateway,
                     $this->gatewayDataBuilder,
+                    $this->configGatewaysRepository,
                     $this->utility,
                     $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
-                    $this->smarty
+                    $this->smarty,
+                    $this->ifthenpayLogger
                 );
             case 'payshop':
                 return new PayshopConfigForm(
@@ -90,11 +102,13 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayVars,
                     $this->gateway,
                     $this->gatewayDataBuilder,
+                    $this->configGatewaysRepository,
                     $this->utility,
                     $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
-                    $this->smarty
+                    $this->smarty,
+                    $this->ifthenpayLogger
                 );
             case 'ccard':
                 return new CCardConfigForm(
@@ -102,11 +116,13 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayVars,
                     $this->gateway,
                     $this->gatewayDataBuilder,
+                    $this->configGatewaysRepository,
                     $this->utility,
                     $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
-                    $this->smarty
+                    $this->smarty,
+                    $this->ifthenpayLogger
                 );
             default:
                 throw new \Exception('Unknown Admin Config Form');

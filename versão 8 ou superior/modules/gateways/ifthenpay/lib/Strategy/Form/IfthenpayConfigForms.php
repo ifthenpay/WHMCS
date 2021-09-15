@@ -29,4 +29,16 @@ class IfthenpayConfigForms
     {
         $this->ifthenpayConfigFormFactory->setType($this->paymentMethod)->build()->processForm();
     }
+
+    /**
+     * Set the value of paymentMethod
+     *
+     * @return  self
+     */ 
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
 }

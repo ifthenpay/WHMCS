@@ -9,7 +9,6 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Base\PaymentBase;
-use WHMCS\Database\Capsule;
 
 class MultibancoBase extends PaymentBase
 {
@@ -19,17 +18,31 @@ class MultibancoBase extends PaymentBase
     {
         $this->gatewayBuilder->setEntidade($this->whmcsGatewaySettings['entidade']);
         $this->gatewayBuilder->setSubEntidade($this->whmcsGatewaySettings['subEntidade']);
+        $this->logGatewayBuilderData();
     }
 
     protected function saveToDatabase(): void
     {
-        Capsule::table($this->paymentTable)->insert(
-            [
-                'entidade' => $this->paymentGatewayResultData->entidade,
-                'referencia' => $this->paymentGatewayResultData->referencia, 
-                'order_id' => $this->paymentDefaultData->orderId, 
-                'status' => 'pending'
-            ]
-        );
+        $paymentData = [
+            'entidade' => $this->paymentGatewayResultData->entidade,
+            'referencia' => $this->paymentGatewayResultData->referencia, 
+            'order_id' => $this->paymentDefaultData->orderId, 
+            'status' => 'pending'
+        ];
+        $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
+        //$this->paymentRepository->create($paymentData);
+        $this->logSavePaymentDataInDatabase($paymentData);
+    }
+
+    protected function updateToDatabase(): void
+    {
+        $paymentData = [
+            'entidade' => $this->paymentGatewayResultData->entidade,
+            'referencia' => $this->paymentGatewayResultData->referencia, 
+            'order_id' => $this->paymentDefaultData->orderId, 
+            'status' => 'pending'
+        ];
+        $this->paymentRepository->updatePaymentByOrderId($paymentData, $this->paymentDefaultData->orderId);
+        $this->logSavePaymentDataInDatabase($paymentData, 'update');
     }
 }

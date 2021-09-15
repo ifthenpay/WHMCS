@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Callback;
 
-use WHMCS\Database\Capsule;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackProcess;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Callback\CallbackProcessInterface;
 
@@ -13,53 +12,78 @@ class CallbackOnline extends CallbackProcess implements CallbackProcessInterface
         
     public function process(): void
     {
-        $this->whmcs->load_function('gateway');
-        $this->whmcs->load_function('invoice');
-        $GATEWAY = getGatewayVariables($this->paymentMethod);
+        try {
+            $GATEWAY = getGatewayVariables($this->paymentMethod);
+            $this->logGatewayDataRetrieved($GATEWAY);
 
-        $_GET['payment'] = $this->paymentMethod;
-        $this->setPaymentData();
+            $this->request['payment'] = $this->paymentMethod;
+            $this->setPaymentData();
 
-        if (empty($this->paymentData)) {
-            logTransaction($GATEWAY['name'], $this->request, 'Pagamento não encontrado');
-        } else {
-            try {
+            if (empty($this->paymentData)) {
+                logTransaction($GATEWAY['name'], $this->request, \Lang::trans('errorCallbackPaymentNotFound'));
+                $this->logCallbackDataNotFound();
+            } else {
                 $paymentStatus = $this->status->getTokenStatus(
                     $this->token->decrypt($this->request['qn'])
                 );
-                $invoiceid = checkCbInvoiceID($this->paymentData['order_id'], $GATEWAY['name']); # Checks invoice ID is a valid invoice number or ends processing
+                $this->ifthenpayLogger->info('payment status decrypt with success', [
+                        'paymentMethod' => $this->paymentMethod,
+                        'paymentStatus' => $paymentStatus,
+                        'requestToken' => $this->request['qn'],
+                        'className' => get_class($this)
+                    ]
+                );
+                $this->whmcsInvoiceHistory
+                    //->loadWhmcsFunctions()
+                    ->setInvoiceId($GATEWAY['name'], $this->paymentData['order_id']);
+                $invoiceid = $this->whmcsInvoiceHistory->getInvoiceId();
 
                 if ($paymentStatus === 'success') {
-                    $order = $this->utility->getOrderById($this->paymentData['order_id']);
+                    $order = $this->invoiceRepository->getOrderById((int)$this->paymentData['order_id']);
+                    $this->logCallbackPaymentOrder($order);
+                    if ($this->request['sk'] !== $this->tokenExtra->encript(
+                        $this->request['id'] . $this->request['amount'] . $this->request['requestId'], $GATEWAY['ccardKey'])) {
+                            throw new \Exception(\Lang::trans('invalidSecurityToken'));
+                    }
                 
-                    if ($order['amount'] !== $this->request['amount']) {
-                        logTransaction($GATEWAY["paymentmethod"], $this->request, 'Valor não corresponde ao valor da encomenda.');
+                    if ($order['total'] !== $this->request['amount']) {
+                        logTransaction($GATEWAY["paymentmethod"], $this->request, \Lang::trans('errorPaymentTotal'));
                         redirSystemURL("id=" . $invoiceid . "&paymentfailed=true", "viewinvoice.php");
                     }
-
                     $transid = $this->request['requestId'] . $this->paymentData['order_id'];
-                    $amount = $this->request['valor'];
-                    
-                    checkCbTransID($transid); # Checks transaction number isn't already in the database and ends processing if it does
-
-                    # Successful
-                    addInvoicePayment($invoiceid, $transid, $amount, $fee, $gatewaymodule); # Apply Payment to Invoice: invoiceid, transactionid, amount paid, fees, modulename
-                    $this->utility->saveIfthenpayPayment('ifthenpay_' . $this->paymentMethod, (string)$this->paymentData['id']);
-                    logTransaction($GATEWAY["name"], $this->paymentData, 'Sucesso: pagamento realizado com sucesso');
+                
+                    $this->whmcsInvoiceHistory->processInvoice($this->request['amount'], $this->paymentData, $transid);
+                    $this->paymentRepository->update(['status' => 'paid'], (string) $this->paymentData['id']);
+                    logTransaction($GATEWAY["name"], $this->paymentData, \Lang::trans('paymentSuccessful'));
+                    $this->logCallbackProcess($order, $this->request['amount']);
                     redirSystemURL("id=" . $invoiceid . "&paymentsuccess=true", "viewinvoice.php");
                 } else if($paymentStatus === 'cancel') {
-                    Capsule::table('ifthenpay_' . $this->paymentMethod)->where('id', $this->paymentData['id'])->update(['status' => 'cancel']);
-                    logTransaction($GATEWAY["name"], $this->paymentData, 'Cliente cancelou o pagamento');
+                    $this->whmcsInvoiceHistory->cancelInvoice($this->paymentData);
+                    $this->paymentRepository->update(['status' => 'cancel'], (string) $this->paymentData['id']);
+                    $this->ifthenpayLogger->info('payment cancel by user', [
+                            'paymentMethod' => $this->paymentMethod,
+                            'paymentData' => $this->paymentData,
+                            'className' => get_class($this)
+                        ]
+                    );
                     redirSystemURL("id=" . $invoiceid . "&paymentfailed=true", "viewinvoice.php");
                 } else {
-                    throw new \Exception('Erro ao processar o pagamento');
+                    throw new \Exception(\Lang::trans('paymentErrorProcessing'));
                 }
-
-            } catch (\Throwable $th) {
-                Capsule::table('ifthenpay_' . $this->paymentMethod)->where('id', $this->paymentData['id'])->update(['status' => 'error']);
-                logTransaction($GATEWAY['name'], $this->request, 'Error processing callback - ' . $th->getMessage());
-                redirSystemURL("id=" . $invoiceid . "&paymentfailed=true", "viewinvoice.php");
             }
+        } catch (\Throwable $th) {
+            $this->paymentRepository->update(['status' => 'error'], (string) $this->paymentData['id']);
+            logTransaction($GATEWAY['name'], $this->request, \Lang::trans('errorCallbackProcessing') . $th->getMessage());
+            $this->ifthenpayLogger->alert('error processing payment - ' . $th->getMessage(), [
+                    'paymentMethod' => $this->paymentMethod,
+                    'request' => $this->request,
+                    'paymentData' => $this->paymentData,
+                    'className' => get_class($this),
+                    'exception' => $th
+                ]
+            );
+            redirSystemURL("id=" . $invoiceid . "&paymentfailed=true", "viewinvoice.php");
         }
+        
     }
 }

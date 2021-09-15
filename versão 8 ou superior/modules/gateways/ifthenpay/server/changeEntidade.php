@@ -5,25 +5,27 @@ require_once(__DIR__ . '/../../../../init.php');
 define("ADMINAREA", true);
 
 use WHMCS\Module\Gateway\Ifthenpay\Router\Router;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
-use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\ChangeEntidade;
 
 $ioc = (new Ifthenpay())->getIoc();
-$ioc->makeWith(Router::class, [
+$routerData = [
     'requestMethod' => 'post',
+    'tokenExtra' => null,
     'requestAction' => 'GetSubEntidade',
-    'requestData' => $_POST
-])->init(function() use ($ioc) {
+    'requestData' => $_POST,
+    'isFront' => false
+];
+$ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData) {
     try {
-        $ifthenpayUserAccount = $ioc->make(Utility::class)->getIfthenpayUserAccount('multibanco');
-        $ifthenpayGateway = $ioc->make(Gateway::class);
-        $ifthenpayGateway->setAccount($ifthenpayUserAccount);
-        $subEntidades = json_encode($ifthenpayGateway->getSubEntidadeInEntidade($_POST['entidade']));
         header("Content-Type: application/json", true);
         header('HTTP/1.0 200 OK');
-        die($subEntidades);
+        die($ioc->make(ChangeEntidade::class)->setRequest($_POST)->execute());
     } catch (\Throwable $th) {
+        $ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MULTIBANCO)->getLogger();
+        $ifthenpayLogger->error('error changing entidade', array_merge($routerData, ['exception' => $th]));
         header("Content-Type: application/json", true);
         header('HTTP/1.0 400 Bad Request');
         die($th->getMessage());

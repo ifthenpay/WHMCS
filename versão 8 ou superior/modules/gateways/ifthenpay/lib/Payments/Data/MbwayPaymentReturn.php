@@ -23,8 +23,15 @@ class MbwayPaymentReturn extends MbwayBase implements PaymentReturnInterface
             strval($this->paymentDefaultData->orderId),
             strval($this->paymentDefaultData->totalToPay)
         )->getData();
-        $this->saveToDatabase();
-        //$this->setSmartyVariables();
+        $this->logPaymentGatewayResultData();
+        $this->persistToDatabase();
+        if (isset($_COOKIE['mbwayCountdownShow'])) {
+            $_COOKIE['mbwayCountdownShow'] = 'true';
+        } else {
+            setcookie('mbwayCountdownShow', 'true');
+            $_COOKIE['mbwayCountdownShow'] = 'true';
+        }
+        $this->ifthenpayLogger->info('mbwayCountdownShow cookie set with success', ['cookies' => $_COOKIE]);
         return $this;
     }
 }

@@ -4,50 +4,64 @@ require_once(__DIR__ . '/../../../../init.php');
 
 define("CLIENTAREA", true);
 
-use WHMCS\Database\Capsule;
 use WHMCS\Module\GatewaySetting;
 use WHMCS\Module\Gateway\Ifthenpay\Router\Router;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
-use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
-use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\ResendMbwayNotification;
 
 $ioc = (new Ifthenpay('mbway'))->getIoc();
-$ioc->makeWith(Router::class, [
-    'requestMethod' => 'get',
+$routerData = [
+    'requestMethod' => 'post',
+    'tokenExtra' => $ioc->make(TokenExtra::class),
     'requestAction' => 'resendMbwayNotification',
-    'requestData' => $_GET
-])->init(function() use ($ioc) {
+    'requestData' => $_POST
+];
+$ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+$ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+$ioc->makeWith(Router::class, $routerData)->setSecretForTokenExtra(GatewaySetting::getForGateway('mbway')['mbwayKey'])->init(function() use ($ioc, $routerData, $ifthenpayLogger) {
     try {
-        $orderId = $_GET['orderId'];
-        $mbwayTelemovel = $_GET['mbwayTelemovel']; 
-        $totalToPay = $_GET['orderTotalPay'];
-        $fileName = $_GET['filename'];
-        $systemUrl = $ioc->make(Utility::class)->getSystemUrl();
-        $paymentData = $ioc->make(GatewayDataBuilder::class)
-            ->setMbwayKey(GatewaySetting::getForGateway('mbway')['mbwayKey'])
-            ->setTelemovel($mbwayTelemovel);
-        $gatewayResult = $ioc->make(Gateway::class)->execute(
-            'mbway',
-            $paymentData,
-            strval($orderId),
-            strval($totalToPay)
-        )->getData();
-        Capsule::table('ifthenpay_mbway')->where('order_id', $orderId)->update(['id_transacao' => $gatewayResult->idPedido]);
+        $orderId = $_POST['orderId'];
+        $fileName = $_POST['filename'];
+        $resendMbwayNotification = $ioc->make(ResendMbwayNotification::class);
+        $resendMbwayNotification->setRequest($_GET)->execute();
+        $ifthenpayLogger->info('mbway notification resend with success', [ 
+                'routerData' => $routerData
+            ]
+        );
         if ($fileName === 'viewinvoice') {
-            header('Location: ' . $systemUrl . 'viewinvoice.php?id=' . $orderId . '&messageType=success&message=MB WAY notification sent with success. Confirm payment on your MB WAY app.');
+            header('Location: ' . $resendMbwayNotification->getSystemUrl() . 'viewinvoice.php?id=' . $orderId . '&messageType=success&message=' . \Lang::trans('mbwaySendNotificationSuccess'));
         } else {
-            header('Location: ' . $systemUrl . 'cart.php?a=complete&messageType=success&message=MB WAY notification sent with success. Confirm payment on your MB WAY app.');
+            if (isset($_COOKIE['mbwayCountdownShow'])) {
+                $_COOKIE['mbwayCountdownShow'] = 'true';
+            } else {
+                setcookie('mbwayCountdownShow', 'true');
+                $_COOKIE['mbwayCountdownShow'] = 'true';
+            }
+            $ifthenpayLogger->info('mbway mbwayCountdownShow set with success', [ 
+                    'routerData' => $routerData,
+                    'cookie' => $_COOKIE
+                ]
+            );
+            header('Content-Type: application/json');
+            die(json_encode([
+                'success' => \Lang::trans('mbwaySendNotificationSuccess')
+            ]));
         }
-        echo "";
-        exit;
     } catch (\Throwable $th) {
+        $ifthenpayLogger->error('error resending mbway notification - ' . $th->getMessage(), [ 
+                'routerData' => $routerData,
+                'exception' => $th
+            ]
+        );
         if ($fileName === 'viewinvoice') {
-            header('Location: ' . $systemUrl . 'viewinvoice.php?id=' . $orderId . '&messageType=error&message=Error sending MB WAY notification.');
+            header('Location: ' . $resendMbwayNotification->getSystemUrl() . 'viewinvoice.php?id=' . $orderId . '&messageType=error&message=' . Lang::trans('mbwaySendNotificationError'));
         } else {
-            header('Location: ' . $systemUrl . 'cart.php?a=complete&messageType=error&message=Error sending MB WAY notification.');
+            header('Content-Type: application/json');
+            die(json_encode([
+                'error' => \Lang::trans('mbwaySendNotificationError')
+            ]));
         }
-        echo "Error sending MB WAY notification.";
-        exit;
     }
 });

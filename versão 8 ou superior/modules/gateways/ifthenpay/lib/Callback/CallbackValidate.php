@@ -18,7 +18,7 @@ class CallbackValidate
     private function validateOrder(): void
     {
         if (!$this->order) {
-            throw new \Exception('Ordem não encontrada.');
+            throw new \Exception(\Lang::trans('paymentOrderNotFound'));
         }
     }
 
@@ -27,25 +27,25 @@ class CallbackValidate
         $orderTotal = floatval($this->order['amount'] ? $this->order['amount'] : $this->order['total']);
         $requestValor = floatval($this->httpRequest['valor']);
         if (round($orderTotal, 2) !== round($requestValor, 2)) {
-            throw new \Exception('Valor não corresponde ao valor da encomenda.');
+            throw new \Exception(\Lang::trans('errorPaymentTotal'));
         }
     }
 
     private function validateOrderStatus(): void
     {
         if ($this->paymentDataFromDb['status'] === 'paid') {
-                throw new \Exception('Encomenda já foi paga.');
+                throw new \Exception(\Lang::trans('orderPaid'));
         }
     }
 
     private function validateChaveAntiPhishing()
     {
         if (!$this->httpRequest['chave']) {
-            throw new \Exception('Chave Anti-Phishing não foi enviada.');
+            throw new \Exception(\Lang::trans('antiPhishingKeyNotSentCallback'));
         }
 
         if ($this->httpRequest['chave'] !== $this->configurationChaveAntiPhishing) {
-            throw new \Exception('Chave Anti-Phishing não é válida.');
+            throw new \Exception(\Lang::trans('antiPhishingKeyNotValidCallback'));
         }
     }
 

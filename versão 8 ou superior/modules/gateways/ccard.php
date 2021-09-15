@@ -4,7 +4,13 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Session;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Facades\PaymentFacade;
+use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
+use WHMCS\Module\Gateway\Ifthenpay\Strategy\Form\IfthenpayConfigForms;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
 
 /**
@@ -49,25 +55,59 @@ function ccard_MetaData()
 function ccard_config()
 {
     try {
-        return (new Ifthenpay('ccard'))->getConfigForm();
+       $ioc = new Ifthenpay('ccard');
+       $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
+       $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_CCARD)->getLogger();
+       return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
     } catch (\Throwable $th) {
-        throw $th;
+        if($th instanceof BackOfficeException) {
+            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => 'ccard', 'setting' => 'backofficeKey']);
+            $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
+            Session::setAndRelease("ConfigurationError", $th->getMessage());
+            $redirect = "error=ccard#m_ccard";
+            redir($redirect);
+        }
+        $ifthenpayLogger->alert($th->getMessage(), ['exception' => $th]);
     }
 }
 function ccard_link($params) {
     try {
-        $paymentData = (new Ifthenpay('ccard'))->getPaymentData($params);
-            
-        if (is_array($paymentData) && $paymentData['status'] === 'pending') {
+        $ifthenpayContainer = (new Ifthenpay('ccard'))->getIoc();
+        $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+        $paymentData = $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod('ccard')->setParams($params)->execute();
+
+        if (is_array($paymentData) && $paymentData['status'] === 'pending' && !strpos($_SERVER['REQUEST_URI'], 'admin/invoices')) {
+            $ifthenpayLogger->info('redirect user to provider ccard page', [
+                    'paymentMethod' => 'ccard',
+                    'paymentData' => $paymentData
+                ]
+            );
             header('Location: ' . $paymentData['paymentUrl']);
                   
         } else if (!is_array($paymentData) && $paymentData->getPaymentGatewayResultData()->status === '0') {
+            $ifthenpayLogger->info('redirect user to provider ccard page', [
+                    'paymentMethod' => 'ccard',
+                    'paymentGatewayResulData' => $paymentData->getPaymentGatewayResultData()
+                ]
+            );
             header('Location: ' . $paymentData->getPaymentGatewayResultData()->paymentUrl);  
         } else {
+            $ifthenpayLogger->info('payment data retrieved with success', [
+                    'paymentMethod' => 'ccard',
+                    'paymentData' => $paymentData
+                ]
+            );
             return $paymentData;
         }
     } catch (\Throwable $th) {
-        return $th->getMessage();
+        $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
+                'paymentMethod' => 'ccard',
+                'params' => $params,
+                'exception' => $th
+            ]
+        );
+        return '<div class=\"alert alert-danger\">' . $th->getMessage() . '</div>';
     }
 }
 

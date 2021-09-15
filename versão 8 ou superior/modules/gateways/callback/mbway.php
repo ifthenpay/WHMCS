@@ -1,6 +1,8 @@
 <?php
 
 require_once('../../../init.php');
+require_once __DIR__ . '/../../../includes/gatewayfunctions.php';
+require_once __DIR__ . '/../../../includes/invoicefunctions.php';
 
 
 use WHMCS\Module\Gateway\Ifthenpay\Router\Router;
@@ -13,6 +15,6 @@ $ioc->makeWith(Router::class, [
     'requestAction' => null,
     'requestData' => $_GET
 ])->init(function() use($ioc, $whmcs) {
-    return $ioc->make(CallbackStrategy::class)->setWhmcs($whmcs)->execute('offline', 'mbway');
+    return $ioc->make(CallbackStrategy::class)->execute('offline', 'mbway');
 });
 

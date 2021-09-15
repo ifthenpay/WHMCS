@@ -9,6 +9,7 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\StrategyFactory;
@@ -23,19 +24,22 @@ class IfthenpayStrategy
     protected $paymentValueFormated;
     protected $utility;
     protected $factory;
+    protected $ifthenpayLogger;
 
 
     public function __construct(
         PaymentDataBuilder $paymentDataBuilder, 
         SmartyDataBuilder $smartyDataBuilder, 
         Utility $utility, 
-        StrategyFactory $factory
+        StrategyFactory $factory,
+        IfthenpayLogger $ifthenpayLogger
     )
     {
         $this->paymentDefaultData = $paymentDataBuilder;
         $this->smartyDefaultData = $smartyDataBuilder;
         $this->utility = $utility;
         $this->factory = $factory;
+        $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
     }
 
     protected function setDefaultData(): void
@@ -43,6 +47,11 @@ class IfthenpayStrategy
         $this->paymentDefaultData->setOrderId(strval($this->params['invoiceid']));
         $this->paymentDefaultData->setPaymentMethod($this->params['paymentmethod']);
         $this->paymentDefaultData->setTotalToPay(strval(isset($this->params['amount']) ? $this->params['amount'] : $this->params['total']->toNumeric()));
+        $this->ifthenpayLogger->info('payment default data set with success', [
+                'params' => $this->params,
+                'className' => get_class($this)
+            ]
+        );
     }
 
     /**
@@ -54,6 +63,11 @@ class IfthenpayStrategy
     {
         $this->params = $params;
         $this->setPaymentValueFormated();
+        $this->ifthenpayLogger->info('payment params data set with success', [
+                'params' => $params,
+                'className' => get_class($this)
+            ]
+        );
         return $this;
     }
 
@@ -67,5 +81,10 @@ class IfthenpayStrategy
         $this->paymentValueFormated = isset($this->params['amount']) ? 
             formatCurrency($this->params['amount'], $this->params['currency'] ? 
                 $this->params['currency'] : null)->toSuffixed() : $this->params['total']->toSuffixed();
+        $this->ifthenpayLogger->info('payment value formated with success', [
+                'paymentValueFormated' => $this->paymentValueFormated,
+                'className' => get_class($this)
+            ]
+        );
     }
 }

@@ -30,7 +30,7 @@ class MbWay extends Payment implements PaymentMethodInterface
     public function checkValue(): void
     {
         if (intval($this->valor) < 0.10) {
-            throw new \Exception('Mbway does not allow payments under 0.10€');
+            throw new \Exception(\Lang::trans('mbwayUnderPayment'));
         }
     }
 
@@ -44,7 +44,7 @@ class MbWay extends Payment implements PaymentMethodInterface
     private function setReferencia(): void
     {
         $this->mbwayPedido = $this->webservice->postRequest(
-            'https://ifthenpay.com/mbwayws/IfthenPayMBW.asmx/SetPedidoJSON',
+            'https://mbway.ifthenpay.com/IfthenPayMBW.asmx/SetPedidoJSON',
             [
                     'MbWayKey' => $this->mbwayKey,
                     'canal' => '03',

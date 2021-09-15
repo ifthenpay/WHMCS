@@ -8,62 +8,21 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Database\Capsule;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigRepositoryInterface;
 
 class Utility
 {
     private $ifthenpayPathLib = 'modules/gateways/ifthenpay';
+    private $configRepository;
 
+	public function __construct(ConfigRepositoryInterface $configRepository)
+	{
+        $this->configRepository = $configRepository;
+	}
+    
     public function getSystemUrl(): string
     {
-        $systemUrl = Capsule::table('tblconfiguration')->where('setting', 'SystemURL')->pluck('value')[0];
-        return $systemUrl ? $systemUrl : '';
-    }
-
-    public function getBackofficeKey(): string
-    {
-        $backofficeKey = Capsule::table('tblpaymentgateways')->where('setting', 'backofficeKey')->pluck('value')[0];
-        return $backofficeKey ? $backofficeKey : '';
-    }
-
-    public function getIfthenpayUserAccount(string $paymentMethod): array
-    {
-        $ifthenpayUserAccount = Capsule::table('tblpaymentgateways')->where([
-            'gateway' => $paymentMethod,
-            'setting' => 'userAccount'])->pluck('value')[0];
-        return $ifthenpayUserAccount ? unserialize($ifthenpayUserAccount) : []; 
-    }
-
-    public function getIfthenpayUserPaymentMethods(): array
-    {
-        $ifthenpayUserPaymentMethods = Capsule::table('tblpaymentgateways')->where('setting', 'ifthenpayUserPaymentMethods')->pluck('value')[0];
-        return $ifthenpayUserPaymentMethods ? unserialize($ifthenpayUserPaymentMethods) : []; 
-    }
-
-    public function getIfthenpayUserActivatedPaymentMethod(string $paymentMethod): string
-    {
-        $userActivatePaymentMethod = Capsule::table('tblpaymentgateways')->where('setting', $paymentMethod)->pluck('value')[0]; 
-        return $userActivatePaymentMethod ? $userActivatePaymentMethod : '';
-    }
-
-    public function getActivatedCallback(string $paymentMethod): string
-    {
-        $activatedCallback = Capsule::table('tblpaymentgateways')->where([
-            'gateway' => $paymentMethod,
-            'setting' => 'activatedCallback'
-        ])->pluck('value')[0]; 
-        return $activatedCallback ? $activatedCallback : '';
-    }
-
-    public function getCallbackData(string $paymentMethod): array
-    {
-        $callbackData = Capsule::table('tblpaymentgateways')
-            ->where('gateway', $paymentMethod)->get()->filter(function ($value, $key) {
-                if ($value->setting === 'chaveAntiPhishing' || $value->setting === 'urlCallback') {
-                    return $value;
-                }
-            })->pluck('value');
-        return $callbackData ? $callbackData->toArray() : [];
+        return $this->configRepository->getSystemUrl();
     }
 
     public function getImgUrl(): string
@@ -89,22 +48,7 @@ class Utility
     public function getTemplatesUrl(): string
     {
         return $this->getSystemUrl() . $this->ifthenpayPathLib . '/templates';
-    }
-
-    public function getOrderById(string $orderId): array
-    {
-        $order = Capsule::table('tblorders')
-            ->where('invoiceid', $orderId)->first();
-        if (empty($order) || is_null($order)) {
-            $order = Capsule::table('tblinvoices')->where('id', $orderId)->first();
-        }
-        return $order ? $this->convertObjectToarray($order) : [];
-    }
-
-    public function saveIfthenpayPayment(string $databaseTable, string $paymentId): void
-    {
-        Capsule::table($databaseTable)->where('id', $paymentId)->update(['status' => 'paid']);
-    }
+    }  
 
     public function getCallbackControllerUrl(string $paymentMethod): string
     {

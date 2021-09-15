@@ -1,86 +1,66 @@
 {if $status == 'ok'}
-<p>
-	Your order is complete!
-		<br /><br />
-		Please use the data below to pay for your order.
-		<div class="panel panel-ifthenpayConfirmPage">
-			<div class="panel-heading">
-				<h5>Pay by {$paymentMethod}</h5>
-			</div>
+<br><br>
+	{$LANG.paymentReturnTitle}
+	{if ($paymentMethod|lower === 'mbway' || $paymentMethod|lower === 'mb way') && $mbwayCountdownShow === 'true'}
+		<div class="panel mbwayCountdownPanel">
 			<div class="panel-body">
-				<div class="paymentLogo">
-					{if $paymentMethod|lower !== 'credit card'}
-						<img src="{$paymentLogo}">
-					{else}
-						<img src="{$paymentLogo}" style="max-width: 45%">
-					{/if}
+				<h3>{$confirmMbwayPaymentTitle}</h3>
+				{include file="./spinner.tpl"}
+				<div id="countdownMbway">
+					<h3 id="countdownMinutes"></h3>
+					<h3>:</h3>
+					<h3 id="countdownSeconds"></h3>
 				</div>
-				<div class="paymentData">
-					{if $paymentMethod|lower === 'multibanco'}
-					<ul class="list-group">
-						<li class="list-group-item">
-							Entity:
-							<span class="badge">{$entidade}</span>
-						</li>
-						<li class="list-group-item">
-							Reference:
-							<span class="badge">{$referencia}</span>
-						</li>
-						<li class="list-group-item">
-							Total to pay:
-							<span class="badge">{$totalToPay}</span>
-						</li>
-					</ul>
-					{elseif $paymentMethod|lower === 'mbway' || $paymentMethod|lower === 'mb way'}
-						<ul class="list-group">
-							<li class="list-group-item">
-								Phone:
-								<span class="badge">{$telemovel}</span>
-							</li>
-							<li class="list-group-item">
-								Order:
-								<span class="badge">{$orderId}</span>
-							</li>
-							<li class="list-group-item">
-								Total to Pay:
-								<span class="badge">{$totalToPay}</span>
-							</li>
-						</ul>
-						{if $resendMbwayNotificationControllerUrl !== ''}
-							<div>
-								<h5>Not receive MBway notification?</h5>
-								<a class="btn btn-primary" href="{$resendMbwayNotificationControllerUrl}">Resend MBway notification</a>
-							</div>
-						{/if}
-					{elseif $paymentMethod|lower === 'payshop'}
-						<ul class="list-group">
-							<li class="list-group-item">
-								Reference:
-								<span class="badge">{$referencia}</span>
-							</li>
-							<li class="list-group-item">
-								Deadline:
-								<span class="badge">{$validade}</span>
-							</li>
-							<li class="list-group-item">
-								Total to Pay:
-								<span class="badge">{$totalToPay}</span>
-							</li>
-						</ul>
-						{elseif $paymentMethod|lower === 'credit card'}
-							<ul class="list-group">
-								<li class="list-group-item">
-									Total to Pay:
-									<span class="badge">{$totalToPay}</span>
-								</li>
-							</ul>
-					{/if}
-				</div>
+				<p>{$mbwayExpireTitle}</p>
 			</div>
 		</div>
-</p>
+		<div id="confirmMbwayOrder" class="panel" style="display:none;">
+			<div class="panel-heading">
+			<img src="{$mbwayOrderConfirmUrl}" alt="confirm order icon">
+			</div>
+			<div class="panel-body">
+				<h3>{$mbwayOrderPaid}</h3>
+				<p>{$mbwayPaymentConfirmed}</p>
+			</div>
+		</div>
+	{else}
+		<div class="panel mbwayCountdownPanel" style="display:none;">
+			<div class="panel-body">
+				<h3>{$confirmMbwayPaymentTitle}</h3>
+				{include file="./spinner.tpl"}
+				<div id="countdownMbway">
+					<h3 id="countdownMinutes"></h3>
+					<h3>:</h3>
+					<h3 id="countdownSeconds"></h3>
+				</div>
+				<p>{$mbwayExpireTitle}</p>
+			</div>
+		</div>
+		<div id="confirmMbwayOrder" class="panel" style="display:none;">
+			<div class="panel-heading">
+			<img src="{$mbwayOrderConfirmUrl}" alt="confirm order icon">
+			</div>
+			<div class="panel-body">
+				<h3>{$mbwayOrderPaid}</h3>
+				<p>{$mbwayPaymentConfirmed}</p>
+			</div>
+		</div>
+	{/if}
+	<div class="panel panel-ifthenpayConfirmPage">
+        <div class="panel-heading">
+            <h5>{$ifthenpayPayBy}</h5>
+        </div>
+        <div class="panel-body">
+            <div class="paymentLogo">
+                {if $paymentMethod|lower !== 'credit card'}
+                    <img src="{$paymentLogo}">
+                {else}
+                    <img src="{$paymentLogo}" style="max-width: 45%">
+                {/if}
+            </div>
+			{include file="./ifthenpayPaymentData.tpl"}
+		</div>
+    </div>
 {else}
-	<p class="warning">
-		We have noticed that there is a problem with your order. If you think this is an error, you can contact our expert customer support team.
-	</p>
+	{include file="./ifthenpayErrorPayment.tpl"}
 {/if}

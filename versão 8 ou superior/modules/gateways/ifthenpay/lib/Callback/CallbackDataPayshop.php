@@ -8,7 +8,6 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Database\Capsule;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackPayment;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Callback\CallbackDataInterface;
 
@@ -16,6 +15,6 @@ class CallbackDataPayshop extends CallbackPayment implements CallbackDataInterfa
 {
     public function getData(array $request): array
     {
-        return $this->utility->convertObjectToarray(Capsule::table('ifthenpay_payshop')->where('id_transacao', $request['id_transacao'])->first());
+        return $this->repositoryFactory->setType('payshop')->build()->getPaymentByIdTransacao($request['id_transacao']);
     }
 }

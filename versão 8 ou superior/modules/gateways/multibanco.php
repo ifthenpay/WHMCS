@@ -4,7 +4,13 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Session;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Facades\PaymentFacade;
+use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
+use WHMCS\Module\Gateway\Ifthenpay\Strategy\Form\IfthenpayConfigForms;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
 /**
  * Define module related meta data.
@@ -48,18 +54,39 @@ function multibanco_MetaData()
 function multibanco_config()
 {
     try {
-        return (new Ifthenpay('multibanco'))->getConfigForm();
+       $ioc = new Ifthenpay('multibanco');
+       $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
+       $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MULTIBANCO)->getLogger();
+       return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
     } catch (\Throwable $th) {
-        throw $th;
+       if($th instanceof BackOfficeException) {
+            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => 'multibanco', 'setting' => 'backofficeKey']);
+            $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
+            Session::setAndRelease("ConfigurationError", $th->getMessage());
+            $redirect = "error=multibanco#m_multibanco";
+            redir($redirect);
+        }
+        $ifthenpayLogger->alert($th->getMessage(), ['exception' => $th]);
     }
 }
 function multibanco_link($params) {
     try {
-        (new Ifthenpay('multibanco'))->getPaymentData($params);
+        $ifthenpayContainer = (new Ifthenpay('multibanco'))->getIoc();
+        $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod('multibanco')->setParams($params)->execute();
     } catch (\Throwable $th) {
-        throw $th;
+        logTransaction('multibanco', $th->getMessage(), "Error", $params);
+        $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
+                'paymentMethod' => 'multibanco',
+                'params' => $params,
+                'exception' => $th
+            ]
+        );
+        return '<div class=\"alert alert-danger\">' . $th->getMessage() . '</div>';
     }
 }
+
 
 
 

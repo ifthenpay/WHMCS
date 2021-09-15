@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Callback;
 
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
+use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -13,10 +13,10 @@ if (!defined("WHMCS")) {
 
 class CallbackPayment
 {
-    protected $utility;
+    protected $repositoryFactory;
 
-    public function __construct(Utility $utility)
+    public function __construct(RepositoryFactory $repositoryFactory)
     {
-        $this->utility = $utility;
+        $this->repositoryFactory = $repositoryFactory;
     }
 }

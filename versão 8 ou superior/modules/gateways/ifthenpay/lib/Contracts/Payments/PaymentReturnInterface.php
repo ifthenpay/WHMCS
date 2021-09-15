@@ -11,4 +11,5 @@ if (!defined("WHMCS")) {
 interface PaymentReturnInterface
 {
     public function getPaymentReturn(): PaymentReturnInterface;
+    public function persistToDatabase(): void;
 }

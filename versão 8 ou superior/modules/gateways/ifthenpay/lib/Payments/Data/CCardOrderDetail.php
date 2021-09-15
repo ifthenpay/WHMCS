@@ -19,6 +19,7 @@ class CCardOrderDetail extends CCardBase implements OrderDetailInterface
             $this->paymentMethod, 'en'));
         $this->smartyDefaultData->setOrderId($this->paymentDataFromDb['order_id']);
         $this->smartyDefaultData->setIdPedido($this->paymentDataFromDb['requestId']);
+        $this->logSmartyBuilderData();
     }
 
     public function getOrderDetail(): OrderDetailInterface

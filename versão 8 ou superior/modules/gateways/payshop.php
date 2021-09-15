@@ -4,7 +4,13 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Session;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Facades\PaymentFacade;
+use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
+use WHMCS\Module\Gateway\Ifthenpay\Strategy\Form\IfthenpayConfigForms;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
 /**
  * Define module related meta data.
@@ -48,16 +54,36 @@ function payshop_MetaData()
 function payshop_config()
 {
     try {
-        return (new Ifthenpay('payshop'))->getConfigForm();
+        $ioc = new Ifthenpay('payshop');
+        $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_PAYSHOP)->getLogger();
+        return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
     } catch (\Throwable $th) {
-        throw $th;
+        if($th instanceof BackOfficeException) {
+            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => 'payshop', 'setting' => 'backofficeKey']);
+            $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
+            Session::setAndRelease("ConfigurationError", $th->getMessage());
+            $redirect = "error=payshop#m_payshop";
+            redir($redirect);
+        }
+        $ifthenpayLogger->alert($th->getMessage(), ['exception' => $th]);
     }
 }
 function payshop_link($params) {
     try {
-        (new Ifthenpay('payshop'))->getPaymentData($params);
+        $ifthenpayContainer = (new Ifthenpay('payshop'))->getIoc();
+        $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod('payshop')->setParams($params)->execute();
     } catch (\Throwable $th) {
-        throw $th;
+        logTransaction('payshop', $th->getMessage(), "Error", $params);
+        $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
+                'paymentMethod' => 'payshop',
+                'params' => $params,
+                'exception' => $th
+            ]
+        );
+        return '<div class=\"alert alert-danger\">' . $th->getMessage() . '</div>';
     }
 }
 

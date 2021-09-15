@@ -15,7 +15,7 @@ use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
 class CCardConfigForm extends ConfigForm
 {
     protected $paymentMethod = 'ccard';
-    protected $paymentMethodNameAlias = 'Cartão de Crédito (Ifthenpay)';
+    protected $paymentMethodNameAlias;
     protected $hasCallback = false;
 
     public function checkConfigValues(): array
@@ -26,6 +26,13 @@ class CCardConfigForm extends ConfigForm
 
     protected function addPaymentInputsToForm(): void
     {
+        try {
+            $this->ifthenpaySql->changeCcardTable();
+            $this->ifthenpayLogger->info('change ccard table with success');
+        } catch (\Throwable $th) {
+            $this->ifthenpayLogger->error('error changing ccard', ['exception' => $th]);
+            throw $th;
+        } 
         if (!$this->configValues) {
             $this->addToOptions();
         } else {
@@ -37,8 +44,9 @@ class CCardConfigForm extends ConfigForm
             'type' => 'dropdown',
             'name' => 'ccardKey',
             'options' => $this->options,
-            'description' => 'Choose CCard key',
-        ])); 
+            'description' => \AdminLang::trans('chooseCcardKey'),
+        ]));
+        $this->ifthenpayLogger->info('ccardKey input config added with success to form', ['options' => $this->options]);
     }
 
     public function setGatewayBuilderData(): void
@@ -54,5 +62,13 @@ class CCardConfigForm extends ConfigForm
     public function processForm(): void
     {
         //void
+    }
+
+    /**
+     * Get the value of paymentMethodNameAlias
+     */ 
+    public function getPaymentMethodNameAlias()
+    {
+        return \AdminLang::trans('creditCardAlias');
     }
 }

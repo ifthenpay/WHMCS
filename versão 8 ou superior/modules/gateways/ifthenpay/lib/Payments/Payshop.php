@@ -8,15 +8,17 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use DateTime;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Payment;
+use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Traits\Payments\FormatReference;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentMethodInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
 
 class Payshop extends Payment implements PaymentMethodInterface
 {
+    use FormatReference;
+    
     private $payshopKey;
     protected $validade;
     private $payshopPedido;
@@ -41,7 +43,7 @@ class Payshop extends Payment implements PaymentMethodInterface
     public function checkValue(): void
     {
         if (intval($this->valor) < 0) {
-            throw new \Exception('Payshop does not allow payments of 0€');
+            throw new \Exception(\Lang::trans('invalidPayshopValue'));
         }
     }
 

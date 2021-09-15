@@ -18,7 +18,7 @@ class Gateway
     private $webservice;
     private $paymentFactory;
     private $account;
-    private $paymentMethods = ['multibanco', 'mbway', 'payshop', 'ccard'];
+    private $paymentMethods = ['multibanco', 'mbway', 'payshop', 'ccard', 'credit card (ifthenpay)'];
     private $aliasPaymentMethods = [
         'multibanco' => [
             'en' => 'Multibanco',
@@ -74,7 +74,7 @@ class Gateway
             )->getResponseJson();
 
         if (!$authenticate[0]['Entidade'] && empty($authenticate[0]['SubEntidade'])) {
-            throw new \Exception('Backoffice key is invalid');
+            throw new \Exception(is_null(\Lang::trans('backofficeKeyInvalid')) ? \AdminLang::trans('backofficeKeyInvalid') : \Lang::trans('backofficeKeyInvalid'));
         } else {
             $this->account = $authenticate;
         }

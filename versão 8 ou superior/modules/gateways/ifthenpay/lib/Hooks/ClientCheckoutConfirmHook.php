@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace WHMCS\Module\Gateway\ifthenpay\Hooks;
 
 use Smarty;
+use WHMCS\Module\Gateway\ifthenpay\Utility\Mix;
 use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\ifthenpay\Hooks\CheckoutHook;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment\IfthenpayOrderDetail;
 
 if (!defined("WHMCS")) {
@@ -18,9 +20,9 @@ class ClientCheckoutConfirmHook extends CheckoutHook
     private $paymentMethod;
     private $ifthenpayOrderDetail;
 
-    public function __construct(Utility $utility, IfthenpayOrderDetail $ifthenpayOrderDetail)
+    public function __construct(Utility $utility, IfthenpayOrderDetail $ifthenpayOrderDetail, Mix $mix)
 	{
-        $this->utility = $utility;
+        parent::__construct($utility, $mix);
         $this->ifthenpayOrderDetail = $ifthenpayOrderDetail;
     }
     
@@ -38,7 +40,7 @@ class ClientCheckoutConfirmHook extends CheckoutHook
     
     public function executeStyles(): string
     {
-        return $this->validateTemplate() ? '<link rel="stylesheet" href="'. $this->utility->getCssUrl() . '/ifthenpayConfirmPage.css">' : '';
+        return $this->validateTemplate() ? '<link rel="stylesheet" href="'. $this->utility->getCssUrl() . '/' . $this->mix->create('ifthenpayConfirmPage.css') . '">' : '';
     }
 
     public function execute()

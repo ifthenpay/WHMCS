@@ -23,7 +23,8 @@ class CCardPaymentReturn extends CCardBase implements PaymentReturnInterface
             strval($this->paymentDefaultData->orderId),
             strval($this->paymentDefaultData->totalToPay)
         )->getData();
-        $this->saveToDatabase();
+        $this->logPaymentGatewayResultData();
+        $this->persistToDatabase();
         return $this;
     }
 }

@@ -9,6 +9,7 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Database\Capsule;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpayInstall;
 
 
@@ -18,8 +19,9 @@ class IfthenpaySql extends IfthenpayInstall
     private $statusEnum = ['pending', 'paid'];
     private $schema;
 
-    public function __construct()
+    public function __construct(IfthenpayLogger $ifthenpayLogger)
     {
+        parent::__construct($ifthenpayLogger);
         $this->schema = Capsule::schema();
     }
 
@@ -40,6 +42,7 @@ class IfthenpaySql extends IfthenpayInstall
                     $table->timestamps();
                 }
             );
+            $this->ifthenpayLogger->info($this->paymentMethod . 'database table created with success');
         }
         
     }
@@ -60,6 +63,7 @@ class IfthenpaySql extends IfthenpayInstall
                     $table->timestamps();
                 }
             );
+            $this->ifthenpayLogger->info($this->paymentMethod . 'database table created with success');
         }
         
     }
@@ -81,6 +85,7 @@ class IfthenpaySql extends IfthenpayInstall
                     $table->timestamps();
                 }
             );
+            $this->ifthenpayLogger->info($this->paymentMethod . 'database table created with success');
         }
         
     }
@@ -95,11 +100,13 @@ class IfthenpaySql extends IfthenpayInstall
                     $table->increments('id');
                     $table->string('requestId', 50);
                     $table->string('order_id', 50);
-                    $table->string('paymentUrl', 250);
+                    $table->string('paymentUrl', 1000);
                     $table->enum('status', ['paid', 'cancel', 'error', 'pending']);
+                    $table->index('requestId');
                     $table->timestamps();
                 }
             );
+            $this->ifthenpayLogger->info($this->paymentMethod . 'database table created with success');
         }
     }
 
@@ -125,6 +132,14 @@ class IfthenpaySql extends IfthenpayInstall
             } catch (\Throwable $th) {
                 throw $th;
             }
+    }
+
+    public function changeCcardTable(): void
+    {
+        if ($this->schema->hasTable('ifthenpay_ccard') && Capsule::select(Capsule::raw('SHOW FIELDS FROM ifthenpay_ccard'))[3]->Type === 'varchar(250)') {
+            Capsule::statement('ALTER TABLE ifthenpay_ccard  MODIFY paymentUrl varchar(1000)');
+            $this->ifthenpayLogger->info('ccard table changed with success');           
+        }
     }
 
     public function install(): void

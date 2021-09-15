@@ -30,30 +30,30 @@ class MultibancoConfigForm extends ConfigForm
             $this->options[$this->configValues['entidade']] = $this->configValues['entidade'];
         }
         $this->form->add($this->ioc->makeWith(Input::class, [
-            'friendlyName' => 'Entity',
+            'friendlyName' => \AdminLang::trans('multibancoEntity'),
             'type' => 'dropdown',
             'name' => 'entidade',
             'options' => $this->options,
-            'description' => 'Choose Entity',
-        ]));   
+            'description' => \AdminLang::trans('multibancoEntityDescription'),
+        ]));
+        $this->ifthenpayLogger->info('multibanco entidade input config added with success to form', ['options' => $this->options]);   
         if (!$this->configValues) {
             $this->options = [
-                'default' => 'Choose Entity'
+                'default' => \AdminLang::trans('multibancoEntityDescription')
             ];
         } else {
             $this->options = [];
             $this->options[$this->configValues['subEntidade']] = $this->configValues['subEntidade'];
         }
         $this->form->add($this->ioc->makeWith(Input::class, [
-            'friendlyName' => 'SubEntity',
+            'friendlyName' => \AdminLang::trans('multibancoSubEntity'),
             'type' => 'dropdown',
             'name' => 'subEntidade',
             'options' => $this->options,
-            'description' => 'Choose SubEntity',
-        ]));    
-    }
-
-    
+            'description' => \AdminLang::trans('multibancoSubEntityDescription'),
+        ]));
+        $this->ifthenpayLogger->info('multibanco subentidade input config added with success to form', ['options' => $this->options]);
+    }   
 
     public function setGatewayBuilderData(): void
     {

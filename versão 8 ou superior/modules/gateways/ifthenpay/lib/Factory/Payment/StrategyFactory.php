@@ -10,8 +10,11 @@ use WHMCS\Module\Gateway\ifthenpay\Utility\Status;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
 use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
+use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -25,6 +28,10 @@ abstract class StrategyFactory extends Factory
     protected $ifthenpayGateway;
     protected $whmcsGatewaySettings;
     protected $utility;
+    protected $repositoryFactory;
+    protected $token;
+    protected $status;
+    protected $ifthenpayLogger;
     
     public function __construct(
         Container $ioc,
@@ -32,8 +39,11 @@ abstract class StrategyFactory extends Factory
         Gateway $ifthenpayGateway,
         array $whmcsGatewaySettings,
         Utility $utility,
+        RepositoryFactory $repositoryFactory,
+        IfthenpayLogger $ifthenpayLogger,
         Token $token = null,
-        Status $status = null
+        Status $status = null,
+        TokenExtra $tokenExtra = null
     )
 	{
         parent::__construct($ioc);
@@ -41,8 +51,11 @@ abstract class StrategyFactory extends Factory
         $this->ifthenpayGateway = $ifthenpayGateway;
         $this->whmcsGatewaySettings = $whmcsGatewaySettings;
         $this->utility = $utility;
+        $this->repositoryFactory = $repositoryFactory;
+        $this->ifthenpayLogger = $ifthenpayLogger;
         $this->token = $token;
         $this->status = $status;
+        $this->tokenExtra = $tokenExtra;
     }
 
     abstract public function build();

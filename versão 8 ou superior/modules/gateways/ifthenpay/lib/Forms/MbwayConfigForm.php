@@ -8,8 +8,6 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Database\Capsule;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\ifthenpay\Forms\ConfigForm;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
 
@@ -33,12 +31,20 @@ class MbwayConfigForm extends ConfigForm
         }
 
         $this->form->add($this->ioc->makeWith(Input::class, [
+            'friendlyName' => \AdminLang::trans('cancelMbwayOrder'),
+            'type' => 'yesno',
+            'name' => 'cancelMbwayOrder',
+            'description' => \AdminLang::trans('cancelMbwayOrderDescription'),
+        ]));
+
+        $this->form->add($this->ioc->makeWith(Input::class, [
             'friendlyName' => 'Mbway key',
             'type' => 'dropdown',
             'name' => 'mbwayKey',
             'options' => $this->options,
-            'description' => 'Choose Mbway key',
-        ]));   
+            'description' => \AdminLang::trans('chooseMbwayKey'),
+        ]));
+        $this->ifthenpayLogger->info('mbwayKey input config added with success to form', ['options' => $this->options]);  
     }
 
     public function setGatewayBuilderData(): void

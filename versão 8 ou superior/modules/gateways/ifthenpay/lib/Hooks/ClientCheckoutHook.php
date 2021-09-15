@@ -11,7 +11,7 @@ if (!defined("WHMCS")) {
 }
 
 class ClientCheckoutHook extends CheckoutHook
-{    
+{
     public function validateTemplate(): bool
     {
         return $this->vars['templatefile'] === 'viewcart';
@@ -19,7 +19,7 @@ class ClientCheckoutHook extends CheckoutHook
     
     public function executeStyles(): string
     {
-        return $this->validateTemplate() ? '<link rel="stylesheet" href="'. $this->utility->getCssUrl() . '/checkoutPaymentOption.css">' : '';
+        return $this->validateTemplate() ? '<link rel="stylesheet" href="'. $this->utility->getCssUrl() . '/' . $this->mix->create('checkoutPaymentOption.css') . '">' : '';
     }
 
     public function execute()
@@ -28,19 +28,19 @@ class ClientCheckoutHook extends CheckoutHook
             $gateways = $this->vars['gateways'];
             foreach($gateways as $key => $gateway) {
                 if ($gateway['sysname'] === 'multibanco') {
-                    $gateways[$key]['name'] = '<img class="ifthenpayIcon multibancoIcon" src="'. $this->utility->setPaymentLogo('multibanco') .'" alt="'.$gateway['sysname'].'">';
+                    $gateways[$key]['name'] = '<img class="ifthenpayIcon multibancoIcon" src="'. $this->utility->setPaymentLogo('multibanco') . '" alt="'. $gateway['sysname'] .'">';
                 }
                 
                 if ($gateway['sysname'] === 'mbway') {
-                    $gateways[$key]['name'] = '<img class="ifthenpayIcon mbwayIcon" src="'. $this->utility->setPaymentLogo('mbway') .'" alt="'.$gateway['sysname'].'">';
+                    $gateways[$key]['name'] = '<img class="ifthenpayIcon mbwayIcon" src="'. $this->utility->setPaymentLogo('mbway') . '" alt="'. $gateway['sysname'] .'">';
                 }
                 
                 if ($gateway['sysname'] === 'payshop') {
-                    $gateways[$key]['name'] = '<img class="ifthenpayIcon payshopIcon" src="'. $this->utility->setPaymentLogo('payshop') .'" alt="'.$gateway['sysname'].'">';
+                    $gateways[$key]['name'] = '<img class="ifthenpayIcon payshopIcon" src="'. $this->utility->setPaymentLogo('payshop') . '" alt="' . $gateway['sysname'] . '">';
                 }
                 
                 if ($gateway['sysname'] === 'ccard') {
-                    $gateways[$key]['name'] = '<img class="ifthenpayIcon ccardIcon" src="'. $this->utility->setPaymentLogo('ccard') .'" alt="'.$gateway['sysname'].'">';
+                    $gateways[$key]['name'] = '<img class="ifthenpayIcon ccardIcon" src="'. $this->utility->setPaymentLogo('ccard') . '" alt="' . $gateway['sysname'] . '">';
                 }
                 
             }			

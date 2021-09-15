@@ -1,6 +1,8 @@
 <?php 
 
 require('../../../init.php');
+require_once __DIR__ . '/../../../includes/gatewayfunctions.php';
+require_once __DIR__ . '/../../../includes/invoicefunctions.php';
 
 use WHMCS\Module\Gateway\Ifthenpay\Router\Router;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
@@ -12,6 +14,6 @@ $ioc->makeWith(Router::class, [
     'requestAction' => null,
     'requestData' => $_GET
 ])->init(function() use($ioc, $whmcs) {
-    return $ioc->make(CallbackStrategy::class)->setWhmcs($whmcs)->execute('offline', 'payshop');
+    return $ioc->make(CallbackStrategy::class)->execute('offline', 'payshop');
 });
 

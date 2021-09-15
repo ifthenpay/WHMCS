@@ -10,12 +10,14 @@ if (!defined("WHMCS")) {
 
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Traits\Payments\FormatReference;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Payment as MasterPayment;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentMethodInterface;
 
 class Multibanco extends MasterPayment implements PaymentMethodInterface
 {
-
+    use FormatReference;
+    
     private $entidade;
     private $subEntidade;
 
@@ -29,7 +31,7 @@ class Multibanco extends MasterPayment implements PaymentMethodInterface
     public function checkValue(): void
     {
         if (intval($this->valor) >= 1000000) {
-            throw new \Exception('Invalid Multibanco value, above 999999€');
+            throw new \Exception(\Lang::trans('invalidMultibancoValue'));
         }
     }
 

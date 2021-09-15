@@ -12,8 +12,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Base\Payments\MultibancoBase;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentReturnInterface;
 
 class MultibancoPaymentReturn extends MultibancoBase implements PaymentReturnInterface
-{
-    
+{ 
     public function getPaymentReturn(): PaymentReturnInterface
     {
         $this->setPaymentTable('ifthenpay_multibanco');
@@ -24,8 +23,8 @@ class MultibancoPaymentReturn extends MultibancoBase implements PaymentReturnInt
             strval($this->paymentDefaultData->orderId),
             strval($this->paymentDefaultData->totalToPay)
         )->getData();
-        $this->saveToDatabase();
-        
+        $this->logPaymentGatewayResultData();
+        $this->persistToDatabase();
         return $this;
     }
 }

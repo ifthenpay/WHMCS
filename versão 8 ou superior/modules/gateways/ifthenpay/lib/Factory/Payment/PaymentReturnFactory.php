@@ -25,6 +25,8 @@ class PaymentReturnFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
             case 'mbway':
@@ -34,6 +36,8 @@ class PaymentReturnFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
             case 'payshop':
@@ -43,6 +47,8 @@ class PaymentReturnFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
             case 'ccard':
@@ -52,6 +58,8 @@ class PaymentReturnFactory extends StrategyFactory
                     $this->ifthenpayGateway,
                     $this->whmcsGatewaySettings,
                     $this->utility,
+                    $this->repositoryFactory,
+                    $this->ifthenpayLogger,
                     $this->token,
                     $this->status,
                     $this->smartyDefaultData

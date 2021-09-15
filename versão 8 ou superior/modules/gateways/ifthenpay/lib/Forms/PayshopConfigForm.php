@@ -35,14 +35,16 @@ class PayshopConfigForm extends ConfigForm
             'type' => 'dropdown',
             'name' => 'payshopKey',
             'options' => $this->options,
-            'description' => 'Choose Payshop key',
+            'description' => \AdminLang::trans('choosePayshopKey'),
         ]));
+        $this->ifthenpayLogger->info('payshopKey input config added with success to form', ['options' => $this->options]);
         $this->form->add($this->ioc->makeWith(Input::class, [
-            'friendlyName' => 'Validity',
+            'friendlyName' => \AdminLang::trans('payshopValidaty'),
             'type' => 'text',
             'name' => 'payshopValidity',
-            'description' => 'Choose the number of days, leave empty if you do not want validity',
-        ]));    
+            'description' => \AdminLang::trans('payshopValidatyDescription'),
+        ]));
+        $this->ifthenpayLogger->info('payshop validade input config added with success to form');    
     }
 
     public function setGatewayBuilderData(): void
@@ -52,6 +54,5 @@ class PayshopConfigForm extends ConfigForm
             $this->gatewayDataBuilder->setEntidade(strtoupper($this->paymentMethod));
             $this->gatewayDataBuilder->setSubEntidade($this->configValues['payshopKey']);
         }
-        
     }
 }

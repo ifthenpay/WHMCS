@@ -9,7 +9,6 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Base\PaymentBase;
-use WHMCS\Database\Capsule;
 
 class MbwayBase extends PaymentBase
 {
@@ -19,17 +18,32 @@ class MbwayBase extends PaymentBase
     {
         $this->gatewayBuilder->setMbwayKey($this->whmcsGatewaySettings['mbwayKey']);
         $this->gatewayBuilder->setTelemovel($_POST['mbwayPhoneNumber'] ? $_POST['mbwayPhoneNumber'] : $_COOKIE['mbwayPhoneNumber']);
+        $this->logGatewayBuilderData();
     }
 
     protected function saveToDatabase(): void
     {
-        Capsule::table($this->paymentTable)->insert(
-            [
-                'id_transacao' => $this->paymentGatewayResultData->idPedido,
-                'telemovel' => $this->paymentGatewayResultData->telemovel, 
-                'order_id' => $this->paymentDefaultData->orderId, 
-                'status' => 'pending'
-            ]
-        );
+        $paymentData = [
+            'id_transacao' => $this->paymentGatewayResultData->idPedido,
+            'telemovel' => $this->paymentGatewayResultData->telemovel, 
+            'order_id' => $this->paymentDefaultData->orderId, 
+            'status' => 'pending'
+        ];
+        $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
+        //$this->paymentRepository->create($paymentData);
+        $this->logSavePaymentDataInDatabase($paymentData);
+    }
+
+    protected function updateToDatabase(): void
+    {
+        $paymentData = [
+            'id_transacao' => $this->paymentGatewayResultData->idPedido,
+            'telemovel' => $this->paymentGatewayResultData->telemovel, 
+            'order_id' => $this->paymentDefaultData->orderId, 
+            'status' => 'pending'
+        ];
+        //$this->paymentRepository->updatePaymentByOrderId($paymentData, $this->paymentDefaultData->orderId);
+        $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
+        $this->logSavePaymentDataInDatabase($paymentData, 'update');
     }
 }

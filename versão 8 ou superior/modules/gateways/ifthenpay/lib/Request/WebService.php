@@ -31,6 +31,11 @@ class WebService
         return json_decode(json_encode(json_decode((string) $this->response->getBody())), true);
     }
 
+    public function getXmlConvertedResponseToArray(): array
+    {
+        return json_decode(json_encode(json_decode((string) simplexml_load_string($this->response->getBody()->getContents()))[0]), true);
+    }
+
     public function postRequest(string $url, array $data, bool $jsonContentType = false, array $headers = []): self
     {
         try {

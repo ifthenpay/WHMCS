@@ -19,6 +19,18 @@ class IfthenpayOrderDetail extends IfthenpayStrategy
         $this->smartyDefaultData->setTotalToPay($this->paymentValueFormated);
         $this->smartyDefaultData->setPaymentMethod($this->params['paymentmethod']);
         $this->smartyDefaultData->setPaymentLogo($this->utility->getImgUrl() . '/' . strtolower($this->params['paymentmethod']) . '.png');
+        $this->smartyDefaultData->setSpinnerUrl($this->utility->getSvgUrl() . '/' .  'oval.svg');
+        $this->smartyDefaultData->setMbwayOrderConfirmUrl($this->utility->getSvgUrl() . '/' .  'mbwayOrderConfirm.svg');
+        $this->smartyDefaultData->setErrorUrl($this->utility->getSvgUrl() . '/' .  'error.svg');
+        $this->smartyDefaultData->setErrorPaymentProcessingLang(\Lang::trans('errorPaymentProcessing'));
+        $this->smartyDefaultData->setErrorPaymentProcessingDescriptionLang(\Lang::trans('errorPaymentProcessingDescription'));
+        $this->smartyDefaultData->setIfthenpayTotalToPayLang(\Lang::trans('ifthenpayTotalToPay'));
+        $this->smartyDefaultData->setIfthenpayPayBy(\Lang::trans('ifthenpayPayBy') . $this->params['paymentmethod']); 
+        $this->ifthenpayLogger->info('payment default smarty data set with success', [
+                'params' => $this->params,
+                'className' => get_class($this)
+            ]
+        );
     }
 
     public function execute(): OrderDetailInterface

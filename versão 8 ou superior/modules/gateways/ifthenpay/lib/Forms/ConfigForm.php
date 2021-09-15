@@ -9,16 +9,18 @@ if (!defined("WHMCS")) {
 }
 
 use Smarty;
-use WHMCS\Database\Capsule;
 use Illuminate\Container\Container;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\Callback;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpaySql;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpayUpgrade;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Form;
+use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 
 abstract class ConfigForm
 {
@@ -28,11 +30,10 @@ abstract class ConfigForm
     protected $ifthenpayUserAccount;
     protected $activatedCallback;
     protected $paymentMethodNameAlias;
-    protected $utility;
+    protected $configGatewaysRepository;
     protected $callback;
     protected $ifthenpaySql;
-
-
+    protected $utility;
     protected $paymentMethod;
     protected $form;
     protected $gatewayDataBuilder;
@@ -43,31 +44,35 @@ abstract class ConfigForm
     protected $hasCallback = true;
     private $ifthenpayUpgrade;
     private $smarty;
+    protected $ifthenpayLogger;
 
     public function __construct(
         Container $ioc,
         array $gatewayVars,
         Gateway $gateway, 
         GatewayDataBuilder $gatewayDataBuilder, 
-        Utility $utility, 
+        ConfigGatewaysRepositoryInterface $configGatewaysRepository,
+        Utility $utility,
         Callback $callback,
         IfthenpaySql $ifthenpaySql,
         IfthenpayUpgrade $ifthenpayUpgrade,
-        Smarty $smarty
+        Smarty $smarty,
+        IfthenpayLogger $ifthenpayLogger
     )
     {
         $this->ioc = $ioc;
         $this->gatewayVars = $gatewayVars;
         $this->backofficeKey = $this->gatewayVars['backofficeKey'];
+        $this->configGatewaysRepository = $configGatewaysRepository;
         $this->utility = $utility;
         $this->callback = $callback;
         $this->ifthenpaySql = $ifthenpaySql;
-        $this->callbackData = $this->utility->getCallbackData($this->paymentMethod);
-        $this->ifthenpayUserAccount = $this->utility->getIfthenpayUserAccount($this->paymentMethod);
-        $this->activatedCallback = $this->utility->getActivatedCallback($this->paymentMethod);
-        $this->form = $this->ioc->makeWith(Form::class, ['paymentMethod' => $this->paymentMethod, 'paymentMethodNameAlias' => $this->paymentMethodNameAlias]);
-
-
+        $this->callbackData = $this->configGatewaysRepository->getCallbackData($this->paymentMethod);
+        $this->ifthenpayUserAccount = $this->configGatewaysRepository->getIfthenpayUserAccount($this->paymentMethod);
+        $this->activatedCallback = $this->configGatewaysRepository->getActivatedCallback($this->paymentMethod);
+        $this->form = $this->ioc->makeWith(
+            Form::class, ['paymentMethod' => $this->paymentMethod, 'paymentMethodNameAlias' => method_exists($this, 'getPaymentMethodNameAlias') ? $this->getPaymentMethodNameAlias() : $this->paymentMethodNameAlias]
+        );
         $this->gatewayDataBuilder = $gatewayDataBuilder;
         $this->ifthenpayGateway = $gateway;
         $this->ifthenpayGateway->setAccount($this->ifthenpayUserAccount);
@@ -75,65 +80,81 @@ abstract class ConfigForm
         $this->configValues = $this->checkConfigValues();
         $this->ifthenpayUpgrade = $ifthenpayUpgrade;
         $this->smarty = $smarty;
+        $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger->getChannelBackofficeConst($this->paymentMethod))->getLogger();
     }
 
     protected function addSandboxAndActivateCallback(): void {
         $this->form->add($this->ioc->makeWith(Input::class, [
-            'friendlyName' => 'Sandbox Mode',
+            'friendlyName' => \AdminLang::trans('sandboxMode'),
             'type' => 'yesno',
             'name' => 'sandboxMode',
-            'description' => 'Tick to enable sandbox mode',
+            'description' => \AdminLang::trans('sandboxModeDescription'),
         ]));
+        $this->ifthenpayLogger->info('sandbox mode input added with success to form');
         $this->form->add($this->ioc->makeWith(Input::class, [
-            'friendlyName' => 'Activate Callback',
+            'friendlyName' => \AdminLang::trans('callbackActivate'),
             'type' => 'yesno',
             'name' => 'activateCallback',
-            'description' => 'Tick to activate callback',
+            'description' => \AdminLang::trans('callbackActivateDescription'),
         ]));
+        $this->ifthenpayLogger->info('activate callback input added with success to form');
     }
 
     private function addCallbackInfoToConfigForm(): void
     {
         if ($this->activatedCallback) {
-            $btn = '<button type="button" class="btn btn-success">Callback activated</button>';
+            $btn = '<button type="button" class="btn btn-success">' . \AdminLang::trans('callbackActivated') . '</button>';
         } else {
-            $btn = '<button type="button" class="btn btn-danger">Callback not activated</button>';
+            $btn = '<button type="button" class="btn btn-danger">' . \AdminLang::trans('callbackNotActivated') . '</button>';
         }
+        $this->ifthenpayLogger->info('callback activated label added with success', ['activatedCallback' => $this->activatedCallback]);
         $this->form->add($this->ioc->makeWith(Input::class, [
             'type' => 'System',
             'name' => 'UsageNotes',
-            'value' =>  $btn . '<br>' . 'Anti-phishing key: <strong>' . $this->callbackData[0] . 
-                '</strong><br>' . 'Callback Url: <strong>' . $this->callbackData[1] . '</strong>'
+            'value' =>  $btn . '<br>' . \AdminLang::trans('antiPhishingKey') . $this->callbackData[0] . 
+                '</strong><br>' . \AdminLang::trans('urlCallback') . $this->callbackData[1] . '</strong>'
         ]));
+        $this->ifthenpayLogger->info('callback data info added with success', ['urlCallback' => $this->callbackData[1], 'antiPhishingKey' => $this->callbackData[0]]);
     }
 
     private function getIfthenpayUserAccountFromWebservice(): void
     {
-        $this->ifthenpayGateway->authenticate($this->backofficeKey);
-        $this->ifthenpayUserAccount = $this->ifthenpayGateway->getAccount($this->paymentMethod);
-        if (empty($this->ifthenpayUserAccount)) {
-            $this->form->add($this->ioc->makeWith(Input::class, [
-                'type' => 'System',
-                'name' => 'UsageNotes',
-                'value' =>  '<button type="button" class="btn btn-danger">Não tem conta ' . ucfirst($this->paymentMethod) . 
-                    '</button>' . '<br><br>' . 'Solicite a criação de conta ' . ucfirst($this->paymentMethod) . 
-                    ':<br><a class="btn btn-success" href="mailto:suporte@ifthenpay.com">Enviar email</a><br><br>
-                    Após receber os dados da nova conta, atualize os seus dados abaixo:<br> 
-                    <button onClick="window.location.reload();" type="button" class="btn btn-success">Atualizar Dados</button>'
-            ]));
+        try {
+            $this->ifthenpayGateway->authenticate($this->backofficeKey);
+            $this->ifthenpayLogger->info('backoffice key authenticated with success', ['backofficeKey' => $this->backofficeKey]);
+            $this->ifthenpayUserAccount = $this->ifthenpayGateway->getAccount($this->paymentMethod);
+            $this->ifthenpayLogger->info('user account retrieved with success', ['userAccount' => $this->ifthenpayUserAccount]);
+            if (empty($this->ifthenpayUserAccount)) {
+                $this->form->add($this->ioc->makeWith(Input::class, [
+                    'type' => 'System', 
+                    'name' => 'UsageNotes', 
+                    'value' =>  '<button type="button" class="btn btn-danger">' . \AdminLang::trans('notAccount' . ucfirst($this->paymentMethod)) . 
+                        '</button>' . '<br><br>' . \AdminLang::trans('requestAccount' . ucfirst($this->paymentMethod)) . 
+                        ':<br><a class="btn btn-success" href="mailto:suporte@ifthenpay.com">' . \AdminLang::trans('sendEmailNewAccount') . '</a><br><br>' .
+                        \AdminLang::trans('updateAccountDescription') . '<br> 
+                        <button onClick="window.location.reload();" type="button" class="btn btn-success">' . \AdminLang::trans('updateAccount') . '</button>'
+                ]));
+                $this->ifthenpayLogger->info('user with no account field notification added to form with success');
+            }
+            
+        } catch (\Throwable $th) {
+            $this->ifthenpayLogger->error('error authenticating backoffice', ['backofficeKey' => $this->backofficeKey, 'exception' => $th]);
+            throw new BackOfficeException($th->getMessage());
         }
+        
     }
 
     private function saveIfthenpayUserAccount(): void
     {
-        Capsule::table('tblpaymentgateways')->insert([
+        $this->configGatewaysRepository->create(
             [
                 'gateway' => $this->paymentMethod, 
                 'setting' => 'userAccount', 
                 'value' => serialize($this->ifthenpayUserAccount), 
                 'order' => 0
-            ],
-        ]);
+            ]
+        );
+        $this->ifthenpayLogger->info('ifthenpay user account saved with success', ['userAccount' => $this->ifthenpayUserAccount]);
     }
 
     private function renderCallbackInfo(): void
@@ -146,11 +167,12 @@ abstract class ConfigForm
     protected function addBackofficeKeyInputToForm(): void
     {
         $this->form->add($this->ioc->makeWith(Input::class, [
-            'friendlyName' => 'Backoffice key',
+            'friendlyName' => \AdminLang::trans('backofficeKey'),
             'type' => 'text',
             'name' => 'backofficeKey',
-            'description' => 'Enter your backoffice key provided by Ifthenpay',
+            'description' => \AdminLang::trans('backofficeKeyDescription'),
         ]));
+        $this->ifthenpayLogger->info('backoffice key input added to form with success');
     }
 
     protected function addUpgradeModuleToForm(): void
@@ -162,14 +184,19 @@ abstract class ConfigForm
                     'updateSystemIcon' => $this->utility->getSvgUrl() . '/system-update.svg',
                     'upgradeModuleBulletPoints' => $needUpgrade['upgrade'] ? $needUpgrade['body'] : '',
                     'moduleUpgradeUrlDownload' => $needUpgrade['upgrade'] ? $needUpgrade['download'] : '',
-                    'updatedModuleIcon' => $this->utility->getSvgUrl() . '/updated.svg'
+                    'updatedModuleIcon' => $this->utility->getSvgUrl() . '/updated.svg',
+                    'ifthenpayNewUpdateTitle' => \ADMINLANG::trans('ifthenpayNewUpdateTitle'),
+                    'downloadUpdateIfthenpay' => \ADMINLANG::trans('downloadUpdateIfthenpay'),
+                    'ifthenpayNoUpdate' => \ADMINLANG::trans('ifthenpayNoUpdate')
                 ];  
                 $this->smarty->assign($data);
                 $html = $this->smarty->fetch('file:' . ROOTDIR . '\modules\gateways\ifthenpay\templates\ifthenpayUpgradeModule.tpl');
                 $this->form->add($this->ioc->makeWith(Input::class, [
                     "friendlyName" => "", "type" => "html", 'options' => null, 'description' => $html
-                ]));            
+                ]));
+                $this->ifthenpayLogger->info('upgrade module notification added with success to form', ['needUpgrade' => $$needUpgrade]);            
         } catch (\Throwable $th) {
+            $this->ifthenpayLogger->error('error checking upgrade module notification', ['exception' => $th]);
             throw $th;
         }
         
@@ -178,7 +205,7 @@ abstract class ConfigForm
     protected function addToOptions(): void
     {
         $this->options = [
-            'default' => 'Choose Entity'
+            'default' => \AdminLang::trans('multibancoEntityDescription')
         ];
         foreach ($this->ifthenpayGateway->getEntidadeSubEntidade($this->paymentMethod) as $key => $value) {
             if (is_array($value)) {
@@ -191,6 +218,10 @@ abstract class ConfigForm
                 $this->options[$value] = $value;
             }
         }
+        $this->ifthenpayLogger->info('ifthenpay account options retrieved with success', [
+                'options' => $this->options
+            ]
+        );
     }
 
     protected function setGatewayBuilderData(): void
@@ -201,23 +232,35 @@ abstract class ConfigForm
     protected function saveCallback(string $url, string $antiPhishingKey, bool $activateCallback)
     {
         try {
-            Capsule::table('tblpaymentgateways')
-            ->updateOrInsert(
+            $this->configGatewaysRepository->createOrUpdate(
                 ['gateway' => $this->paymentMethod, 'setting' => 'urlCallback'],
                 ['value' => $url]
             );
-            Capsule::table('tblpaymentgateways')
-            ->updateOrInsert(
+            $this->configGatewaysRepository->createOrUpdate(
                 ['gateway' => $this->paymentMethod, 'setting' => 'chaveAntiPhishing'],
                 ['value' => $antiPhishingKey]
             );
-            Capsule::table('tblpaymentgateways')
-            ->updateOrInsert(
+            $this->configGatewaysRepository->createOrUpdate(
                 ['gateway' => $this->paymentMethod, 'setting' => 'activatedCallback'],
                 ['value' => $activateCallback ? true : false]
             );
             $this->callbackData = [$antiPhishingKey, $url];
+            $this->ifthenpayLogger->info('callback activation data saved with success', [
+                    'paymentMethod' => $this->paymentMethod,
+                    'url' => $url,
+                    'antiPhishingKey' =>$antiPhishingKey,
+                ]
+            );
         } catch (\Throwable $th) {
+            $this->ifthenpayLogger->error('error saving callback activation data in database', [
+                    'paymentMethod' => $this->paymentMethod,
+                    'url' => $url,
+                    'antiPhishingKey' =>$antiPhishingKey,
+                    'activateCallback' => $activateCallback,
+                    'exception' => $th
+
+                ]
+            );
             throw $th;
         }
     }
@@ -238,6 +281,7 @@ abstract class ConfigForm
                 }
             } else {
                 $this->ifthenpaySql->setPaymentMethod($this->paymentMethod)->install();
+                $this->ifthenpayLogger->info('payments tables created with success in database');
                 $this->addPaymentInputsToForm();
                 $this->processForm();
                 $this->renderCallbackInfo();
@@ -245,7 +289,8 @@ abstract class ConfigForm
             }
         } else {
             $this->addBackofficeKeyInputToForm();
-        }    
+        }
+        $this->ifthenpayLogger->info('backoffice payment method form build with success');    
         return $this->form->render();
     }
 
@@ -262,9 +307,22 @@ abstract class ConfigForm
                 if (empty($this->callbackData) || !$this->activatedCallback) {
                     $this->activatedCallback = $activateCallback;
                     $this->saveCallback($ifthenpayCallback->getUrlCallback(), $ifthenpayCallback->getChaveAntiPhishing(), $activateCallback);
-                }               
+                }
+                $this->ifthenpayLogger->info('callback data build with success', [
+                        'activateCallback' => $activateCallback,
+                        'urlCallback' => $ifthenpayCallback->getUrlCallback(),
+                        'antiPhishingKey' => $ifthenpayCallback->getChaveAntiPhishing()
+                    ]
+                );               
             }
         } catch (\Throwable $th) {
+            $this->ifthenpayLogger->error('error building callback data', [
+                    'activateCallback' => $activateCallback,
+                    'data' => $this->gatewayDataBuilder,
+                    'paymentMethod' => $this->paymentMethod,
+                    'exception' => $th
+                ]
+            );
             throw $th;
         }
     }

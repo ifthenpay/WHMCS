@@ -8,12 +8,19 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Config\InstallerInterface;
 
 abstract class IfthenpayInstall implements InstallerInterface
 {
-
     protected $paymentMethod;
+    protected $ifthenpayLogger;
+
+    public function __construct(IfthenpayLogger $ifthenpayLogger)
+	{
+        $this->ifthenpayLogger = $ifthenpayLogger;
+	}
+    
 
     /**
      * Set the value of paymentMethod
@@ -23,6 +30,7 @@ abstract class IfthenpayInstall implements InstallerInterface
     public function setPaymentMethod($paymentMethod)
     {
         $this->paymentMethod = $paymentMethod;
+        $this->ifthenpayLogger = $this->ifthenpayLogger->setChannel($this->ifthenpayLogger->getChannelBackofficeConst($this->paymentMethod))->getLogger();
 
         return $this;
     }

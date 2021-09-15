@@ -17,7 +17,6 @@ class CallbackStrategy
 {
     private $callbackOffline;
     private $callbackOnline;
-    private $whmcs;
 
 	public function __construct(CallbackOffline $callbackOffline, CallbackOnline $callbackOnline)
 	{
@@ -30,27 +29,13 @@ class CallbackStrategy
         if ($paymentType === 'offline') {
             return $this->callbackOffline
                 ->setPaymentMethod($paymentMethod)
-                ->setWhmcs($this->whmcs)
                 ->setRequest($_GET)
                 ->process();
         } else {
             return $this->callbackOnline
             ->setPaymentMethod($paymentMethod)
-            ->setWhmcs($this->whmcs)
             ->setRequest($_GET)
             ->process();
         }
-    }
-
-    /**
-     * Set the value of whmcs
-     *
-     * @return  self
-     */ 
-    public function setWhmcs($whmcs)
-    {
-        $this->whmcs = $whmcs;
-
-        return $this;
     }
 }

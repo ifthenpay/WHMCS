@@ -4,7 +4,13 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Session;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Facades\PaymentFacade;
+use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
+use WHMCS\Module\Gateway\Ifthenpay\Strategy\Form\IfthenpayConfigForms;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
 /**
  * Define module related meta data.
@@ -19,7 +25,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
 function mbway_MetaData()
 {
     return array(
-        'DisplayName' => 'Mbway',
+        'DisplayName' => 'MB WAY',
         'APIVersion' => '1.1', // Use API Version 1.1
     );
 }
@@ -48,16 +54,42 @@ function mbway_MetaData()
 function mbway_config()
 {
     try {
-        return (new Ifthenpay('mbway'))->getConfigForm();
+        $ioc = new Ifthenpay('mbway');
+        $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MBWAY)->getLogger();
+       return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
     } catch (\Throwable $th) {
-        throw $th;
+        if($th instanceof BackOfficeException) {
+            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => 'mbway', 'setting' => 'backofficeKey']);
+            $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
+            Session::setAndRelease("ConfigurationError", $th->getMessage());
+            $redirect = "error=mbway#m_mbway";
+            redir($redirect);
+        }
+        $ifthenpayLogger->alert($th->getMessage(), ['exception' => $th]);
     }
 }
 function mbway_link($params) {
     try {
-        (new Ifthenpay('mbway'))->getPaymentData($params);
+        $ifthenpayContainer = (new Ifthenpay('mbway'))->getIoc();
+        $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
+        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+        if (!$_POST['mbwayPhoneNumber'] && !$_COOKIE['mbwayPhoneNumber']) {
+            throw new \Exception(Lang::trans('mbwayPhoneRequired'));
+        } else {
+            $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod('mbway')->setParams($params)->execute();
+        }
     } catch (\Throwable $th) {
-        throw $th;
+        logTransaction('mbway', $th->getMessage(), "Error", $params);
+        $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
+                'paymentMethod' => 'mbway',
+                'requestPost' => $_POST,
+                'cookie' => $_COOKIE,
+                'params' => $params,
+                'exception' => $th
+            ]
+        );
+        return '<div class=\"alert alert-danger\">' . $th->getMessage() . '</div>';
     }
 }
 

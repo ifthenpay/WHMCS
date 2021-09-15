@@ -9,7 +9,7 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
-use WHMCS\Module\Gateway\Ifthenpay\Factory\Request\RequestFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 
 class Callback
@@ -22,19 +22,21 @@ class Callback
     private $backofficeKey;
     private $entidade;
     private $subEntidade;
+    private $ifthenpayLogger;
 
     private $urlCallbackParameters = [
-        'multibanco' => '?payment=multibanco&chave=[CHAVE_ANTI_PHISHING]&entidade=[ENTIDADE]&referencia=[REFERENCIA]&valor=[VALOR]',
-        'mbway' => '?payment=mbway&chave=[CHAVE_ANTI_PHISHING]&referencia=[REFERENCIA]&id_pedido=[ID_TRANSACAO]&valor=[VALOR]&estado=[ESTADO]',
-        'payshop' => '?payment=payshop&chave=[CHAVE_ANTI_PHISHING]&id_cliente=[ID_CLIENTE]&id_transacao=[ID_TRANSACAO]&referencia=[REFERENCIA]&valor=[VALOR]&estado=[ESTADO]',
+        'multibanco' => '?chave=[CHAVE_ANTI_PHISHING]&entidade=[ENTIDADE]&referencia=[REFERENCIA]&valor=[VALOR]',
+        'mbway' => '?chave=[CHAVE_ANTI_PHISHING]&referencia=[REFERENCIA]&id_pedido=[ID_TRANSACAO]&valor=[VALOR]&estado=[ESTADO]',
+        'payshop' => '?chave=[CHAVE_ANTI_PHISHING]&id_cliente=[ID_CLIENTE]&id_transacao=[ID_TRANSACAO]&referencia=[REFERENCIA]&valor=[VALOR]&estado=[ESTADO]',
     ];
 
-    public function __construct(GatewayDataBuilder $data, WebService $webservice)
+    public function __construct(GatewayDataBuilder $data, WebService $webservice, IfthenpayLogger $ifthenpayLogger)
     {
         $this->webservice = $webservice;
         $this->backofficeKey = $data->getData()->backofficeKey;
         $this->entidade = $data->getData()->entidade;
         $this->subEntidade = $data->getData()->subEntidade;
+        $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_CALLBACK)->getLogger();
     }
 
     private function createAntiPhishing(): void
@@ -63,7 +65,7 @@ class Callback
 
         $response = $request->getResponse();
         if (!$response->getStatusCode() === 200 && !$response->getReasonPhrase()) {
-            throw new \Exception("Error Activating Callback");
+            throw new \Exception(\Lang::trans('errorCallbackActivation'));
         }
     }
 
@@ -71,8 +73,22 @@ class Callback
     {
         $this->createAntiPhishing();
         $this->createUrlCallback($paymentType, $moduleLink);
+        $this->ifthenpayLogger->info('callback data created with sucess', [
+                'paymentType' => $paymentType,
+                'chaveAntiPhishing' => $this->chaveAntiPhishing,
+                'callbackUrl' => $this->urlCallback,
+            ]
+        );
         if ($activateCallback) {
             $this->activateCallback();
+            $this->ifthenpayLogger->info('callback activated with sucess', [
+                    'chave' => $this->backofficeKey,
+                    'entidade' => $this->entidade,
+                    'subentidade' => $this->subEntidade,
+                    'apKey' => $this->chaveAntiPhishing,
+                    'urlCb' => $this->urlCallback,
+                ]
+            );
         }
     }
 
