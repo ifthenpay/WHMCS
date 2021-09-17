@@ -122,12 +122,15 @@ add_hook('ClientAreaHeaderOutput', 1, function($vars) use ($hooksStrategy, $util
 
 add_hook('ClientAreaFooterOutput', 1, function($vars) use ($utility, $mix, $ifthenpayModuleApp, $ifthenpayData, $ifthenpayLogger) {
     try {
-        //$systemUrl = $utility->getSystemUrl();
-        $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
+        $mbwayKey = GatewaySetting::getForGateway('mbway')['mbwayKey'];
         $orderId = $_SESSION["orderdetails"]["InvoiceID"];
-        $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . 'modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&sk=' . 
-            $tokenExtra->encript($orderId . 'cancelMbwayOrder', GatewaySetting::getForGateway('mbway')['mbwayKey']);
-        $ifthenpayData['orderId'] = $orderId;
+        if ($mbwayKey && $orderId) {
+            $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
+            $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . 'modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&sk=' . 
+                $tokenExtra->encript($orderId . 'cancelMbwayOrder', $mbwayKey);
+            $ifthenpayData['orderId'] = $orderId;
+        }
+        
         if ($vars['filename'] === 'cart' && $_REQUEST['a'] === 'checkout') {
             $ifthenpayLogger->info('add checkoutPage.js and mbwayPhoneInput.css to footer', ['hook' => 'ClientAreaFooterOutput']);
             return '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('mbwayPhoneInput.css') . '">
@@ -175,11 +178,13 @@ add_hook('ClientAreaPageCart', 1, function($vars) use ($hooksStrategy, $ifthenpa
 
 add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($hooksStrategy, $gateway, $utility, $mix, $ifthenpayData, $ifthenpayLogger, $ifthenpayModuleApp) {
     try {
-        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod'])) {
+        $mbwayKey = GatewaySetting::getForGateway('mbway')['mbwayKey'];
+        $orderId = $vars['invoiceid'];
+        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod']) && $mbwayKey && $orderId) {
             $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
             $orderId = $vars['invoiceid'];
             $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . 'modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&sk=' . 
-                $tokenExtra->encript($orderId . 'cancelMbwayOrder', GatewaySetting::getForGateway('mbway')['mbwayKey']);
+                $tokenExtra->encript($orderId . 'cancelMbwayOrder', $mbwayKey);
             $ifthenpayData['orderId'] = $orderId;
             $vars['notes'] .='<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
             <script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
