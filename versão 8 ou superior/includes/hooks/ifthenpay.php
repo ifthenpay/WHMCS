@@ -180,8 +180,7 @@ add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($hooksStrategy, $g
     try {
         $mbwayKey = GatewaySetting::getForGateway('mbway')['mbwayKey'];
         $orderId = $vars['invoiceid'];
-        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod']) && $mbwayKey && $orderId) {
-            $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
+        $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
             $orderId = $vars['invoiceid'];
             $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . 'modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&sk=' . 
                 $tokenExtra->encript($orderId . 'cancelMbwayOrder', $mbwayKey);
@@ -190,9 +189,11 @@ add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($hooksStrategy, $g
             <script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
             <script src="'. $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>';
             $ifthenpayLogger->info('add ifthenpayViewInvoice.css and invoiceViewPage.js to $vars[notes]', ['hook' => 'ClientAreaPageViewInvoice']);
+        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod']) && $mbwayKey && $orderId) {
             $vars['notes'] .= $hooksStrategy->execute('clientCheckoutConfirmHook', $vars)->execute();
             return $vars;
         }
+        return $vars;
     } catch (\Throwable $th) {
         $ifthenpayLogger->warning($th->getMessage(), [
                 'hook' => 'ClientAreaPageCart',
