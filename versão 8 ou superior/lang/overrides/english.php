@@ -4087,6 +4087,7 @@ $_LANG['mbwayExpireTitle'] = "If you do not confirm payment in 5 minutes, the pa
 $_LANG['mbwayOrderPaid'] = "Order Paid!";
 $_LANG['mbwayPaymentConfirmed'] = "Payment order confirmed, please check your email.";
 $_LANG['ifthenpayPayBy'] = 'Pay by ';
+$_LANG['mbwayPhoneNumber'] = 'Mbway Phone Number';
 
 
 

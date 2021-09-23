@@ -4089,5 +4089,6 @@ $_LANG['mbwayPaymentConfirmed'] = "Pagamento confirmado, por favor verifique o s
 $_LANG['ifthenpayNewUpdateTitle'] = "Nova Atualização disponível!";
 $_LANG['ifthenpayNoUpdate'] = "O Módulo está Atualizado!";
 $_LANG['ifthenpayPayBy'] = 'Pagamento por ';
+$_LANG['mbwayPhoneNumber'] = 'Telemóvel MB WAY';
 
 ////////// End of portuguese-pt language file.  Do not place any translation strings below this line!

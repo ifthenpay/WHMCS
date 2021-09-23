@@ -4,12 +4,10 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Module\GatewaySetting;
 use WHMCS\Module\Gateway\ifthenpay\Utility\Mix;
 use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
-use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Hooks\HooksStrategy;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\MbwayCancelOrder;
@@ -38,9 +36,6 @@ add_hook('AdminAreaHeadOutput', 1, function($vars) use ($utility, $mix, $ifthenp
         if ($vars['filename'] === 'configgateways') {
             $ifthenpayLogger->info('add ifthenpayPaymentMethodSetup.css to header', ['hook' => 'AdminAreaHeadOutput']);
             return '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayPaymentMethodSetup.css') . '">';
-        } else if ($vars['filename'] === 'invoices' || $vars['filename'] === 'ordersadd') {
-            $ifthenpayLogger->info('add mbwayPhoneInput.css to header', ['hook' => 'AdminAreaHeadOutput']);
-            return '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('mbwayPhoneInput.css') . '">';
         }
     } catch (\Throwable $th) {
         $ifthenpayLogger->warning($th->getMessage(), [
@@ -58,19 +53,9 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) use ($utility, $systemUrl, 
             $ifthenpayLogger->info('add adminConfigPage.js to footer', ['hook' => 'AdminAreaFooterOutput']);
             return '<script type="text/javascript">var ifthenpayData = '. $ifthenpayData .'</script> 
                 <script type="text/javascript" src="'. $utility->getJsUrl() . '/' . $mix->create('adminConfigPage.js') . '"></script>';
-        } else if ($vars['filename'] === 'invoices') {
-            $ifthenpayLogger->info('add adminInvoicePage.js to footer', ['hook' => 'AdminAreaFooterOutput']);
-            return '<script type="text/javascript">var ifthenpayData = '. $ifthenpayData .'</script>
-                <script type="text/javascript" src="'. $utility->getJsUrl() . '/' . $mix->create('adminInvoicePage.js') . '"></script>';
-        } else if ($vars['filename'] === 'ordersadd') {
-            $ifthenpayLogger->info('add adminOrderAddPage.js to footer', ['hook' => 'AdminAreaFooterOutput']);
-            return '<script type="text/javascript">var ifthenpayData = '. $ifthenpayData .'</script>
-                <script type="text/javascript" src="'. $utility->getJsUrl() . '/' . $mix->create('adminOrderAddPage.js') . '"></script>';
-        } else {
-            return '';
         }
     } catch (\Throwable $th) {
-        $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_HOOKS)->getLogger()->warning($th->getMessage(), [
+        $ifthenpayLogger->warning($th->getMessage(), [
                 'ifthenpayData' => $ifthenpayData,
                 'hook' => 'AdminAreaFooterOutput',
                 'vars' => $vars,
@@ -80,37 +65,11 @@ add_hook('AdminAreaFooterOutput', 1, function($vars) use ($utility, $systemUrl, 
     }   
 });
 
-add_hook('ShoppingCartCheckoutCompletePage', 1, function($vars) use ($gateway, $hooksStrategy, $ifthenpayLogger) {
-    try {
-        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod'])) {
-            return $hooksStrategy->execute('clientCheckoutConfirmHook', $vars)->execute();
-        }
-    } catch (\Throwable $th) {
-        $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_HOOKS)->getLogger()->warning($th->getMessage(), [
-                'paymentMethod' => $vars['paymentMethod'],
-                'hook' => 'ShoppingCartCheckoutCompletePage',
-                'vars' => $vars,
-                'exception' => $th
-            ]
-        );
-    }
-});
-
 add_hook('ClientAreaHeaderOutput', 1, function($vars) use ($hooksStrategy, $utility, $mix, $ifthenpayLogger) {
-    try {
-        if ($vars['filename'] === 'clientarea' && $_REQUEST['action'] === 'masspay' && $_REQUEST['all'] === 'true') {
-            $ifthenpayLogger->info('add ifthenpayViewInvoice.css and mbwayPhoneInput.css to header', ['hook' => 'ClientAreaHeaderOutput']);
-            return '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
-            <link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('mbwayPhoneInput.css') . '">';
-        }
-        if ($vars['filename'] === 'clientarea' && $_REQUEST['action'] === 'addfunds') {
-            $ifthenpayLogger->info('add ifthenpayViewInvoice.css and mbwayPhoneInput.css to header', ['hook' => 'ClientAreaHeaderOutput']);
-            return '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
-            <link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('mbwayPhoneInput.css') . '">';
-        }
+    try {        
         return $hooksStrategy->execute('clientCheckoutHook', $vars)->executeStyles();
     } catch (\Throwable $th) {
-        $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_HOOKS)->getLogger()->warning($th->getMessage(), [
+        $ifthenpayLogger->warning($th->getMessage(), [
                 'paymentMethod' => $vars['paymentMethod'],
                 'hook' => 'ClientAreaHeaderOutput',
                 'vars' => $vars,
@@ -118,56 +77,13 @@ add_hook('ClientAreaHeaderOutput', 1, function($vars) use ($hooksStrategy, $util
             ]
         );
     }
-});
-
-add_hook('ClientAreaFooterOutput', 1, function($vars) use ($utility, $mix, $ifthenpayModuleApp, $ifthenpayData, $ifthenpayLogger) {
-    try {
-        $mbwayKey = GatewaySetting::getForGateway('mbway')['mbwayKey'];
-        $orderId = $_SESSION["orderdetails"]["InvoiceID"];
-        if ($mbwayKey && $orderId) {
-            $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
-            $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . 'modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&sk=' . 
-                $tokenExtra->encript($orderId . 'cancelMbwayOrder', $mbwayKey);
-            $ifthenpayData['orderId'] = $orderId;
-        }
-        
-        if ($vars['filename'] === 'cart' && $_REQUEST['a'] === 'checkout') {
-            $ifthenpayLogger->info('add checkoutPage.js and mbwayPhoneInput.css to footer', ['hook' => 'ClientAreaFooterOutput']);
-            return '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('mbwayPhoneInput.css') . '">
-                <script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
-                <script src="'. $utility->getJsUrl() . '/' . $mix->create('checkoutPage.js') . '" type="text/javascript"></script>';
-        }
-        if ($vars['filename'] === 'cart' && $_REQUEST['a'] === 'complete') {
-            $ifthenpayLogger->info('add mbwayCountdownConfirmPage.js to footer', ['hook' => 'ClientAreaFooterOutput']);
-            return '<script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
-                <script src="'. $utility->getJsUrl() . '/' . $mix->create('mbwayCountdownConfirmPage.js') . '" type="text/javascript"></script>';
-        }
-
-        if ($vars['filename'] === 'clientarea' && $_REQUEST['action'] === 'masspay' && $_REQUEST['all'] === 'true') {
-            $ifthenpayLogger->info('add invoiceViewPage.js to footer', ['hook' => 'ClientAreaFooterOutput']);
-            return  '<script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
-            <script src="'. $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>';
-        }
-        if ($vars['filename'] === 'clientarea' && $_REQUEST['action'] === 'addfunds') {
-            $ifthenpayLogger->info('add addFundsPage.js to footer', ['hook' => 'ClientAreaFooterOutput']);
-            return  '<script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
-            <script src="'. $utility->getJsUrl() . '/' . $mix->create('addFundsPage.js') . '" type="text/javascript"></script>';
-        }
-    } catch (\Throwable $th) {
-        $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_HOOKS)->getLogger()->warning($th->getMessage(), [
-                'hook' => 'ClientAreaFooterOutput',
-                'vars' => $vars,
-                'exception' => $th
-            ]
-        );
-    }
- });
+});   
 
 add_hook('ClientAreaPageCart', 1, function($vars) use ($hooksStrategy, $ifthenpayLogger) {
     try {
         return $hooksStrategy->execute('clientCheckoutHook', $vars)->execute();
     } catch (\Throwable $th) {
-        $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_HOOKS)->getLogger()->warning($th->getMessage(), [
+        $ifthenpayLogger->warning($th->getMessage(), [
                 'hook' => 'ClientAreaPageCart',
                 'vars' => $vars,
                 'exception' => $th
@@ -178,18 +94,7 @@ add_hook('ClientAreaPageCart', 1, function($vars) use ($hooksStrategy, $ifthenpa
 
 add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($hooksStrategy, $gateway, $utility, $mix, $ifthenpayData, $ifthenpayLogger, $ifthenpayModuleApp) {
     try {
-        $mbwayKey = GatewaySetting::getForGateway('mbway')['mbwayKey'];
-        $orderId = $vars['invoiceid'];
-        $tokenExtra = $ifthenpayModuleApp->getIoc()->make(TokenExtra::class);
-            $orderId = $vars['invoiceid'];
-            $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . 'modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&sk=' . 
-                $tokenExtra->encript($orderId . 'cancelMbwayOrder', $mbwayKey);
-            $ifthenpayData['orderId'] = $orderId;
-            $vars['notes'] .='<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
-            <script type="text/javascript">var ifthenpayData='. json_encode($ifthenpayData) . '</script>
-            <script src="'. $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>';
-            $ifthenpayLogger->info('add ifthenpayViewInvoice.css and invoiceViewPage.js to $vars[notes]', ['hook' => 'ClientAreaPageViewInvoice']);
-        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod']) && $mbwayKey && $orderId) {
+        if ($gateway->checkIfthenpayPaymentMethod($vars['paymentmethod']) && $vars['invoiceid']) {
             $vars['notes'] .= $hooksStrategy->execute('clientCheckoutConfirmHook', $vars)->execute();
             return $vars;
         }

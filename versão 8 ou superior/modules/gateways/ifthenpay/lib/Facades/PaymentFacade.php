@@ -46,7 +46,7 @@ class PaymentFacade
         
         if (empty($this->paymentData)) {
             return $this->ifthenpayPaymentReturn->setParams($this->params)->execute();
-        } else if ((isset($_POST['mbwayPhoneNumber']) && $_POST['mbwayPhoneNumber']  !== $this->paymentData['telemovel']) || (isset($_COOKIE['mbwayPhoneNumber']) && $_COOKIE['mbwayPhoneNumber'] !== $this->paymentData['telemovel'])) {
+        } else if ((isset($_POST['mbwayPhoneNumber']) && $_POST['mbwayPhoneNumber']  !== $this->paymentData['telemovel'])) {
             return $this->ifthenpayPaymentReturn->setParams($this->params)->execute();
         } 
         else {
