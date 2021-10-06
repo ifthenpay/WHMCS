@@ -4090,5 +4090,7 @@ $_LANG['ifthenpayNewUpdateTitle'] = "Nova Atualização disponível!";
 $_LANG['ifthenpayNoUpdate'] = "O Módulo está Atualizado!";
 $_LANG['ifthenpayPayBy'] = 'Pagamento por ';
 $_LANG['mbwayPhoneNumber'] = 'Telemóvel MB WAY';
+$_LANG['orderTitle'] = 'Nº do Pedido';
+
 
 ////////// End of portuguese-pt language file.  Do not place any translation strings below this line!
