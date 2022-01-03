@@ -8,39 +8,57 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Module\Gateway\ifthenpay\Utility\Token;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Status;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Base\PaymentBase;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ClientRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\CurrencieRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\StatusInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\ConvertEurosInterface;
 
 class CCardBase extends PaymentBase
 {
     
-    protected $paymentMethod = 'ccard';
-    private $token;
-    private $status;
+    protected $paymentMethod = Gateway::CCARD;
+    protected $convertEuros;
+    protected $status;
+    protected $currencieRepository;
+    protected $clientRepository;
+    
+    
 
     public function __construct(
         PaymentDataBuilder $paymentDefaultData,
         GatewayDataBuilder $gatewayBuilder,
         Gateway $ifthenpayGateway,
         array $whmcsGatewaySettings,
-        Utility $utility,
+        UtilityInterface $utility,
         RepositoryFactory $repositoryFactory,
         IfthenpayLogger $ifthenpayLogger,
-        Token $token = null,
-        Status $status = null,
+        TokenInterface $token,
+        StatusInterface $status,
+        ConvertEurosInterface $convertEuros,
         SmartyDataBuilder $smartyDefaultData = null
     ) {
-        parent::__construct($paymentDefaultData, $gatewayBuilder, $ifthenpayGateway, $whmcsGatewaySettings, $utility, $repositoryFactory, $ifthenpayLogger, $smartyDefaultData);
+        parent::__construct(
+            $paymentDefaultData, 
+            $gatewayBuilder, 
+            $ifthenpayGateway, 
+            $whmcsGatewaySettings, 
+            $utility, 
+            $repositoryFactory, 
+            $ifthenpayLogger, 
+            $smartyDefaultData
+        );
         $this->token = $token;
         $this->status = $status;
+        $this->convertEuros = $convertEuros;
     }
 
     protected function setGatewayBuilderData(): void
@@ -56,7 +74,6 @@ class CCardBase extends PaymentBase
     {
         $paymentData = [
             'requestId' => $this->paymentGatewayResultData->idPedido,
-            'paymentUrl' => $this->paymentGatewayResultData->paymentUrl,
             'order_id' => $this->paymentDefaultData->orderId, 
             'status' => 'pending' 
         ];

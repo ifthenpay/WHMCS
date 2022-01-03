@@ -9,6 +9,7 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Repositories\CCardRepository;
 use WHMCS\Module\Gateway\Ifthenpay\Repositories\MbWayRepository;
 use WHMCS\Module\Gateway\Ifthenpay\Repositories\PaymentRepository;
@@ -19,13 +20,13 @@ class RepositoryFactory extends Factory
 {    
     public function build(): PaymentRepository {
         switch (strtolower($this->type)) {
-            case 'multibanco':
+            case Gateway::MULTIBANCO:
                 return new MultibancoRepository();
-            case 'mbway':
+            case Gateway::MBWAY:
                 return new MbWayRepository();
-            case 'payshop':
+            case Gateway::PAYSHOP:
                 return new PayshopRepository();
-            case 'ccard':
+            case Gateway::CCARD:
                 return new CCardRepository();
             default:
                 throw new \Exception('Unknown Repository Class');

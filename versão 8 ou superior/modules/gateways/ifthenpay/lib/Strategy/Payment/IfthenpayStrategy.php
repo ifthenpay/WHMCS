@@ -8,11 +8,11 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\StrategyFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 
 require_once(__DIR__ . '/../../../../../../init.php');
 
@@ -30,7 +30,7 @@ class IfthenpayStrategy
     public function __construct(
         PaymentDataBuilder $paymentDataBuilder, 
         SmartyDataBuilder $smartyDataBuilder, 
-        Utility $utility, 
+        UtilityInterface $utility, 
         StrategyFactory $factory,
         IfthenpayLogger $ifthenpayLogger
     )
@@ -47,6 +47,9 @@ class IfthenpayStrategy
         $this->paymentDefaultData->setOrderId(strval($this->params['invoiceid']));
         $this->paymentDefaultData->setPaymentMethod($this->params['paymentmethod']);
         $this->paymentDefaultData->setTotalToPay(strval(isset($this->params['amount']) ? $this->params['amount'] : $this->params['total']->toNumeric()));
+        if ($this->params['currency']) {
+            $this->paymentDefaultData->setCurrency((string) $this->params['currency']);
+        }
         $this->ifthenpayLogger->info('payment default data set with success', [
                 'params' => $this->params,
                 'className' => get_class($this)

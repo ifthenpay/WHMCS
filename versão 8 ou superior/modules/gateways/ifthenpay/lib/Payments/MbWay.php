@@ -12,7 +12,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Payments\Payment;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentMethodInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
+use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 
 class MbWay extends Payment implements PaymentMethodInterface
 {
@@ -20,9 +20,9 @@ class MbWay extends Payment implements PaymentMethodInterface
     private $telemovel;
     private $mbwayPedido;
 
-    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, Webservice $webservice)
+    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, WebService $webService)
     {
-        parent::__construct($orderId, $valor, $dataBuilder, $webservice);
+        parent::__construct($orderId, $valor, $dataBuilder, $webService);
         $this->mbwayKey = $data->getData()->mbwayKey;
         $this->telemovel = $data->getData()->telemovel;
     }
@@ -43,7 +43,7 @@ class MbWay extends Payment implements PaymentMethodInterface
 
     private function setReferencia(): void
     {
-        $this->mbwayPedido = $this->webservice->postRequest(
+        $this->mbwayPedido = $this->webService->postRequest(
             'https://mbway.ifthenpay.com/IfthenPayMBW.asmx/SetPedidoJSON',
             [
                     'MbWayKey' => $this->mbwayKey,

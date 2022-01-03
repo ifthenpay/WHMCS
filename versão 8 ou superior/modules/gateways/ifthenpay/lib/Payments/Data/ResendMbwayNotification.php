@@ -47,11 +47,11 @@ class ResendMbwayNotification
         $orderId = $this->request['orderId'];
         $totalToPay = $this->request['orderTotalPay'];
         $paymentData = $this->gatewayDataBuilder
-            ->setMbwayKey(GatewaySetting::getForGateway('mbway')['mbwayKey'])
+            ->setMbwayKey(GatewaySetting::getForGateway(Gateway::MBWAY)['mbwayKey'])
             ->setTelemovel($this->request['mbwayTelemovel']);
         $this->ifthenpayLogger->info('mbway resend data set with success', ['gatewayDataBuilder' => $paymentData, 'className' => get_class($this)]);
         $gatewayResult = $this->gateway->execute(
-            'mbway',
+            Gateway::MBWAY,
             $paymentData,
             strval($orderId),
             strval($totalToPay)

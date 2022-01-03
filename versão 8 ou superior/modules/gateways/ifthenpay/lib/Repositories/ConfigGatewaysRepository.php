@@ -30,12 +30,6 @@ class ConfigGatewaysRepository extends BaseRepository implements ConfigGatewaysR
         return $ifthenpayUserAccount ? unserialize($ifthenpayUserAccount) : []; 
     }
 
-    public function getIfthenpayUserPaymentMethods(): array
-    {
-        $ifthenpayUserPaymentMethods = Capsule::table($this->table)->where('setting', 'ifthenpayUserPaymentMethods')->pluck('value')[0];
-        return $ifthenpayUserPaymentMethods ? unserialize($ifthenpayUserPaymentMethods) : []; 
-    }
-
     public function getIfthenpayUserActivatedPaymentMethod(string $paymentMethod): string
     {
         $userActivatePaymentMethod = Capsule::table($this->table)->where('setting', $paymentMethod)->pluck('value')[0]; 
@@ -59,5 +53,14 @@ class ConfigGatewaysRepository extends BaseRepository implements ConfigGatewaysR
                 }
             })->pluck('value');
         return $callbackData ? $callbackData->toArray() : [];
+    }
+
+    public function getUserToken(string $paymentMethod, string $action): string
+    {
+        $userToken = Capsule::table($this->table)->where([
+            'gateway' => $paymentMethod,
+            'setting' => $action . 'UserToken'
+        ])->pluck('value')[0]; 
+        return $userToken ? $userToken : '';
     }
 }

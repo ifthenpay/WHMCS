@@ -5,18 +5,18 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\ifthenpay\Utility\Mix;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Hooks\HooksStrategy;
-use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\MbwayCancelOrder;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Strategy\Cancel\IfthenpayCancelOrder;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment\IfthenpayInvoiceUpdate;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment\IfthenpayPaymentStatus;
 use WHMCS\Module\Gateway\Ifthenpay\Exceptions\IfthenpayInvoiceUpdateException;
 
 $ifthenpayModuleApp = new Ifthenpay();
-$utility = $ifthenpayModuleApp->getIoc()->make(Utility::class);
+$utility = $ifthenpayModuleApp->getIoc()->make(UtilityInterface::class);
 $gateway = $ifthenpayModuleApp->getIoc()->make(Gateway::class);
 $mix = $ifthenpayModuleApp->getIoc()->make(Mix::class);
 $hooksStrategy = $ifthenpayModuleApp->getIoc()->make(HooksStrategy::class);
@@ -111,15 +111,23 @@ add_hook('ClientAreaPageViewInvoice', 1, function($vars) use ($hooksStrategy, $g
 
 add_hook('DailyCronJob', 1, function($vars) use ($ifthenpayModuleApp, $ifthenpayLogger) {
     try {
-        $ifthenpayModuleApp->setPaymentMethod('mbway');
-        $ifthenpayModuleApp->getIoc()->make(MbwayCancelOrder::class)->cancelOrder();
-        foreach (['multibanco', 'mbway', 'payshop'] as $paymentMethod) {
+        $ifthenpayLogger->info('dailyCronJob started');
+        $gateway = $ifthenpayModuleApp->getIoc()->make(Gateway::class);
+        foreach($gateway->getPaymentMethodsType() as $paymentMethod) {
             if (getGatewayVariables($paymentMethod)["type"]) {
                 $ifthenpayModuleApp->setPaymentMethod($paymentMethod);
                 $ifthenpayPaymentStatus = $ifthenpayModuleApp->getIoc()->make(IfthenpayPaymentStatus::class);
                 $ifthenpayPaymentStatus->setPaymentMethod($paymentMethod)->execute();
             }
         }
+        foreach ($gateway->getPaymentMethodsCanCancel() as $paymentMethod) {
+            if (getGatewayVariables($paymentMethod)["type"]) {
+                $ifthenpayModuleApp->setPaymentMethod($paymentMethod);
+                $ifthenpayCancelOrder = $ifthenpayModuleApp->getIoc()->make(IfthenpayCancelOrder::class);
+                $ifthenpayCancelOrder->setPaymentMethod($paymentMethod)->execute();
+            }
+        }
+        $ifthenpayLogger->info('dailyCronJob finish');
     } catch (\Throwable $th) {
         $ifthenpayLogger->warning($th->getMessage(), [
                 'hook' => 'DailyCronJob',

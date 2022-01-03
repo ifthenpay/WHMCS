@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace WHMCS\Module\Gateway\ifthenpay\Hooks;
 
 use Smarty;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Mix;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\ifthenpay\Hooks\CheckoutHook;
-use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\MixInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment\IfthenpayInvoiceCreated;
 
 if (!defined("WHMCS")) {
@@ -19,7 +18,7 @@ class EmailPreSendHook extends CheckoutHook
 {
     private $ifthenpayInvoiceCreated;
 
-    public function __construct(Utility $utility, IfthenpayInvoiceCreated $ifthenpayInvoiceCreated, Mix $mix)
+    public function __construct(UtilityInterface $utility, IfthenpayInvoiceCreated $ifthenpayInvoiceCreated, MixInterface $mix)
 	{
         parent::__construct($utility, $mix);
         $this->ifthenpayInvoiceCreated = $ifthenpayInvoiceCreated;

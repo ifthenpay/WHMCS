@@ -9,10 +9,11 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Base\PaymentBase;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 
 class PayshopBase extends PaymentBase
 {
-    protected $paymentMethod = 'payshop';
+    protected $paymentMethod = Gateway::PAYSHOP;
 
     protected function setGatewayBuilderData(): void
     {

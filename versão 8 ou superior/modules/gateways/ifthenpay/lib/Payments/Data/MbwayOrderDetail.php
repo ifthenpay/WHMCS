@@ -10,7 +10,6 @@ if (!defined("WHMCS")) {
 
 use WHMCS\Module\Gateway\Ifthenpay\Base\Payments\MbwayBase;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Order\OrderDetailInterface;
-use WHMCS\Module\GatewaySetting;
 
 class MbwayOrderDetail extends MbwayBase implements OrderDetailInterface
 {
@@ -24,8 +23,8 @@ class MbwayOrderDetail extends MbwayBase implements OrderDetailInterface
         $this->smartyDefaultData->setResendMbwayNotificationControllerUrl(
             $this->utility->getSystemUrl() . 'modules/gateways/ifthenpay/server/resendMbwayNotification.php?action=resendMbwayNotification&orderId=' . 
                 $this->paymentDefaultData->orderId . '&mbwayTelemovel=' . $this->paymentDataFromDb['telemovel'] .
-                '&orderTotalPay=' . $this->paymentDefaultData->totalToPay . '&filename=' . $this->params['filename'] . '&sk=' . 
-                    $this->tokenExtra->encript($this->paymentDefaultData->orderId . 'resendMbwayNotification', GatewaySetting::getForGateway('mbway')['mbwayKey'])
+                '&orderTotalPay=' . $this->paymentDefaultData->totalToPay . '&filename=' . $this->params['filename'] . '&userToken=' . 
+                    $this->token->saveUserToken($this->paymentMethod, 'resendMbwayNotification') . '&paymentMethod=mbway'
         );
         $this->smartyDefaultData->setMbwayCountdownShow(isset($_COOKIE['mbwayCountdownShow']) ? $_COOKIE['mbwayCountdownShow'] : 'false');
         $this->smartyDefaultData->setPhoneMbwayLang(\Lang::trans('phoneMbway'));

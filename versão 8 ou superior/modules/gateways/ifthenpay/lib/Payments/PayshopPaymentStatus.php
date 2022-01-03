@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Payments;
 
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\PaymentStatus;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentStatusInterface;
 
@@ -26,11 +27,11 @@ class PayshopPaymentStatus extends PaymentStatus implements PaymentStatusInterfa
 
     private function getPayshopEstado(): void
     {
-        $this->payshopPedido = $this->webservice->postRequest(
+        $this->payshopPedido = $this->webService->postRequest(
             'https://www.ifthenpay.com/IfmbWS/WsIfmb.asmx/GetPaymentsJson',
                 [
                     'Chavebackoffice' => $this->data->getData()->backofficeKey,
-                    'Entidade' => 'PAYSHOP',
+                    'Entidade' => strtoupper(Gateway::PAYSHOP),
                     'Subentidade' => $this->data->getData()->payshopKey,
                     'dtHrInicio' => '',
                     'dtHrFim' => '',

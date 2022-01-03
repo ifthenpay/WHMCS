@@ -11,6 +11,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Facades\PaymentFacade;
 use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Form\IfthenpayConfigForms;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 
 /**
  * Define module related meta data.
@@ -25,7 +26,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysReposito
 function multibanco_MetaData()
 {
     return array(
-        'DisplayName' => 'Multibanco',
+        'DisplayName' => ucfirst(Gateway::MULTIBANCO),
         'APIVersion' => '1.1', // Use API Version 1.1
     );
 }
@@ -54,13 +55,13 @@ function multibanco_MetaData()
 function multibanco_config()
 {
     try {
-       $ioc = new Ifthenpay('multibanco');
+       $ioc = new Ifthenpay(Gateway::MULTIBANCO);
        $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MULTIBANCO)->getLogger();
        return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
     } catch (\Throwable $th) {
        if($th instanceof BackOfficeException) {
-            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => 'multibanco', 'setting' => 'backofficeKey']);
+            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => Gateway::MULTIBANCO, 'setting' => 'backofficeKey']);
             $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
             Session::setAndRelease("ConfigurationError", $th->getMessage());
             $redirect = "error=multibanco#m_multibanco";
@@ -71,14 +72,14 @@ function multibanco_config()
 }
 function multibanco_link($params) {
     try {
-        $ifthenpayContainer = (new Ifthenpay('multibanco'))->getIoc();
+        $ifthenpayContainer = (new Ifthenpay(Gateway::MULTIBANCO))->getIoc();
         $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
         $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
-        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod('multibanco')->setParams($params)->execute();
+        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod(Gateway::MULTIBANCO)->setParams($params)->execute();
     } catch (\Throwable $th) {
-        logTransaction('multibanco', $th->getMessage(), "Error", $params);
+        logTransaction(Gateway::MULTIBANCO, $th->getMessage(), "Error", $params);
         $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
-                'paymentMethod' => 'multibanco',
+                'paymentMethod' => Gateway::MULTIBANCO,
                 'params' => $params,
                 'exception' => $th
             ]

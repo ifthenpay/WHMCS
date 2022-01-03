@@ -16,35 +16,31 @@ class MultibancoChangePaymentStatus extends CheckPaymentStatusBase
 
     protected function setGatewayDataBuilder(): void
     {
-        $this->gatewayDataBuilder->setBackofficeKey($this->whmcsGatewaySettings['backofficeKey']);
-        $this->gatewayDataBuilder->setEntidade($this->whmcsGatewaySettings['entidade']);
-        $this->gatewayDataBuilder->setSubEntidade($this->whmcsGatewaySettings['subEntidade']);
+        $this->setGatewayDataBuilderBackofficeKey();
+        $this->gatewayDataBuilder->setEntidade($this->gatewaySettings['entidade']);
+        $this->gatewayDataBuilder->setSubEntidade($this->gatewaySettings['subEntidade']);
         $this->logGatewayBuilderData();
-    }
-
-    protected function getPendingOrders(): void
-    {
-        $this->pendingInvoices = $this->invoiceRepository->getAllUnPaidInvoices($this->paymentMethod);
-        $this->logGetPendingOrders($this->pendingInvoices);
     }
     
     public function changePaymentStatus(): void
     {
-        $this->setGatewayDataBuilder();
         $this->getPendingOrders();
         if (!empty($this->pendingInvoices)) {
+            $this->setGatewayDataBuilder();
             foreach ($this->pendingInvoices as $pendingInvoice) {
                 $multibancoPayment = $this->paymentRepository->getPaymentByOrderId((string) $pendingInvoice['id']);
-                $this->gatewayDataBuilder->setReferencia($multibancoPayment['referencia']);
-                if ($this->paymentStatus->setData($this->gatewayDataBuilder)->getPaymentStatus()) {
-                    $this->updatePaymentStatus((string) $multibancoPayment['id']);
-                    $this->whmcsHistory
-                        ->setTransactionId($multibancoPayment)
-                        ->setInvoiceId($this->paymentMethod, $multibancoPayment['order_id'])
-                        ->processInvoice($pendingInvoice['total'], $multibancoPayment);
+                if (!empty($multibancoPayment)) {
+                    $this->gatewayDataBuilder->setReferencia($multibancoPayment['referencia']);
+                    if ($this->paymentStatus->setData($this->gatewayDataBuilder)->getPaymentStatus()) {
+                        $this->updatePaymentStatus((string) $multibancoPayment['id']);
+                        $this->whmcsHistory
+                            ->setTransactionId($multibancoPayment)
+                            ->setInvoiceId($this->paymentMethod, $multibancoPayment['order_id'])
+                            ->processInvoice($pendingInvoice['total'], $multibancoPayment);
+                    }
+                    $this->logChangePaymentStatus($multibancoPayment);
                 }
             }
-            $this->logChangePaymentStatus();
         }
     }
 }

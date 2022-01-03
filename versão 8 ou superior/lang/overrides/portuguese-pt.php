@@ -4092,4 +4092,5 @@ $_LANG['ifthenpayPayBy'] = 'Pagamento por ';
 $_LANG['mbwayPhoneNumber'] = 'Telemóvel MB WAY';
 $_LANG['orderTitle'] = 'Nº do Pedido';
 
+
 ////////// End of portuguese-pt language file.  Do not place any translation strings below this line!

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\ifthenpay\Utility;
 
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\MixInterface;
 
-class Mix {
+class Mix implements MixInterface {
 	
     private $ifthenpayLogger;
 

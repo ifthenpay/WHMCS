@@ -8,8 +8,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackProcess;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Callback\CallbackProcessInterface;
 
 class CallbackOnline extends CallbackProcess implements CallbackProcessInterface
-{
-        
+{  
     public function process(): void
     {
         try {
@@ -45,8 +44,13 @@ class CallbackOnline extends CallbackProcess implements CallbackProcessInterface
                         $this->request['id'] . $this->request['amount'] . $this->request['requestId'], $GATEWAY['ccardKey'])) {
                             throw new \Exception(\Lang::trans('invalidSecurityToken'));
                     }
+                    $clientCurrency = $this->currencieRepository->findById((string) $this->clientRepository->findById((string) $order['userid'])['currency'])['code'];
+                    $orderTotal = $this->convertEuros->execute(
+                        $clientCurrency,
+                        $order['total']
+                    );
                 
-                    if ($order['total'] !== $this->request['amount']) {
+                    if ($orderTotal !== $this->request['amount']) {
                         logTransaction($GATEWAY["paymentmethod"], $this->request, \Lang::trans('errorPaymentTotal'));
                         redirSystemURL("id=" . $invoiceid . "&paymentfailed=true", "viewinvoice.php");
                     }

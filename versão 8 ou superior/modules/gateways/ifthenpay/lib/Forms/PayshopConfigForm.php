@@ -9,11 +9,12 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\ifthenpay\Forms\ConfigForm;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
 
 class PayshopConfigForm extends ConfigForm
 {
-    protected $paymentMethod = 'payshop';
+    protected $paymentMethod = Gateway::PAYSHOP;
 
     public function checkConfigValues(): array
     {
@@ -28,7 +29,15 @@ class PayshopConfigForm extends ConfigForm
             $this->addToOptions();
         } else {
             $this->options[$this->configValues['payshopKey']] = $this->configValues['payshopKey'];
+            $this->addToOptions(true);
         }
+
+        $this->form->add($this->ioc->makeWith(Input::class, [
+            'friendlyName' => \AdminLang::trans('cancelPayshopOrder'),
+            'type' => 'yesno',
+            'name' => 'cancelPayshopOrder',
+            'description' => \AdminLang::trans('cancelPayshopOrderDescription'),
+        ]));
 
         $this->form->add($this->ioc->makeWith(Input::class, [
             'friendlyName' => 'Payshop key',

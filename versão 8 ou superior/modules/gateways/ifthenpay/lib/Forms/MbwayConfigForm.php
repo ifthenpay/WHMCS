@@ -9,12 +9,13 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\ifthenpay\Forms\ConfigForm;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
 
 
 class MbwayConfigForm extends ConfigForm
 {
-    protected $paymentMethod = 'mbway';
+    protected $paymentMethod = Gateway::MBWAY;
 
     public function checkConfigValues(): array
     {
@@ -28,6 +29,7 @@ class MbwayConfigForm extends ConfigForm
             $this->addToOptions();
         } else {
             $this->options[$this->configValues['mbwayKey']] = $this->configValues['mbwayKey'];
+            $this->addToOptions(true);
         }
 
         $this->form->add($this->ioc->makeWith(Input::class, [

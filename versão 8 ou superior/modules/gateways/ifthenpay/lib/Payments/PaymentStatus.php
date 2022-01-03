@@ -7,7 +7,6 @@ namespace WHMCS\Module\Gateway\Ifthenpay\Payments;
 use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
-use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentStatusInterface;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -16,12 +15,12 @@ if (!defined("WHMCS")) {
 class PaymentStatus
 {
     protected $data;
-    protected $webservice;
+    protected $webService;
     protected $ifthenpayLogger;
 
-    public function __construct(WebService $webservice, IfthenpayLogger $ifthenpayLogger)
+    public function __construct(WebService $webService, IfthenpayLogger $ifthenpayLogger)
     {
-        $this->webservice = $webservice;
+        $this->webService = $webService;
         $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
     }
 

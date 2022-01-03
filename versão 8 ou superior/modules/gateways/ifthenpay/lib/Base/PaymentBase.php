@@ -9,14 +9,13 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\GatewaySetting;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
-use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Traits\Logs\LogGatewayBuilderData;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
 
 
@@ -35,19 +34,18 @@ abstract class PaymentBase
     protected $paymentMethod;
     protected $params;
     protected $paymentRepository;
-    protected $tokenExtra;
     protected $ifthenpayLogger;
+    protected $token;
 
     public function __construct(
         PaymentDataBuilder $paymentDefaultData,
         GatewayDataBuilder $gatewayBuilder,
         Gateway $ifthenpayGateway,
         array $whmcsGatewaySettings,
-        Utility $utility,
+        UtilityInterface $utility,
         RepositoryFactory $repositoryFactory,
         IfthenpayLogger $ifthenpayLogger,
-        SmartyDataBuilder $smartyDefaultData = null,
-        TokenExtra $tokenExtra = null
+        SmartyDataBuilder $smartyDefaultData = null
     ) {
         $this->gatewayBuilder = $gatewayBuilder;
         $this->paymentDefaultData = $paymentDefaultData->getData();
@@ -57,7 +55,6 @@ abstract class PaymentBase
         $this->utility = $utility;
         $this->paymentRepository = $repositoryFactory->setType($this->paymentMethod)->build();
         $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
-        $this->tokenExtra = $tokenExtra;
     }
 
     public function setPaymentTable(string $tableName): PaymentBase

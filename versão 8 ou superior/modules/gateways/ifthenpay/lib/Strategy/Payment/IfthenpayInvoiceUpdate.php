@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment;
 
-use WHMCS\Module\GatewaySetting;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\StrategyFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment\IfthenpayPaymentReturn;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\InvoiceUpdateInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentReturnInterface;
@@ -24,13 +23,13 @@ if (!defined("WHMCS")) {
 class IfthenpayInvoiceUpdate extends IfthenpayPaymentReturn implements InvoiceUpdateInterface
 {
     private $invoiceRepository;
-    private $allowedPaymentMethods = ['multibanco', 'mbway', 'payshop'];
+    private $allowedPaymentMethods = [Gateway::MULTIBANCO, Gateway::MBWAY, Gateway::PAYSHOP];
     private $gateway;
 
     public function __construct(
         PaymentDataBuilder $paymentDataBuilder, 
         SmartyDataBuilder $smartyDataBuilder, 
-        Utility $utility, 
+        UtilityInterface $utility, 
         StrategyFactory $factory,
         InvoiceRepositoryInterface $invoiceRepository,
         Gateway $gateway,

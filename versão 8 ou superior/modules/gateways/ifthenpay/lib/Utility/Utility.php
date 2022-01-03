@@ -8,9 +8,10 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigRepositoryInterface;
 
-class Utility
+class Utility implements UtilityInterface
 {
     private $ifthenpayPathLib = 'modules/gateways/ifthenpay';
     private $configRepository;
@@ -65,5 +66,6 @@ class Utility
         return !is_null($object) ? json_decode(
             json_encode($object), true) : [];
     }
+    
 
 }

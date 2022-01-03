@@ -9,7 +9,7 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
-use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
+use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Models\PaymentModelInterface;
 
 class Payment
@@ -17,14 +17,14 @@ class Payment
     protected $orderId;
     protected $valor;
     protected $dataBuilder;
-    protected $webservice;
+    protected $webService;
 
-    public function __construct(string $orderId, string $valor, DataBuilder $dataBuilder, Webservice $webservice = null)
+    public function __construct(string $orderId, string $valor, DataBuilder $dataBuilder, WebService $webService = null)
     {
         $this->orderId = $orderId;
         $this->valor = $this->formatNumber($valor);
         $this->dataBuilder = $dataBuilder;
-        $this->webservice = $webservice;
+        $this->webService = $webService;
     }
 
     protected function formatNumber(string $number) : string

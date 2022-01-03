@@ -25,7 +25,7 @@ class MbWayPaymentStatus extends PaymentStatus implements PaymentStatusInterface
 
     private function getMbwayEstado(): void
     {
-        $this->mbwayPedido = $this->webservice->postRequest(
+        $this->mbwayPedido = $this->webService->postRequest(
             'https://mbway.ifthenpay.com/IfthenPayMBW.asmx/EstadoPedidosJSON',
                 [
                     'MbWayKey' => $this->data->getData()->mbwayKey,

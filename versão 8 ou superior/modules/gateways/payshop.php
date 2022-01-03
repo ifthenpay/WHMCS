@@ -6,6 +6,7 @@ if (!defined("WHMCS")) {
 
 use WHMCS\Session;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Facades\PaymentFacade;
 use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
@@ -25,7 +26,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysReposito
 function payshop_MetaData()
 {
     return array(
-        'DisplayName' => 'Payshop',
+        'DisplayName' => ucfirst(Gateway::PAYSHOP),
         'APIVersion' => '1.1', // Use API Version 1.1
     );
 }
@@ -54,13 +55,13 @@ function payshop_MetaData()
 function payshop_config()
 {
     try {
-        $ioc = new Ifthenpay('payshop');
+        $ioc = new Ifthenpay(Gateway::PAYSHOP);
         $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
         $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_PAYSHOP)->getLogger();
         return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
     } catch (\Throwable $th) {
         if($th instanceof BackOfficeException) {
-            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => 'payshop', 'setting' => 'backofficeKey']);
+            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => Gateway::PAYSHOP, 'setting' => 'backofficeKey']);
             $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
             Session::setAndRelease("ConfigurationError", $th->getMessage());
             $redirect = "error=payshop#m_payshop";
@@ -71,14 +72,14 @@ function payshop_config()
 }
 function payshop_link($params) {
     try {
-        $ifthenpayContainer = (new Ifthenpay('payshop'))->getIoc();
+        $ifthenpayContainer = (new Ifthenpay(Gateway::PAYSHOP))->getIoc();
         $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
         $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
-        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod('payshop')->setParams($params)->execute();
+        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod(Gateway::PAYSHOP)->setParams($params)->execute();
     } catch (\Throwable $th) {
-        logTransaction('payshop', $th->getMessage(), "Error", $params);
+        logTransaction(Gateway::PAYSHOP, $th->getMessage(), "Error", $params);
         $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
-                'paymentMethod' => 'payshop',
+                'paymentMethod' => Gateway::PAYSHOP,
                 'params' => $params,
                 'exception' => $th
             ]

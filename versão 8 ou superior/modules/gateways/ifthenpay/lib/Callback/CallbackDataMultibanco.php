@@ -10,11 +10,12 @@ if (!defined("WHMCS")) {
 
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackPayment;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Callback\CallbackDataInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 
 class CallbackDataMultibanco extends CallbackPayment implements CallbackDataInterface
 {
     public function getData(array $request): array
     {
-        return $this->repositoryFactory->setType('multibanco')->build()->getPaymentByReferencia($request['referencia']);
+        return $this->repositoryFactory->setType(Gateway::MULTIBANCO)->build()->getPaymentByReferencia($request['referencia']);
     }
 }

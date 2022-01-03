@@ -9,10 +9,42 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Base\PaymentBase;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
 
 class MbwayBase extends PaymentBase
 {
-    protected $paymentMethod = 'mbway';
+    protected $paymentMethod = Gateway::MBWAY;
+
+    public function __construct(
+        PaymentDataBuilder $paymentDefaultData,
+        GatewayDataBuilder $gatewayBuilder,
+        Gateway $ifthenpayGateway,
+        array $whmcsGatewaySettings,
+        UtilityInterface $utility,
+        RepositoryFactory $repositoryFactory,
+        IfthenpayLogger $ifthenpayLogger,
+        TokenInterface $token,
+        SmartyDataBuilder $smartyDefaultData = null
+    ) {
+        parent::__construct(
+            $paymentDefaultData, 
+            $gatewayBuilder, 
+            $ifthenpayGateway, 
+            $whmcsGatewaySettings, 
+            $utility, 
+            $repositoryFactory, 
+            $ifthenpayLogger, 
+            $smartyDefaultData
+        );
+        $this->token = $token;
+    }
 
     protected function setGatewayBuilderData(): void
     {

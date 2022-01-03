@@ -8,6 +8,7 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\CCardOrderDetail;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\MbwayOrderDetail;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\StrategyFactory;
@@ -19,7 +20,7 @@ class OrderDetailFactory extends StrategyFactory
 {    
     public function build(): OrderDetailInterface {
         switch (strtolower($this->type)) {
-            case 'multibanco':
+            case Gateway::MULTIBANCO:
                 return new MultibancoOrderDetail(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
@@ -30,7 +31,7 @@ class OrderDetailFactory extends StrategyFactory
                     $this->ifthenpayLogger,
                     $this->smartyDefaultData
             );
-            case 'mbway':
+            case Gateway::MBWAY:
                 return new MbwayOrderDetail(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
@@ -39,10 +40,10 @@ class OrderDetailFactory extends StrategyFactory
                     $this->utility,
                     $this->repositoryFactory,
                     $this->ifthenpayLogger,
-                    $this->smartyDefaultData,
-                    $this->tokenExtra
+                    $this->token,
+                    $this->smartyDefaultData
                 );
-            case 'payshop':
+            case Gateway::PAYSHOP:
                 return new PayshopOrderDetail(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
@@ -53,7 +54,7 @@ class OrderDetailFactory extends StrategyFactory
                     $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
-            case 'ccard' || 'credit card (ifthenpay)':
+            case Gateway::CCARD || Gateway::CCARD_ALIAS:
                 return new CCardOrderDetail(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
@@ -64,6 +65,7 @@ class OrderDetailFactory extends StrategyFactory
                     $this->ifthenpayLogger,
                     $this->token,
                     $this->status,
+                    $this->convertEuros,
                     $this->smartyDefaultData
                 );
             default:

@@ -14,17 +14,17 @@ use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 class IfthenpayUpgrade
 {
     const MODULE_VERSION = '1.1.1';
-    private $webservice;
+    private $webService;
     
 
-	public function __construct(Webservice $webservice)
+	public function __construct(WebService $webService)
 	{
-        $this->webservice = $webservice;
+        $this->webService = $webService;
 	}
 
     public function checkModuleUpgrade(): array
     {
-        $response = $this->webservice->getRequest('https://ifthenpay.com/modulesUpgrade/whmcs/upgrade.json')->getResponseJson();
+        $response = $this->webService->getRequest('https://ifthenpay.com/modulesUpgrade/whmcs/upgrade.json')->getResponseJson();
         if (version_compare(str_replace('v', '', $response['version']), self::MODULE_VERSION, '>')) {
             return [
                 'upgrade' => true,

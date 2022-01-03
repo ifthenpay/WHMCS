@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace WHMCS\Module\Gateway\ifthenpay\Hooks;
 
 use Smarty;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Mix;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\ifthenpay\Hooks\CheckoutHook;
-use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\MixInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment\IfthenpayOrderDetail;
 
 if (!defined("WHMCS")) {
@@ -20,7 +20,7 @@ class ClientCheckoutConfirmHook extends CheckoutHook
     private $paymentMethod;
     private $ifthenpayOrderDetail;
 
-    public function __construct(Utility $utility, IfthenpayOrderDetail $ifthenpayOrderDetail, Mix $mix)
+    public function __construct(UtilityInterface $utility, IfthenpayOrderDetail $ifthenpayOrderDetail, MixInterface $mix)
 	{
         parent::__construct($utility, $mix);
         $this->ifthenpayOrderDetail = $ifthenpayOrderDetail;
@@ -47,8 +47,11 @@ class ClientCheckoutConfirmHook extends CheckoutHook
     {
         if (($this->vars['action'] === 'complete' || $this->vars['filename'] === 'viewinvoice') && $this->vars['paymentmethod'] === $this->paymentMethod) {
             $ifthenpayOrderDetail = $this->ifthenpayOrderDetail->setParams($this->vars)->execute();
-            if ($this->vars['paymentmethod'] === 'ccard' && $ifthenpayOrderDetail->getPaymentDataFromDb()['status'] === 'pending') {
-                header('Location: ' . $ifthenpayOrderDetail->getPaymentDataFromDb()['paymentUrl']); 
+            if (($this->vars['paymentmethod'] === Gateway::CCARD || strtolower($this->vars['paymentmethod']) === Gateway::CCARD_ALIAS) && $ifthenpayOrderDetail->getPaymentDataFromDb()['status'] === 'pending') {
+                //header('Location: ' . $ifthenpayOrderDetail->getPaymentDataFromDb()['paymentUrl']);
+                $paymentUrl = $_SESSION['paymentUrl'];
+                unset($_SESSION['paymentUrl']);
+                header('Location: ' . $paymentUrl);
             } else {
                 $smarty = new Smarty;
             

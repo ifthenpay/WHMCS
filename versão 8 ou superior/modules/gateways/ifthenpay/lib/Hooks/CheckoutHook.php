@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\ifthenpay\Hooks;
 
-use WHMCS\Module\Gateway\ifthenpay\Utility\Mix;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
-use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\MixInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -18,7 +17,7 @@ abstract class CheckoutHook
     protected $utility;
     protected $mix;
 
-	public function __construct(Utility $utility, Mix $mix)
+	public function __construct(UtilityInterface $utility, MixInterface $mix)
 	{
         $this->utility = $utility;
         $this->mix = $mix;

@@ -9,16 +9,27 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Base\PaymentBase;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 
 class MultibancoBase extends PaymentBase
 {
-    protected $paymentMethod = 'multibanco';
+    protected $paymentMethod = Gateway::MULTIBANCO;
     
     protected function setGatewayBuilderData(): void
     {
         $this->gatewayBuilder->setEntidade($this->whmcsGatewaySettings['entidade']);
         $this->gatewayBuilder->setSubEntidade($this->whmcsGatewaySettings['subEntidade']);
+        $this->gatewayBuilder->setValidade($this->whmcsGatewaySettings['multibancoValidity'] !== 'Choose Deadline' ? $this->whmcsGatewaySettings['multibancoValidity'] : '999999');
         $this->logGatewayBuilderData();
+    }
+
+    private function addIdPedidoAndValidadeToDatabaseData(array $paymentData): array
+    {
+        if ($this->paymentGatewayResultData->idPedido) {
+            $paymentData['requestId'] = $this->paymentGatewayResultData->idPedido;
+            $paymentData['validade'] = $this->paymentGatewayResultData->validade;
+        }
+        return $paymentData;
     }
 
     protected function saveToDatabase(): void
@@ -29,6 +40,7 @@ class MultibancoBase extends PaymentBase
             'order_id' => $this->paymentDefaultData->orderId, 
             'status' => 'pending'
         ];
+        $paymentData = $this->addIdPedidoAndValidadeToDatabaseData($paymentData);
         $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
         //$this->paymentRepository->create($paymentData);
         $this->logSavePaymentDataInDatabase($paymentData);
@@ -42,6 +54,7 @@ class MultibancoBase extends PaymentBase
             'order_id' => $this->paymentDefaultData->orderId, 
             'status' => 'pending'
         ];
+        $paymentData = $this->addIdPedidoAndValidadeToDatabaseData($paymentData);
         $this->paymentRepository->updatePaymentByOrderId($paymentData, $this->paymentDefaultData->orderId);
         $this->logSavePaymentDataInDatabase($paymentData, 'update');
     }

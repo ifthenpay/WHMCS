@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Payments\Data;
 
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Base\CheckPaymentStatusBase;
 
 if (!defined("WHMCS")) {
@@ -12,38 +13,34 @@ if (!defined("WHMCS")) {
 
 class PayshopChangePaymentStatus extends CheckPaymentStatusBase
 {
-    protected $paymentMethod = 'payshop';
+    protected $paymentMethod = Gateway::PAYSHOP;
 
     protected function setGatewayDataBuilder(): void
     {
-        $this->gatewayDataBuilder->setBackofficeKey($this->whmcsGatewaySettings['backofficeKey']);
-        $this->gatewayDataBuilder->setPayshopKey($this->whmcsGatewaySettings['payshopKey']);
+        $this->setGatewayDataBuilderBackofficeKey();
+        $this->gatewayDataBuilder->setPayshopKey($this->gatewaySettings['payshopKey']);
         $this->logGatewayBuilderData();
-    }
-
-    protected function getPendingOrders(): void
-    {
-        $this->pendingInvoices = $this->invoiceRepository->getAllUnPaidInvoices($this->paymentMethod);
-        $this->logGetPendingOrders($this->pendingInvoices);
     }
     
     public function changePaymentStatus(): void
     {
-        $this->setGatewayDataBuilder();
         $this->getPendingOrders();
         if (!empty($this->pendingInvoices)) {
             foreach ($this->pendingInvoices as $pendingInvoice) {
+                $this->setGatewayDataBuilder();
                 $payshopPayment = $this->paymentRepository->getPaymentByOrderId((string) $pendingInvoice['id']);
-                $this->gatewayDataBuilder->setReferencia($payshopPayment['referencia']);
-                if ($this->paymentStatus->setData($this->gatewayDataBuilder)->getPaymentStatus()) {
-                    $this->updatePaymentStatus((string) $payshopPayment['id']);
-                    $this->whmcsHistory
-                        ->setTransactionId($payshopPayment)
-                        ->setInvoiceId($this->paymentMethod, $payshopPayment['order_id'])
-                        ->processInvoice($pendingInvoice['total'], $payshopPayment);
+                if (!empty($payshopPayment)) {
+                    $this->gatewayDataBuilder->setReferencia($payshopPayment['referencia']);
+                    if ($this->paymentStatus->setData($this->gatewayDataBuilder)->getPaymentStatus()) {
+                        $this->updatePaymentStatus((string) $payshopPayment['id']);
+                        $this->whmcsHistory
+                            ->setTransactionId($payshopPayment)
+                            ->setInvoiceId($this->paymentMethod, $payshopPayment['order_id'])
+                            ->processInvoice($pendingInvoice['total'], $payshopPayment);
+                    }
                 }
-            }
-            $this->logChangePaymentStatus();
+                $this->logChangePaymentStatus($payshopPayment);
+            }    
         }
     }
 }

@@ -13,14 +13,14 @@ use Illuminate\Container\Container;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\Callback;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpaySql;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpayUpgrade;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Form;
 use WHMCS\Module\Gateway\Ifthenpay\Exceptions\BackOfficeException;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 
 abstract class ConfigForm
 {
@@ -37,13 +37,13 @@ abstract class ConfigForm
     protected $paymentMethod;
     protected $form;
     protected $gatewayDataBuilder;
-    private $ifthenpayGateway;
+    protected $ifthenpayGateway;
     protected $options;
     protected $configValues;
     protected $gatewayVars;
     protected $hasCallback = true;
     private $ifthenpayUpgrade;
-    private $smarty;
+    protected $smarty;
     protected $ifthenpayLogger;
 
     public function __construct(
@@ -52,7 +52,7 @@ abstract class ConfigForm
         Gateway $gateway, 
         GatewayDataBuilder $gatewayDataBuilder, 
         ConfigGatewaysRepositoryInterface $configGatewaysRepository,
-        Utility $utility,
+        UtilityInterface $utility,
         Callback $callback,
         IfthenpaySql $ifthenpaySql,
         IfthenpayUpgrade $ifthenpayUpgrade,
@@ -100,6 +100,17 @@ abstract class ConfigForm
         $this->ifthenpayLogger->info('activate callback input added with success to form');
     }
 
+    protected function addShowPaymentIconCheckout(): void
+    {
+        $this->form->add($this->ioc->makeWith(Input::class, [
+            'friendlyName' => \AdminLang::trans('showPaymentLogo'),
+            'type' => 'yesno',
+            'name' => 'showPaymentLogo',
+            'description' => \AdminLang::trans('showPaymentLogoDescription'),
+        ]));
+        $this->ifthenpayLogger->info('show payment icon input added with success to form');
+    }
+
     private function addCallbackInfoToConfigForm(): void
     {
         if ($this->activatedCallback) {
@@ -130,9 +141,8 @@ abstract class ConfigForm
                     'name' => 'UsageNotes', 
                     'value' =>  '<button type="button" class="btn btn-danger">' . \AdminLang::trans('notAccount' . ucfirst($this->paymentMethod)) . 
                         '</button>' . '<br><br>' . \AdminLang::trans('requestAccount' . ucfirst($this->paymentMethod)) . 
-                        ':<br><a class="btn btn-success" href="mailto:suporte@ifthenpay.com">' . \AdminLang::trans('sendEmailNewAccount') . '</a><br><br>' .
-                        \AdminLang::trans('updateAccountDescription') . '<br> 
-                        <button onClick="window.location.reload();" type="button" class="btn btn-success">' . \AdminLang::trans('updateAccount') . '</button>'
+                        ':<br><a id="requestNewAccount" class="btn btn-success" href="" data-paymentmethod="' . $this->paymentMethod . '">' . \AdminLang::trans('sendEmailNewAccount') . '</a><br><br>' .
+                        \AdminLang::trans('updateAccountDescription')
                 ]));
                 $this->ifthenpayLogger->info('user with no account field notification added to form with success');
             }
@@ -192,7 +202,7 @@ abstract class ConfigForm
                 $this->smarty->assign($data);
                 $html = $this->smarty->fetch('file:' . ROOTDIR . '\modules\gateways\ifthenpay\templates\ifthenpayUpgradeModule.tpl');
                 $this->form->add($this->ioc->makeWith(Input::class, [
-                    "friendlyName" => "", "type" => "html", 'options' => null, 'description' => $html
+                    "friendlyName" => "", 'name' => 'htmlField', "type" => "html", 'options' => null, 'description' => $html
                 ]));
                 $this->ifthenpayLogger->info('upgrade module notification added with success to form', ['needUpgrade' => $$needUpgrade]);            
         } catch (\Throwable $th) {
@@ -202,11 +212,13 @@ abstract class ConfigForm
         
     }
 
-    protected function addToOptions(): void
+    protected function addToOptions(bool $afterSave = false): void
     {
-        $this->options = [
-            'default' => \AdminLang::trans('multibancoEntityDescription')
-        ];
+        if (!$afterSave) {
+            $this->options = [
+                'default' => \AdminLang::trans('multibancoEntityDescription')
+            ];
+        }
         foreach ($this->ifthenpayGateway->getEntidadeSubEntidade($this->paymentMethod) as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $key2 => $value2) {
@@ -269,7 +281,7 @@ abstract class ConfigForm
     {
         if ($this->backofficeKey) {
             $this->addUpgradeModuleToForm();
-            $this->renderCallbackInfo();
+            //$this->renderCallbackInfo();
             if ($this->hasCallback) {
                 $this->addSandboxAndActivateCallback();
             }
@@ -277,11 +289,13 @@ abstract class ConfigForm
                 $this->getIfthenpayUserAccountFromWebservice();            
                 $this->saveIfthenpayUserAccount();
                 if (!empty($this->ifthenpayUserAccount)) {
+                    $this->addShowPaymentIconCheckout();
                     $this->addPaymentInputsToForm();
                 }
             } else {
                 $this->ifthenpaySql->setPaymentMethod($this->paymentMethod)->install();
                 $this->ifthenpayLogger->info('payments tables created with success in database');
+                $this->addShowPaymentIconCheckout();
                 $this->addPaymentInputsToForm();
                 $this->processForm();
                 $this->renderCallbackInfo();

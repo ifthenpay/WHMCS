@@ -24,4 +24,5 @@ interface DataBuilderInterface
     public function setPaymentMessage(string $value): DataBuilderInterface;
     public function setPaymentUrl(string $value): DataBuilderInterface;
     public function setPaymentStatus(string $value): DataBuilderInterface;
+    public function setCurrency(string $value): DataBuilderInterface;
 }

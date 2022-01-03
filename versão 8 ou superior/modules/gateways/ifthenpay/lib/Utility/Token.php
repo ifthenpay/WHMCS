@@ -8,26 +8,35 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-class Token {
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
-    private $key;
-    private $iv;
-    private $cipher = 'eKbL_fjE@i#u;;VlX..6s??$$POx1d2!!lsjk__WQAH_seuieks,xnfhdmz,x';
+class Token implements TokenInterface {
+    
+	private $configGatewaysRepository;
 
-    private function init(): void
+    public function __construct(ConfigGatewaysRepositoryInterface $configGatewaysRepository)
+	{
+        $this->configGatewaysRepository = $configGatewaysRepository;
+	}
+
+    public function encrypt(string $input): string 
     {
-        $this->key = hash( 'sha256', $this->cipher, true );
-        $this->iv = mcrypt_create_iv(32);
+        return urlencode(base64_encode( $input));
     }
 
-    public function encrypt( string $input ): string {
-        $this->init();
-        return urlencode( base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, $this->key, $input, MCRYPT_MODE_ECB, $this->iv ) ) );
+    public function decrypt(string $input): string 
+    {
+        return base64_decode(urldecode($input));
     }
 
-    public function decrypt( string $input ): string {
-        $this->init();
-        return mcrypt_decrypt( MCRYPT_RIJNDAEL_256, $this->key, base64_decode( urldecode( $input ) ), MCRYPT_MODE_ECB, $this->iv );
+    public function saveUserToken(string $paymentMethod, string $action): string
+    {
+        $token = md5((string) rand());
+        $this->configGatewaysRepository->createOrUpdate(
+            ['gateway' => $paymentMethod, 'setting' => $action . 'UserToken'],
+            ['value' => $token]
+        );
+        return $token;
     }
-
 }

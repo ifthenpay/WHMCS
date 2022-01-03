@@ -10,6 +10,7 @@ if (!defined("WHMCS")) {
 
 use Illuminate\Container\Container;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackDataCCard;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackDataMbway;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackDataPayshop;
@@ -30,13 +31,13 @@ class CallbackDataFactory extends Factory
     public function build(): CallbackDataInterface
     {
         switch ($this->type) {
-            case 'multibanco':
+            case Gateway::MULTIBANCO:
                 return new CallbackDataMultibanco($this->repositoryFactory);
-            case 'mbway':
+            case Gateway::MBWAY:
                 return new CallbackDataMbway($this->repositoryFactory);
-            case 'payshop':
+            case Gateway::PAYSHOP:
                 return new CallbackDataPayshop($this->repositoryFactory);
-            case 'ccard':
+            case Gateway::CCARD:
                 return new CallbackDataCCard($this->repositoryFactory);
             default:
                 throw new \Exception('Unknown Callback Data Class');

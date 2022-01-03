@@ -5,18 +5,23 @@ declare(strict_types=1);
 namespace WHMCS\Module\Gateway\Ifthenpay\Repositories;
 
 use WHMCS\Database\Capsule;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\BaseRepositoryInterface;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-class BaseRepository 
+class BaseRepository implements BaseRepositoryInterface
 {
     protected $tableName;
     
     public function all(): array
     {
         return [];
+    }
+    public function findById(string $id): array
+    {
+        return $this->convertObjectToArray(Capsule::table($this->table)->find($id));
     }
     public function create(array $data): void
     {
@@ -43,7 +48,7 @@ class BaseRepository
         Capsule::table($this->table)->where($conditions)->delete();
     }
 
-    protected function convertObjectToarray(object $object = null): array
+    public function convertObjectToarray(object $object = null): array
     {
         return !is_null($object) ? json_decode(
             json_encode($object), true) : [];

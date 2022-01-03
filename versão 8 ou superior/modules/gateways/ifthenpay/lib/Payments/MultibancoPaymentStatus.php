@@ -25,7 +25,7 @@ class MultibancoPaymentStatus extends PaymentStatus implements PaymentStatusInte
 
     private function getMultibancoEstado(): void
     {
-        $this->multibancoPedido = $this->webservice->getRequest(
+        $this->multibancoPedido = $this->webService->getRequest(
             'https://www.ifthenpay.com/IfmbWS/WsIfmb.asmx/GetPaymentsJson',
                 [
                     'Chavebackoffice' => $this->data->getData()->backofficeKey,

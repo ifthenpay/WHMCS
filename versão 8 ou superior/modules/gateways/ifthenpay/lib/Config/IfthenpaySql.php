@@ -11,10 +11,14 @@ if (!defined("WHMCS")) {
 use WHMCS\Database\Capsule;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpayInstall;
-
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 
 class IfthenpaySql extends IfthenpayInstall
 {
+    const MULTIBANCO_TABLE = 'ifthenpay_multibanco';
+    const MBWAY_TABLE = 'ifthenpay_mbway';
+    const PAYSHOP_TABLE = 'ifthenpay_payshop';
+    const CCARD_TABLE = 'ifthenpay_ccard';
 
     private $statusEnum = ['pending', 'paid'];
     private $schema;
@@ -28,15 +32,17 @@ class IfthenpaySql extends IfthenpayInstall
 
     private function createMultibancoTable(): void
     {
-        if (!$this->schema->hasTable('ifthenpay_multibanco')) {
+        if (!$this->schema->hasTable(self::MULTIBANCO_TABLE)) {
             $this->schema->create(
-                'ifthenpay_multibanco',
+                self::MULTIBANCO_TABLE,
                 function ($table) {
                     /** @var \Illuminate\Database\Schema\Blueprint $table */
                     $table->increments('id');
                     $table->string('entidade', 5);
                     $table->string('referencia', 9);
                     $table->string('order_id', 50);
+                    $table->string('requestId', 50)->nullable();
+                    $table->string('validade', 15)->nullable();
                     $table->enum('status', $this->statusEnum);
                     $table->index('referencia');
                     $table->timestamps();
@@ -49,9 +55,9 @@ class IfthenpaySql extends IfthenpayInstall
 
     private function createMbwayTable(): void
     {
-        if (!$this->schema->hasTable('ifthenpay_mbway')) {
+        if (!$this->schema->hasTable(self::MBWAY_TABLE)) {
             $this->schema->create(
-                'ifthenpay_mbway',
+                self::MBWAY_TABLE,
                 function ($table) {
                     /** @var \Illuminate\Database\Schema\Blueprint $table */
                     $table->increments('id');
@@ -70,9 +76,9 @@ class IfthenpaySql extends IfthenpayInstall
 
     private function createPayshopTable(): void
     {
-        if (!$this->schema->hasTable('ifthenpay_payshop')) {
+        if (!$this->schema->hasTable(self::PAYSHOP_TABLE)) {
             $this->schema->create(
-                'ifthenpay_payshop',
+                self::PAYSHOP_TABLE,
                 function ($table) {
                     /** @var \Illuminate\Database\Schema\Blueprint $table */
                     $table->increments('id');
@@ -92,15 +98,14 @@ class IfthenpaySql extends IfthenpayInstall
 
     private function createCCardTable(): void
     {
-        if (!$this->schema->hasTable('ifthenpay_ccard')) {
+        if (!$this->schema->hasTable(self::CCARD_TABLE)) {
             $this->schema->create(
-                'ifthenpay_ccard',
+                self::CCARD_TABLE,
                 function ($table) {
                     /** @var \Illuminate\Database\Schema\Blueprint $table */
                     $table->increments('id');
                     $table->string('requestId', 50);
                     $table->string('order_id', 50);
-                    $table->string('paymentUrl', 1000);
                     $table->enum('status', ['paid', 'cancel', 'error', 'pending']);
                     $table->index('requestId');
                     $table->timestamps();
@@ -114,16 +119,16 @@ class IfthenpaySql extends IfthenpayInstall
     {
             try {
                 switch($this->paymentMethod) {
-                    case 'multibanco':
+                    case Gateway::MULTIBANCO:
                         $this->createMultibancoTable();
                         break;
-                    case 'mbway':
+                    case Gateway::MBWAY:
                         $this->createMbwayTable();
                         break;
-                    case 'payshop':
+                    case Gateway::PAYSHOP:
                         $this->createPayshopTable();
                         break;
-                    case 'ccard':
+                    case Gateway::CCARD:
                         $this->createCCardTable();
                         break;
                     default:
@@ -134,11 +139,26 @@ class IfthenpaySql extends IfthenpayInstall
             }
     }
 
-    public function changeCcardTable(): void
+    public function removePaymentUrlFromCCardTable(): void
     {
-        if ($this->schema->hasTable('ifthenpay_ccard') && Capsule::select(Capsule::raw('SHOW FIELDS FROM ifthenpay_ccard'))[3]->Type === 'varchar(250)') {
-            Capsule::statement('ALTER TABLE ifthenpay_ccard  MODIFY paymentUrl varchar(1000)');
-            $this->ifthenpayLogger->info('ccard table changed with success');           
+         if ($this->schema->hasTable(self::CCARD_TABLE) && $this->schema->hasColumn(self::CCARD_TABLE, 'paymentUrl')) {
+            $this->schema->table(
+                self::CCARD_TABLE,
+                function ($table) {
+                    $table->dropColumn('paymentUrl');
+                }
+            );
+        }
+    }
+
+    public function addRequestIdValidadeToMultibancoTable(): void
+    {
+        if ($this->schema->hasTable(self::MULTIBANCO_TABLE) && !$this->schema->hasColumn(self::MULTIBANCO_TABLE, 'requestId') && !$this->schema->hasColumn(self::MULTIBANCO_TABLE, 'validade')) {
+            $this->schema->table(self::MULTIBANCO_TABLE, function($table) {
+                $table->string('requestId', 50)->nullable();
+                $table->string('validade', 15)->nullable();
+                $this->ifthenpayLogger->info('Multibanco table changed with success');
+            });
         }
     }
 

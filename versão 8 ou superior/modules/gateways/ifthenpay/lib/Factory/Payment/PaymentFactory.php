@@ -12,11 +12,12 @@ use Illuminate\Container\Container;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\CCard;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\MbWay;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Payshop;
+use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Multibanco;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentMethodInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
 
 
 class PaymentFactory extends Factory
@@ -25,27 +26,27 @@ class PaymentFactory extends Factory
     private $orderId;
     private $valor;
     private $dataBuilder;
-    private $webservice;
+    private $webService;
 
-    public function __construct(Container $ioc, DataBuilder $dataBuilder, Webservice $webservice = null)
+    public function __construct(Container $ioc, DataBuilder $dataBuilder, WebService $webService)
 	{
         parent::__construct($ioc);
         $this->dataBuilder = $dataBuilder;
-        $this->webservice = $webservice;
+        $this->webService = $webService;
     }
 
     
     public function build(): PaymentMethodInterface
     {
         switch ($this->type) {
-            case 'multibanco':
-                return new Multibanco($this->data, $this->orderId, $this->valor, $this->dataBuilder);
-            case 'mbway':
-                return new MbWay($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webservice);
-            case 'payshop':
-                return new Payshop($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webservice);
-            case 'ccard':
-                return new CCard($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webservice);
+            case Gateway::MULTIBANCO:
+                return new Multibanco($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webService);
+            case Gateway::MBWAY:
+                return new MbWay($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webService);
+            case Gateway::PAYSHOP:
+                return new Payshop($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webService);
+            case Gateway::CCARD:
+                return new CCard($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webService);
             default:
                 throw new Exception("Unknown Payment Class");
         }

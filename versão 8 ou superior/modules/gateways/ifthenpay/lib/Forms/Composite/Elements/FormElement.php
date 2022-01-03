@@ -42,5 +42,35 @@ abstract class FormElement
         return $this->name;
     }
 
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+     /**
+     * Get the value of description
+     */ 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Get the value of type
+     */ 
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function addToValue(FormElement $field)
+    {
+        if ($field->getType() === 'html') {
+            $this->description = $this->description . $field->getDescription();
+        } else {
+            $this->value = $this->value . $field->getValue();  
+        }
+    }
+
     abstract public function render(): array;
 }

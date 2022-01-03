@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Strategy\Payment;
 
-use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\PaymentStatusFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Factory\Payment\PaymentChangeStatusFactory;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -15,7 +15,7 @@ class IfthenpayPaymentStatus
     private $paymentMethod;
 
     public function __construct(
-        PaymentStatusFactory $factory
+        PaymentChangeStatusFactory $factory
     )
     {
         $this->factory = $factory;

@@ -11,7 +11,6 @@ if (!defined("WHMCS")) {
 use Smarty;
 use Illuminate\Container\Container;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\ConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\Callback;
@@ -23,6 +22,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpayUpgrade;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\PayshopConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\MultibancoConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 
 class IfthenpayConfigFormFactory extends Factory
@@ -44,7 +44,7 @@ class IfthenpayConfigFormFactory extends Factory
         Gateway $gateway, 
         GatewayDataBuilder $gatewayDataBuilder, 
         ConfigGatewaysRepositoryInterface $configGatewaysRepository,
-        Utility $utility,
+        UtilityInterface $utility,
         Callback $callback,
         IfthenpaySql $ifthenpaySql,
         IfthenpayUpgrade $ifthenpayUpgrade,
@@ -68,7 +68,7 @@ class IfthenpayConfigFormFactory extends Factory
     public function build(
     ): ConfigForm {
         switch ($this->type) {
-            case 'multibanco':
+            case Gateway::MULTIBANCO:
                 return new MultibancoConfigForm(
                     $this->ioc, 
                     $this->gatewayVars,
@@ -82,7 +82,7 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->smarty,
                     $this->ifthenpayLogger
                 );
-            case 'mbway':
+            case Gateway::MBWAY:
                 return new MbwayConfigForm(
                     $this->ioc,
                     $this->gatewayVars,
@@ -96,7 +96,7 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->smarty,
                     $this->ifthenpayLogger
                 );
-            case 'payshop':
+            case Gateway::PAYSHOP:
                 return new PayshopConfigForm(
                     $this->ioc,
                     $this->gatewayVars,
@@ -110,7 +110,7 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->smarty,
                     $this->ifthenpayLogger
                 );
-            case 'ccard':
+            case Gateway::CCARD:
                 return new CCardConfigForm(
                     $this->ioc,
                     $this->gatewayVars,

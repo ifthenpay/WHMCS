@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Factory\Payment;
 
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\UpdateMbwayPaymentReturn;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\UpdatePayshopPaymentReturn;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentReturnInterface;
@@ -17,7 +18,7 @@ class UpdatePaymentReturnFactory extends StrategyFactory
 {
     public function build(): PaymentReturnInterface {
         switch ($this->type) {
-            case 'multibanco':
+            case Gateway::MULTIBANCO:
                 return new UpdateMultibancoPaymentReturn(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
@@ -28,7 +29,7 @@ class UpdatePaymentReturnFactory extends StrategyFactory
                     $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
-            case 'mbway':
+            case Gateway::MBWAY:
                 return new UpdateMbwayPaymentReturn(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 
@@ -39,7 +40,7 @@ class UpdatePaymentReturnFactory extends StrategyFactory
                     $this->ifthenpayLogger,
                     $this->smartyDefaultData
                 );
-            case 'payshop':
+            case Gateway::PAYSHOP:
                 return new UpdatePayshopPaymentReturn(
                     $this->paymentDefaultData, 
                     $this->gatewayBuilder, 

@@ -24,7 +24,11 @@ abstract class FieldComposite extends FormElement
     public function add(FormElement $field): void
     {
         $name = $field->getName();
-        $this->fields[$name] = $field;
+        if (isset($this->fields[$name])) {
+            $this->fields[$name]->addToValue($field);
+        } else {
+            $this->fields[$name] = $field;
+        }
     }
 
     public function remove(FormElement $component): void

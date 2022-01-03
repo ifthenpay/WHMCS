@@ -12,6 +12,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\WhmcsHistoryInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentStatusInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\InvoiceRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Traits\Payments\GatewayDataBuilderBackofficeKey;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -20,14 +21,14 @@ if (!defined("WHMCS")) {
 
 abstract class CheckPaymentStatusBase
 {
-    use LogGatewayBuilderData;
+    use LogGatewayBuilderData, GatewayDataBuilderBackofficeKey;
     
     protected $paymentMethod;
     protected $gatewayDataBuilder;
-    protected $whmcsGatewaySettings;
+    protected $gatewaySettings;
     protected $paymentStatus;
     protected $pendingInvoices;
-    protected $webservice;
+    protected $webService;
     protected $orderInvoiceRepository;
     protected $paymentRepository;
     protected $whmcsHistory;
@@ -36,17 +37,17 @@ abstract class CheckPaymentStatusBase
     public function __construct(
         GatewayDataBuilder $gatewayDataBuilder,
         PaymentStatusInterface $paymentStatus,
-        WebService $webservice,
+        WebService $webService,
         InvoiceRepositoryInterface $invoiceRepository,
         RepositoryFactory $repositoryFactory,
         WhmcsHistoryInterface $whmcsHistory,
         IfthenpayLogger $ifthenpayLogger,
-        array $whmcsGatewaySettings
+        array $gatewaySettings
     ) {
         $this->gatewayDataBuilder = $gatewayDataBuilder;
         $this->paymentStatus = $paymentStatus;
-        $this->whmcsGatewaySettings = $whmcsGatewaySettings;
-        $this->webservice = $webservice;
+        $this->gatewaySettings = $gatewaySettings;
+        $this->webService = $webService;
         $this->invoiceRepository = $invoiceRepository;
         $this->paymentRepository = $repositoryFactory->setType($this->paymentMethod)->build();
         $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
@@ -75,16 +76,22 @@ abstract class CheckPaymentStatusBase
         );
     }
 
-    protected function logChangePaymentStatus(): void
+    protected function logChangePaymentStatus(array $payment): void
     {
         $this->ifthenpayLogger->info('payment status changed with success', [
+                'payment' => $payment,
                 'paymentMethod' => $this->paymentMethod,
                 'className' => get_class($this)
             ]
         );
     }
 
+    protected function getPendingOrders(): void
+    {
+        $this->pendingInvoices = $this->invoiceRepository->getAllUnPaidInvoices($this->paymentMethod);
+        $this->logGetPendingOrders($this->pendingInvoices);
+    }
+
     abstract protected function setGatewayDataBuilder(): void;
-    abstract protected function getPendingOrders(): void;
     abstract public function changePaymentStatus(): void;
 }

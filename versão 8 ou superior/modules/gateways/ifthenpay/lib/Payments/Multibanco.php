@@ -8,6 +8,7 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
+use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Traits\Payments\FormatReference;
@@ -17,15 +18,21 @@ use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentMethodInterface;
 class Multibanco extends MasterPayment implements PaymentMethodInterface
 {
     use FormatReference;
+
+    const DYNAMIC_MB_ENTIDADE = 'MB';
     
     private $entidade;
     private $subEntidade;
+    private $validade;
+    private $multibancoPedido;
 
-    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder)
+
+    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, WebService $webService)
     {
-        parent::__construct($orderId, $valor, $dataBuilder);
+        parent::__construct($orderId, $valor, $dataBuilder, $webService);
         $this->entidade = $data->getData()->entidade;
         $this->subEntidade = $data->getData()->subEntidade;
+        $this->validade = isset($data->getData()->validade) ? $data->getData()->validade : '999999';
     }
 
     public function checkValue(): void
@@ -33,6 +40,34 @@ class Multibanco extends MasterPayment implements PaymentMethodInterface
         if (intval($this->valor) >= 1000000) {
             throw new \Exception(\Lang::trans('invalidMultibancoValue'));
         }
+    }
+
+    private function checkEstado(): void
+    {
+        if ($this->multibancoPedido['Status'] !== '0') {
+            throw new \Exception($this->multibancoPedido['Message']);
+        }
+    }
+
+    private function setDynamicReferencia(): void
+    {
+        $this->multibancoPedido = $this->webService->postRequest(
+            'https://ifthenpay.com/api/multibanco/reference/init',
+            [
+                    'mbKey' => $this->subEntidade,
+                    "orderId" => $this->orderId,
+                    "amount" => $this->valor,
+                    "description" => '',
+                    "url" => '',
+                    "clientCode" => '',
+                    "clientName" => '',
+                    "clientEmail" => '',
+                    "clientUsername" => '',
+                    "clientPhone" => '',
+                    "expiryDays" => $this->validade
+            ],
+            true
+        )->getResponseJson();
     }
 
     private function setReferencia()
@@ -64,7 +99,16 @@ class Multibanco extends MasterPayment implements PaymentMethodInterface
     private function getReferencia(): DataBuilder
     {
         $this->dataBuilder->setEntidade($this->entidade);
-        $this->dataBuilder->setReferencia($this->setReferencia());
+        if ($this->entidade === self::DYNAMIC_MB_ENTIDADE) {
+            $this->setDynamicReferencia();
+            $this->checkEstado();
+            $this->dataBuilder->setEntidade($this->multibancoPedido['Entity']);
+            $this->dataBuilder->setReferencia($this->multibancoPedido['Reference']);
+            $this->dataBuilder->setIdPedido($this->multibancoPedido['RequestId']);
+            $this->dataBuilder->setValidade($this->multibancoPedido['ExpiryDate']);
+        } else {
+            $this->dataBuilder->setReferencia($this->setReferencia());
+        }
         $this->dataBuilder->setTotalToPay((string)$this->valor);
         return $this->dataBuilder;
     }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\ifthenpay\Utility;
 
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\StatusInterface;
+
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
 
-class Status {
+class Status implements StatusInterface {
     
     private $statusSucess = "d0749aaba8b833466dfcbb0428e4f89c";
     private $statusError = "bb1ca97ec761fc37101737ba0aa2e7c5";

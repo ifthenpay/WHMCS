@@ -32,7 +32,7 @@ class ChangeEntidade
     
     public function execute(): string
     {
-        $ifthenpayUserAccount = $this->configGatewaysRepository->getIfthenpayUserAccount('multibanco');
+        $ifthenpayUserAccount = $this->configGatewaysRepository->getIfthenpayUserAccount(Gateway::MULTIBANCO);
         $this->ifthenpayLogger->info('ifthenpay user account retrieved with success', ['ifthenpayUserAccount' => $ifthenpayUserAccount, 'className' => get_class($this)]);
         $this->gateway->setAccount($ifthenpayUserAccount);
         return json_encode($this->gateway->getSubEntidadeInEntidade($this->request['entidade']));

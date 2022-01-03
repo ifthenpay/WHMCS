@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Callback;
 
-use WHMCS\Module\Gateway\ifthenpay\Utility\Token;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Status;
-use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackData;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\WhmcsInvoiceHistory;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\StatusInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenExtraInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\ConvertEurosInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ClientRepositoryInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\InvoiceRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\CurrencieRepositoryInterface;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -32,6 +35,9 @@ class CallbackProcess
     protected $whmcsInvoiceHistory;
     protected $invoiceRepository;
     protected $ifthenpayLogger;
+    protected $currencieRepository;
+    protected $clientRepository;
+    protected $convertEuros;
 
 	public function __construct(
         CallbackData $callbackData, 
@@ -40,9 +46,12 @@ class CallbackProcess
         InvoiceRepositoryInterface $invoiceRepository,
         WhmcsInvoiceHistory $whmcsInvoiceHistory,
         IfthenpayLogger $ifthenpayLogger,
-        Status $status = null,
-        Token $token = null,
-        TokenExtra $tokenExtra = null
+        StatusInterface $status = null,
+        TokenInterface $token = null,
+        TokenExtraInterface $tokenExtra = null,
+        CurrencieRepositoryInterface $currencieRepository = null,
+        ClientRepositoryInterface $clientRepository = null,
+        ConvertEurosInterface $convertEuros = null
     )
 	{
         $this->callbackData = $callbackData;
@@ -54,6 +63,9 @@ class CallbackProcess
         $this->status = $status;
         $this->token = $token;
         $this->tokenExtra = $tokenExtra;
+        $this->currencieRepository = $currencieRepository;
+        $this->clientRepository = $clientRepository;
+        $this->convertEuros = $convertEuros;
 	}
     
     /**

@@ -9,14 +9,15 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\ifthenpay\Forms\ConfigForm;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;
 
 
 class CCardConfigForm extends ConfigForm
 {
-    protected $paymentMethod = 'ccard';
+    protected $paymentMethod = Gateway::CCARD;
     protected $paymentMethodNameAlias;
-    protected $hasCallback = false;
+    protected $hasCallback = true;
 
     public function checkConfigValues(): array
     {
@@ -27,17 +28,25 @@ class CCardConfigForm extends ConfigForm
     protected function addPaymentInputsToForm(): void
     {
         try {
-            $this->ifthenpaySql->changeCcardTable();
-            $this->ifthenpayLogger->info('change ccard table with success');
+            $this->ifthenpaySql->removePaymentUrlFromCCardTable();
+            $this->ifthenpayLogger->info('remove paymentUrl from ccard table with success');
         } catch (\Throwable $th) {
-            $this->ifthenpayLogger->error('error changing ccard', ['exception' => $th]);
+            $this->ifthenpayLogger->error('error removing paymentUrl from ccard table', ['exception' => $th]);
             throw $th;
         } 
         if (!$this->configValues) {
             $this->addToOptions();
         } else {
             $this->options[$this->configValues['ccardKey']] = $this->configValues['ccardKey'];
+            $this->addToOptions(true);
         }
+
+        $this->form->add($this->ioc->makeWith(Input::class, [
+            'friendlyName' => \AdminLang::trans('cancelCCardOrder'),
+            'type' => 'yesno',
+            'name' => 'cancelCCardOrder',
+            'description' => \AdminLang::trans('cancelCCardOrderDescription'),
+        ]));
 
         $this->form->add($this->ioc->makeWith(Input::class, [
             'friendlyName' => 'CCard key',
@@ -58,12 +67,6 @@ class CCardConfigForm extends ConfigForm
         }
         
     }
-
-    public function processForm(): void
-    {
-        //void
-    }
-
     /**
      * Get the value of paymentMethodNameAlias
      */ 

@@ -9,7 +9,7 @@ if (!defined("WHMCS")) {
 }
 
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Payment;
-use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
+use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Traits\Payments\FormatReference;
@@ -23,9 +23,9 @@ class Payshop extends Payment implements PaymentMethodInterface
     protected $validade;
     private $payshopPedido;
 
-    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, Webservice $webservice)
+    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, WebService $webService)
     {
-        parent::__construct($orderId, $valor, $dataBuilder, $webservice);
+        parent::__construct($orderId, $valor, $dataBuilder, $webService);
         $this->payshopKey = $data->getData()->payshopKey;
         $this->validade = $this->makeValidade($data->getData()->validade);
     }
@@ -56,7 +56,7 @@ class Payshop extends Payment implements PaymentMethodInterface
 
     private function setReferencia(): void
     {
-        $this->payshopPedido = $this->webservice->postRequest(
+        $this->payshopPedido = $this->webService->postRequest(
             'https://ifthenpay.com/api/payshop/reference/',
             [
                     'payshopkey' => $this->payshopKey,

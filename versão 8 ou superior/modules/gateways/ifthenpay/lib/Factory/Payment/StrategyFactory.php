@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace WHMCS\Module\Gateway\Ifthenpay\Factory\Payment;
 
 use Illuminate\Contracts\Container\Container;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Token;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Status;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
-use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
-use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
+use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\StatusInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
-use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenExtraInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\ConvertEurosInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ClientRepositoryInterface;
+use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\CurrencieRepositoryInterface;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
@@ -32,18 +35,20 @@ abstract class StrategyFactory extends Factory
     protected $token;
     protected $status;
     protected $ifthenpayLogger;
+    protected $convertEuros;
     
     public function __construct(
         Container $ioc,
         GatewayDataBuilder $gatewayBuilder,
         Gateway $ifthenpayGateway,
         array $whmcsGatewaySettings,
-        Utility $utility,
+        UtilityInterface $utility,
         RepositoryFactory $repositoryFactory,
         IfthenpayLogger $ifthenpayLogger,
-        Token $token = null,
-        Status $status = null,
-        TokenExtra $tokenExtra = null
+        TokenInterface $token,
+        StatusInterface $status,
+        TokenExtraInterface $tokenExtra,
+        ConvertEurosInterface $convertEuros
     )
 	{
         parent::__construct($ioc);
@@ -56,6 +61,7 @@ abstract class StrategyFactory extends Factory
         $this->token = $token;
         $this->status = $status;
         $this->tokenExtra = $tokenExtra;
+        $this->convertEuros = $convertEuros;
     }
 
     abstract public function build();

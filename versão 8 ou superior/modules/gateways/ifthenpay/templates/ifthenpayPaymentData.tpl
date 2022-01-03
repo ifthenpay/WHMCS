@@ -9,6 +9,12 @@
             {$ifthenpayReference} 
             <span class="badge">{$referencia}</span>
         </li>
+        {if $validade}
+        <li class="list-group-item">
+            {$payshopDeadline}
+            <span class="badge">{$validade}</span>
+        </li>
+        {/if}
         <li class="list-group-item">
             {$ifthenpayTotalToPay} 
             <span class="badge">{$totalToPay}</span>

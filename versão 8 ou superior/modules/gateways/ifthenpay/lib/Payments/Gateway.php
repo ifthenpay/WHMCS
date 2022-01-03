@@ -8,40 +8,48 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use WHMCS\Module\Gateway\ifthenpay\Builders\DataBuilder;
-use WHMCS\Module\Gateway\ifthenpay\Factory\Payment\PaymentFactory;
-use WHMCS\Module\Gateway\ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
+use WHMCS\Module\Gateway\Ifthenpay\Payments\Multibanco;
+use WHMCS\Module\Gateway\ifthenpay\Builders\DataBuilder;
+use WHMCS\Module\Gateway\ifthenpay\Builders\GatewayDataBuilder;
+use WHMCS\Module\Gateway\ifthenpay\Factory\Payment\PaymentFactory;
 
 class Gateway
 {
-    private $webservice;
+    const MULTIBANCO = 'multibanco';
+    const MBWAY = 'mbway';
+    const PAYSHOP = 'payshop';
+    const CCARD = 'ccard';
+    const CCARD_ALIAS = 'credit card (ifthenpay)';
+
+    private $webService;
     private $paymentFactory;
     private $account;
-    private $paymentMethods = ['multibanco', 'mbway', 'payshop', 'ccard', 'credit card (ifthenpay)'];
+    private $paymentMethods = [self::MULTIBANCO, self::MBWAY, self::PAYSHOP, self::CCARD];
+    private $paymentMethodsCanCancel = [self::MULTIBANCO, self::MBWAY, self::CCARD, self::PAYSHOP];
     private $aliasPaymentMethods = [
-        'multibanco' => [
+        self::MULTIBANCO => [
             'en' => 'Multibanco',
             'pt' => 'Multibanco',
         ],
-        'mbway' => [
+        self::MBWAY => [
             'en' => 'MB WAY',
             'pt' => 'MB WAY',
         ],
-        'payshop' => [
+        self::PAYSHOP => [
             'en' => 'Payshop',
             'pt' => 'Payshop',
         ],
-        'ccard' => [
+        self::CCARD => [
             'en' => 'Credit Card',
             'pt' => 'Cartão de Crédito',
         ],
         
     ];
 
-    public function __construct(WebService $webservice, PaymentFactory $paymentFactory)
+    public function __construct(WebService $webService, PaymentFactory $paymentFactory)
     {
-        $this->webservice = $webservice;
+        $this->webService = $webService;
         $this->paymentFactory = $paymentFactory;
     }
 
@@ -55,17 +63,25 @@ class Gateway
         return $this->paymentMethods;
     }
 
+    public function getPaymentMethodsCanCancel(): array
+    {
+        return $this->paymentMethodsCanCancel;
+    }
+
     public function checkIfthenpayPaymentMethod(string $paymentMethod): bool
     {
         if (in_array(strtolower($paymentMethod), $this->paymentMethods)) {
             return true;
+        } else if (strtolower($paymentMethod) === self::CCARD_ALIAS) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public function authenticate(string $backofficeKey): void
     {
-            $authenticate = $this->webservice->postRequest(
+            $authenticate = $this->webService->postRequest(
                 'https://www.ifthenpay.com/IfmbWS/ifmbws.asmx/' .
                 'getEntidadeSubentidadeJsonV2',
                 [
@@ -85,13 +101,13 @@ class Gateway
         return array_filter(
             $this->account,
             function ($value) use ($paymentMethod) {
-                if($paymentMethod === 'multibanco' && is_numeric($value['Entidade'])) {
+                if($paymentMethod === self::MULTIBANCO && (is_numeric($value['Entidade']) || $value['Entidade'] === Multibanco::DYNAMIC_MB_ENTIDADE)) {
                     return $value;
-                } elseif ($paymentMethod === 'mbway') {
+                } elseif ($paymentMethod === self::MBWAY) {
                     return $value['Entidade'] === strtoupper($paymentMethod);
-                } elseif ($paymentMethod === 'payshop') {
+                } elseif ($paymentMethod === self::PAYSHOP) {
                     return $value['Entidade'] === strtoupper($paymentMethod);
-                } elseif ($paymentMethod === 'ccard') {
+                } elseif ($paymentMethod === self::CCARD) {
                     return $value['Entidade'] === strtoupper($paymentMethod);
                 } 
             }
@@ -130,11 +146,11 @@ class Gateway
     public function getEntidadeSubEntidade(string $paymentMethod): array
     {
         $list = null;
-        if ($paymentMethod === 'multibanco') {
+        if ($paymentMethod === self::MULTIBANCO) {
             $list = array_filter(
                 array_column($this->account, 'Entidade'),
                 function ($value) {
-                    return is_numeric($value);
+                    return is_numeric($value) || $value === Multibanco::DYNAMIC_MB_ENTIDADE;
                 }
             );
         } else {
@@ -146,6 +162,19 @@ class Gateway
             }
         }
         return $list;
+    }
+
+    public function checkDynamicMb(array $userAccount): bool
+    {
+        $multibancoDynamicKey = array_filter(array_column($userAccount, 'Entidade'),
+            function ($value) {
+                return $value === Multibanco::DYNAMIC_MB_ENTIDADE;
+            }
+        );
+        if ($multibancoDynamicKey) {
+            return true;
+        }
+        return false;
     }
 
 

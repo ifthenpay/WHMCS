@@ -103,6 +103,12 @@ class DataBuilder implements DataBuilderInterface
         return $this;
     }
 
+    public function setCurrency(string $value): DataBuilderInterface
+    {
+        $this->data->currency = $value;
+        return $this;
+    }
+
     public function toArray(): array
     {
         return json_decode(json_encode($this->data), true);

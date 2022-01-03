@@ -12,7 +12,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Payments\Payment;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\DataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\PaymentMethodInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Request\Webservice;
+use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 
 class CCard extends Payment implements PaymentMethodInterface
 {
@@ -22,9 +22,9 @@ class CCard extends Payment implements PaymentMethodInterface
     private $errorUrl;
     private $cancelUrl;
 
-    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, Webservice $webservice)
+    public function __construct(GatewayDataBuilder $data, string $orderId, string $valor, DataBuilder $dataBuilder, WebService $webService)
     {
-        parent::__construct($orderId, $valor, $dataBuilder, $webservice);
+        parent::__construct($orderId, $valor, $dataBuilder, $webService);
         $this->ccardKey = $data->getData()->ccardKey;
         $this->successUrl = $data->getData()->successUrl;
         $this->errorUrl = $data->getData()->errorUrl;
@@ -45,7 +45,7 @@ class CCard extends Payment implements PaymentMethodInterface
 
     private function setReferencia(): void
     {
-        $this->ccardPedido = $this->webservice->postRequest(
+        $this->ccardPedido = $this->webService->postRequest(
             'https://ifthenpay.com/api/creditcard/init/' . $this->ccardKey,
             [
                 "orderId" => $this->orderId,
