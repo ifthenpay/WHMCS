@@ -22,7 +22,7 @@ class MultibancoOrderDetail extends MultibancoBase implements OrderDetailInterfa
             $this->paymentMethod, 'en'));
         $this->smartyDefaultData->setEntidade($this->paymentDataFromDb['entidade']);
         $this->smartyDefaultData->setReferencia($this->formatReference($this->paymentDataFromDb['referencia']));
-        $this->smartyDefaultData->setValidade(!empty($this->paymentDataFromDb) ? (new \DateTime($this->paymentDataFromDb['validade']))->format('d-m-Y') : '');
+        $this->smartyDefaultData->setValidade($this->paymentDataFromDb['validade'] ? (new \DateTime($this->paymentDataFromDb['validade']))->format('d-m-Y') : '');
         $this->smartyDefaultData->setPayshopDeadlineLang(\Lang::trans('payshopDeadline'));
         $this->smartyDefaultData->setEntityMultibancoLang(\Lang::trans('entityMultibanco'));
         $this->smartyDefaultData->setIfthenpayReferenceLang(\Lang::trans('ifthenpayReference'));

@@ -19,7 +19,8 @@ class MultibancoBase extends PaymentBase
     {
         $this->gatewayBuilder->setEntidade($this->whmcsGatewaySettings['entidade']);
         $this->gatewayBuilder->setSubEntidade($this->whmcsGatewaySettings['subEntidade']);
-        $this->gatewayBuilder->setValidade($this->whmcsGatewaySettings['multibancoValidity'] !== 'Choose Deadline' ? $this->whmcsGatewaySettings['multibancoValidity'] : '999999');
+        $this->gatewayBuilder->setValidade($this->whmcsGatewaySettings['multibancoValidity'] ? $this->whmcsGatewaySettings['multibancoValidity'] : '999999');
+        
         $this->logGatewayBuilderData();
     }
 
