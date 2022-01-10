@@ -31,7 +31,6 @@ abstract class ConfigForm
     protected $activatedCallback;
     protected $paymentMethodNameAlias;
     protected $configGatewaysRepository;
-    protected $callback;
     protected $ifthenpaySql;
     protected $utility;
     protected $paymentMethod;
@@ -53,7 +52,6 @@ abstract class ConfigForm
         GatewayDataBuilder $gatewayDataBuilder, 
         ConfigGatewaysRepositoryInterface $configGatewaysRepository,
         UtilityInterface $utility,
-        Callback $callback,
         IfthenpaySql $ifthenpaySql,
         IfthenpayUpgrade $ifthenpayUpgrade,
         Smarty $smarty,
@@ -65,7 +63,6 @@ abstract class ConfigForm
         $this->backofficeKey = $this->gatewayVars['backofficeKey'];
         $this->configGatewaysRepository = $configGatewaysRepository;
         $this->utility = $utility;
-        $this->callback = $callback;
         $this->ifthenpaySql = $ifthenpaySql;
         $this->callbackData = $this->configGatewaysRepository->getCallbackData($this->paymentMethod);
         $this->ifthenpayUserAccount = $this->configGatewaysRepository->getIfthenpayUserAccount($this->paymentMethod);
@@ -204,7 +201,7 @@ abstract class ConfigForm
                 $this->form->add($this->ioc->makeWith(Input::class, [
                     "friendlyName" => "", 'name' => 'htmlField', "type" => "html", 'options' => null, 'description' => $html
                 ]));
-                $this->ifthenpayLogger->info('upgrade module notification added with success to form', ['needUpgrade' => $$needUpgrade]);            
+                $this->ifthenpayLogger->info('upgrade module notification added with success to form', ['needUpgrade' => $needUpgrade]);            
         } catch (\Throwable $th) {
             $this->ifthenpayLogger->error('error checking upgrade module notification', ['exception' => $th]);
             throw $th;

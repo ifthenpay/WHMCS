@@ -13,16 +13,17 @@ use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\MbWayPaymentStatus;
 use WHMCS\Module\Gateway\Ifthenpay\Repositories\MbWayRepository;
 
+$ioc = (new Ifthenpay())->getIoc();
+$ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+$ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+$routerData = [
+    'requestMethod' => 'get',
+    'requestAction' => 'cancelMbwayOrder',
+    'requestData' => $_GET,
+    'isFront' => true
+];
+
 try {
-    $ioc = (new Ifthenpay(Gateway::MBWAY))->getIoc();
-    $ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
-    $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
-    $routerData = [
-        'requestMethod' => 'get',
-        'requestAction' => 'cancelMbwayOrder',
-        'requestData' => $_GET,
-        'isFront' => true
-    ];
     $routerData['ifthenpayLogger'] = $ifthenpayLogger;
     $ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData, $ifthenpayLogger) {
         $orderId = $routerData['requestData']['orderId'];
@@ -84,7 +85,7 @@ try {
             'exception' => $th
         ]
     );
-    header("Content-Type: application/json", true);
+    header("Content-Type: application/json; charset=UTF-8", true);
     header('HTTP/1.0 400 Bad Request');
     die(json_encode([
         'error' => $th->getMessage()

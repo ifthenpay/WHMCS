@@ -13,7 +13,7 @@ use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 
 class IfthenpayUpgrade
 {
-    const MODULE_VERSION = '1.2.0';
+    const MODULE_VERSION = '1.2.1';
     private $webService;
     
 

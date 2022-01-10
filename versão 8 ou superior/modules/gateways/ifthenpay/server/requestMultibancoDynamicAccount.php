@@ -10,17 +10,20 @@ use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\MailInterface;
 
+$ioc = (new Ifthenpay())->getIoc();
+$ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+$ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MULTIBANCO)->getLogger();
+$routerData = [
+    'requestMethod' => 'post',
+    'requestAction' => 'requestDynamicMultibancoAccount',
+    'requestData' => $_POST,
+    'isFront' => false
+];
+
 try {
-    $ioc = (new Ifthenpay())->getIoc();
-    $routerData = [
-        'requestMethod' => 'post',
-        'requestAction' => 'requestDynamicMultibancoAccount',
-        'requestData' => $_POST,
-        'isFront' => false
-    ];
-    $ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+       
     $routerData['ifthenpayLogger'] = $ifthenpayLogger;
-    $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MULTIBANCO)->getLogger();
+    
     $ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData, $ifthenpayLogger) {
         $ioc->make(MailInterface::class)
             ->setPaymentMethod(Gateway::MULTIBANCO)
@@ -43,8 +46,9 @@ try {
             'exception' => $th
         ]
     );
-    header("Content-Type: application/json", true);
+    header("Content-Type: application/json; charset=UTF-8", true);
     header('HTTP/1.0 400 Bad Request');
+    
     die(json_encode([
         'error' => \AdminLang::trans('multibancoDynamicSendNotificationError')
     ]));

@@ -176,7 +176,6 @@ class Ifthenpay
                     $this->ioc->make(GatewayDataBuilder::class),
                     $this->ioc->make(ConfigGatewaysRepositoryInterface::class),
                     $this->ioc->make(UtilityInterface::class),
-                    $this->ioc->make(Callback::class),
                     $this->ioc->make(IfthenpaySql::class),
                     $this->ioc->make(IfthenpayUpgrade::class),
                     $this->ioc->make(Smarty::class),

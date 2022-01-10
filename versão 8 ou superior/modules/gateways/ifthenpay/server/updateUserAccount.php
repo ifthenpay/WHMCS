@@ -11,21 +11,25 @@ use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysRepositoryInterface;
 use WHMCS\Module\GatewaySetting;
 
+$ioc = (new Ifthenpay())->getIoc();
+$ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+$propertyName = 'CHANNEL_BACKOFFICE_CONFIG_' . strtoupper($paymentMethod);
+$ifthenpayLogger = $ifthenpayLogger->setChannel(constant(IfthenpayLogger::class . '::' . $propertyName))->getLogger();
+$configGatewayRepository = $ioc->make(ConfigGatewaysRepositoryInterface::class);
+$routerData = [
+    'requestMethod' => 'get',
+    'configGatewaysRepository' => $configGatewayRepository,
+    'requestAction' => 'updateUserAccount',
+    'prevRequestAction' => $_GET['pA'],
+    'requestData' => $_GET,
+    'isFront' => true
+];
+
 try {
-    $ioc = (new Ifthenpay())->getIoc();
-    $configGatewayRepository = $ioc->make(ConfigGatewaysRepositoryInterface::class);
-    $routerData = [
-        'requestMethod' => 'get',
-        'configGatewaysRepository' => $configGatewayRepository,
-        'requestAction' => 'updateUserAccount',
-        'requestData' => $_GET,
-        'isFront' => true
-    ];
-    $ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+    
     $routerData['ifthenpayLogger'] = $ifthenpayLogger;
     $paymentMethod = $routerData['requestData']['paymentMethod'];
-    $propertyName = 'CHANNEL_BACKOFFICE_CONFIG_' . strtoupper($paymentMethod);
-    $ifthenpayLogger = $ifthenpayLogger->setChannel(constant(IfthenpayLogger::class . '::' . $propertyName))->getLogger();
+    
     $ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData, $ifthenpayLogger, $configGatewayRepository, $paymentMethod) {
         $backofficeKey = $backofficeKey = GatewaySetting::getForGateway($paymentMethod)['backofficeKey'];
         if (!$backofficeKey) {
@@ -41,7 +45,7 @@ try {
         $userAccount = $gateway->getAccount($paymentMethod);
         $configGatewayRepository->createOrUpdate(
             ['gateway' => $paymentMethod, 'setting' => 'userAccount'],
-            ['value' => $userAccount]
+            ['value' => serialize($userAccount)]
         );
         $configGatewayRepository->deleteWhere(
             [
@@ -61,7 +65,7 @@ try {
     });
 } catch (\Throwable $th) {
     $ifthenpayLogger->error('error updating user account', array_merge($routerData, ['exception' => $th]));
-    header("Content-Type: application/json", true);
+    header("Content-Type: application/json; charset=UTF-8", true);
     header('HTTP/1.0 400 Bad Request');
     die($th->getMessage());
 }

@@ -9,19 +9,20 @@ use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\MailInterface;
 
+$ioc = (new Ifthenpay())->getIoc();
+$ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+$propertyName = 'CHANNEL_BACKOFFICE_CONFIG_' . strtoupper($routerData['requestData']['paymentMethod']);
+$ifthenpayLogger = $ifthenpayLogger->setChannel(constant(IfthenpayLogger::class . '::' . $propertyName))->getLogger();
+$routerData = [
+    'requestMethod' => 'post',
+    'requestAction' => 'addNewAccount',
+    'requestData' => $_POST,
+    'isFront' => false
+];
 
 try {
-    $ioc = (new Ifthenpay())->getIoc();
-    $routerData = [
-        'requestMethod' => 'post',
-        'requestAction' => 'addNewAccount',
-        'requestData' => $_POST,
-        'isFront' => false
-    ];
-    $ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+    
     $routerData['ifthenpayLogger'] = $ifthenpayLogger;
-    $propertyName = 'CHANNEL_BACKOFFICE_CONFIG_' . strtoupper($routerData['requestData']['paymentMethod']);
-    $ifthenpayLogger = $ifthenpayLogger->setChannel(constant(IfthenpayLogger::class . '::' . $propertyName))->getLogger();
     $ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData, $ifthenpayLogger) {
         $paymentMethod = $routerData['requestData']['paymentMethod'];
         $ioc->make(MailInterface::class)
@@ -31,7 +32,7 @@ try {
             ->setMessageBody("Associar conta " . $paymentMethod . " ao contrato \n\n")
             ->sendEmail();    
             
-        $ifthenpayLogger->info('request multibanco dynamic account sent with success', [ 
+        $ifthenpayLogger->info('request ' . $paymentMethod . ' account sent with success', [ 
                 'routerData' => $routerData
             ]
         );
@@ -46,7 +47,7 @@ try {
         'exception' => $th
         ]
     );
-    header("Content-Type: application/json", true);
+    header("Content-Type: application/json; charset=UTF-8", true);
     header('HTTP/1.0 400 Bad Request');
     die(json_encode([
         'error' => \AdminLang::trans('addNewAccountSendNotificationError')

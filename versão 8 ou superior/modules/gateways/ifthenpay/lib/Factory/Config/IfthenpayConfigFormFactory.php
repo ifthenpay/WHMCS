@@ -13,7 +13,6 @@ use Illuminate\Container\Container;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Factory;
 use WHMCS\Module\Gateway\Ifthenpay\Forms\ConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
-use WHMCS\Module\Gateway\Ifthenpay\Callback\Callback;
 use WHMCS\Module\Gateway\Ifthenpay\Config\IfthenpaySql;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\ifthenpay\Forms\CCardConfigForm;
@@ -32,7 +31,6 @@ class IfthenpayConfigFormFactory extends Factory
     private $gatewayDataBuilder; 
     private $configGatewaysRepository; 
     private $utility;
-    private $callback;
     private $ifthenpaySql;
     private $ifthenpayUpgrade;
     private $smarty;
@@ -45,7 +43,6 @@ class IfthenpayConfigFormFactory extends Factory
         GatewayDataBuilder $gatewayDataBuilder, 
         ConfigGatewaysRepositoryInterface $configGatewaysRepository,
         UtilityInterface $utility,
-        Callback $callback,
         IfthenpaySql $ifthenpaySql,
         IfthenpayUpgrade $ifthenpayUpgrade,
         Smarty $smarty,
@@ -58,7 +55,6 @@ class IfthenpayConfigFormFactory extends Factory
         $this->gatewayDataBuilder = $gatewayDataBuilder;
         $this->configGatewaysRepository = $configGatewaysRepository;
         $this->utility = $utility;
-        $this->callback = $callback;
         $this->ifthenpaySql = $ifthenpaySql;
         $this->ifthenpayUpgrade = $ifthenpayUpgrade;
         $this->smarty = $smarty;
@@ -76,7 +72,6 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayDataBuilder,
                     $this->configGatewaysRepository,
                     $this->utility,
-                    $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
                     $this->smarty,
@@ -90,7 +85,6 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayDataBuilder,
                     $this->configGatewaysRepository,
                     $this->utility,
-                    $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
                     $this->smarty,
@@ -104,7 +98,6 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayDataBuilder,
                     $this->configGatewaysRepository,
                     $this->utility,
-                    $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
                     $this->smarty,
@@ -118,7 +111,6 @@ class IfthenpayConfigFormFactory extends Factory
                     $this->gatewayDataBuilder,
                     $this->configGatewaysRepository,
                     $this->utility,
-                    $this->callback,
                     $this->ifthenpaySql,
                     $this->ifthenpayUpgrade,
                     $this->smarty,

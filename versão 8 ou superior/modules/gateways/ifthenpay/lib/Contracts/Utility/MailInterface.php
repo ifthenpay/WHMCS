@@ -13,8 +13,8 @@ interface MailInterface
 {
     public function setMessage(): void;
     public function sendEmail(): void;     
-    public function setSubject(string $subject): self; 
-    public function setMessageBody(string $messageBody): self;
-    public function setPaymentMethod(string $paymentMethod): self;
-    public function setRouterRequestAction(string $routerRequestAction): self;
+    public function setSubject(string $subject): MailInterface; 
+    public function setMessageBody(string $messageBody): MailInterface;
+    public function setPaymentMethod(string $paymentMethod): MailInterface;
+    public function setRouterRequestAction(string $routerRequestAction): MailInterface;
 }

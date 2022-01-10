@@ -6,20 +6,20 @@ define("CLIENTAREA", true);
 
 use WHMCS\Module\Gateway\Ifthenpay\Router\Router;
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
-use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Data\ResendMbwayNotification;
 
+$ioc = (new Ifthenpay())->getIoc();
+$ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+$ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+$routerData = [
+    'requestMethod' => 'get',
+    'requestAction' => 'resendMbwayNotification',
+    'requestData' => $_GET
+];
 try {
-    $ioc = (new Ifthenpay(Gateway::MBWAY))->getIoc();
-    $routerData = [
-        'requestMethod' => 'get',
-        'requestAction' => 'resendMbwayNotification',
-        'requestData' => $_GET
-    ];
-    $ifthenpayLogger = $ioc->make(IfthenpayLogger::class);
+    
     $routerData['ifthenpayLogger'] = $ifthenpayLogger;
-    $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
     $ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData, $ifthenpayLogger) {
         $orderId = $routerData['requestData']['orderId'];
         $fileName = $routerData['requestData']['filename'];
@@ -58,7 +58,7 @@ try {
     /*if ($fileName === 'viewinvoice') {
         header('Location: ' . $resendMbwayNotification->getSystemUrl() . 'viewinvoice.php?id=' . $orderId . '&messageType=error&message=' . Lang::trans('mbwaySendNotificationError'));
     } else {*/
-        header("Content-Type: application/json", true);
+        header("Content-Type: application/json; charset=UTF-8", true);
         header('HTTP/1.0 400 Bad Request');
         die(json_encode([
             'error' => \Lang::trans('mbwaySendNotificationError')

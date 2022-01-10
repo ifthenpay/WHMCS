@@ -14,6 +14,7 @@ class Router
 {
     private $requestMethod;
     private $requestAction;
+    private $prevRequestAction;
     private $requestData;
     private $isFront;
     private $configGatewaysRepository;
@@ -22,7 +23,8 @@ class Router
 	public function __construct(
         string $requestMethod,
         ConfigGatewaysRepositoryInterface $configGatewaysRepository = null, 
-        string $requestAction = null, 
+        string $requestAction = null,
+        string $prevRequestAction = null,
         array $requestData = null, 
         bool $isFront = true,
         bool $isCallback = false
@@ -31,6 +33,7 @@ class Router
         $this->requestMethod = $requestMethod;
         $this->configGatewaysRepository = $configGatewaysRepository;
         $this->requestAction = $requestAction;
+        $this->prevRequestAction = $prevRequestAction;
         $this->requestData = $requestData;
         $this->isFront = $isFront;
         $this->isCallback = $isCallback;
@@ -52,7 +55,7 @@ class Router
 
     private function validateUserAccountToken(): void
     {
-        $userAccountToken = $this->configGatewaysRepository->getUserToken($this->requestData['paymentMethod'], $this->requestAction);
+        $userAccountToken = $this->configGatewaysRepository->getUserToken($this->requestData['paymentMethod'], $this->prevRequestAction);
         if (!isset($this->requestData['userToken']) || (!is_null($userAccountToken) && 
         $this->requestData['userToken'] !== $userAccountToken)) {
             throw new \Exception('user token request not valid');

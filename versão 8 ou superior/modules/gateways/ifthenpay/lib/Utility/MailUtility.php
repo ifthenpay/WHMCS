@@ -44,13 +44,13 @@ class MailUtility implements MailInterface
     private function setUpdateUserAccountUrl(): string
     {
         return $this->utility->getSystemUrl() . 
-            'modules/gateways/ifthenpay/server/updateUserAccount.php?action=updateUserAccount&paymentMethod=' . 
+            'modules/gateways/ifthenpay/server/updateUserAccount.php?action=updateUserAccount&pA=' . $this->routerRequestAction . '&paymentMethod=' . 
             $this->paymentMethod . '&userToken=' . $this->token->saveUserToken($this->paymentMethod, $this->routerRequestAction);
     }
 
-    private function setDefaultMessageBody(): array
+    private function setDefaultMessageBody(): void
     {
-        return $this->messageBody = [
+        $this->messageBody = [
             "backofficeKey: " . GatewaySetting::getForGateway($this->paymentMethod)['backofficeKey'] .  "\n\n",
             "Email Cliente: " .  $this->adminRepository->getAdminEmail() . "\n\n",
             "Update User Account: " .  $this->setUpdateUserAccountUrl() . "\n\n",
@@ -72,20 +72,21 @@ class MailUtility implements MailInterface
         Mail::factory()->send($this->message);
     }
     
-   public function setSubject(string $subject): self
+   public function setSubject(string $subject): MailInterface
    {
       $this->subject = $subject;
 
       return $this;
    }
 
-    public function setMessageBody(string $messageBody): self
+    public function setMessageBody(string $messageBody): MailInterface
     {
-        array_unshift($this->setDefaultMessageBody(), $messageBody);
+        $this->setDefaultMessageBody();
+        array_unshift($this->messageBody, $messageBody);
         return $this;
     }
 
-    public function setPaymentMethod(string $paymentMethod): self
+    public function setPaymentMethod(string $paymentMethod): MailInterface
     {
        $this->paymentMethod = $paymentMethod;
        return $this;
@@ -96,7 +97,7 @@ class MailUtility implements MailInterface
     *
     * @return  self
     */ 
-   public function setRouterRequestAction(string $routerRequestAction): self
+   public function setRouterRequestAction(string $routerRequestAction): MailInterface
    {
       $this->routerRequestAction = $routerRequestAction;
 
