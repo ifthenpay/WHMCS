@@ -44,7 +44,7 @@ abstract class CancelOrder
         $this->gatewayDataBuilder = $gatewayDataBuilder;
         $this->paymentStatus = $paymentStatusFactory->setType($this->paymentMethod)->build();
         $this->invoiceRepository = $invoiceRepository;
-        $this->paymentRepository = $repositoryFactory->setTYpe($this->paymentMethod)->build();
+        $this->paymentRepository = $repositoryFactory->setType($this->paymentMethod)->build();
         $this->whmcsInvoiceHistory = $whmcsInvoiceHistory;
         $this->ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
         $this->gatewaySettings = $gatewaySettings;
