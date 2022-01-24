@@ -48,7 +48,6 @@ class ClientCheckoutConfirmHook extends CheckoutHook
         if (($this->vars['action'] === 'complete' || $this->vars['filename'] === 'viewinvoice') && $this->vars['paymentmethod'] === $this->paymentMethod) {
             $ifthenpayOrderDetail = $this->ifthenpayOrderDetail->setParams($this->vars)->execute();
             if (($this->vars['paymentmethod'] === Gateway::CCARD || strtolower($this->vars['paymentmethod']) === Gateway::CCARD_ALIAS) && $ifthenpayOrderDetail->getPaymentDataFromDb()['status'] === 'pending') {
-                //header('Location: ' . $ifthenpayOrderDetail->getPaymentDataFromDb()['paymentUrl']);
                 $paymentUrl = $_SESSION['paymentUrl'];
                 unset($_SESSION['paymentUrl']);
                 header('Location: ' . $paymentUrl);

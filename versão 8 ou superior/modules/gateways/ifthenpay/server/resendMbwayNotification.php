@@ -15,10 +15,10 @@ $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMEN
 $routerData = [
     'requestMethod' => 'get',
     'requestAction' => 'resendMbwayNotification',
+    'prevRequestAction' => $_GET['pA'],
     'requestData' => $_GET
 ];
 try {
-    
     $routerData['ifthenpayLogger'] = $ifthenpayLogger;
     $ioc->makeWith(Router::class, $routerData)->init(function() use ($ioc, $routerData, $ifthenpayLogger) {
         $orderId = $routerData['requestData']['orderId'];
@@ -29,9 +29,6 @@ try {
                 'routerData' => $routerData
             ]
         );
-        /*if ($fileName === 'viewinvoice') {
-            header('Location: ' . $resendMbwayNotification->getSystemUrl() . 'viewinvoice.php?id=' . $orderId . '&messageType=success&message=' . \Lang::trans('mbwaySendNotificationSuccess'));
-        } else {*/
             if (isset($_COOKIE['mbwayCountdownShow'])) {
                 $_COOKIE['mbwayCountdownShow'] = 'true';
             } else {
@@ -47,7 +44,6 @@ try {
             die(json_encode([
                 'success' => \Lang::trans('mbwaySendNotificationSuccess')
             ]));
-        /*}*/
     });
 } catch (\Throwable $th) {
     $ifthenpayLogger->error('error resending mbway notification - ' . $th->getMessage(), [ 
@@ -55,14 +51,10 @@ try {
             'exception' => $th
         ]
     );
-    /*if ($fileName === 'viewinvoice') {
-        header('Location: ' . $resendMbwayNotification->getSystemUrl() . 'viewinvoice.php?id=' . $orderId . '&messageType=error&message=' . Lang::trans('mbwaySendNotificationError'));
-    } else {*/
-        header("Content-Type: application/json; charset=UTF-8", true);
-        header('HTTP/1.0 400 Bad Request');
-        die(json_encode([
-            'error' => \Lang::trans('mbwaySendNotificationError')
-        ]));
-    /*}*/
+    header("Content-Type: application/json; charset=UTF-8", true);
+    header('HTTP/1.0 400 Bad Request');
+    die(json_encode([
+        'error' => \Lang::trans('mbwaySendNotificationError')
+    ]));
 }
 

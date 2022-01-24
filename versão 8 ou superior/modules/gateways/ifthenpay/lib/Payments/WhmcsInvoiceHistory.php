@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace WHMCS\Module\Gateway\Ifthenpay\Payments;
 
-use Ramsey\Uuid\Type\Integer;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Payments\WhmcsHistoryInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\InvoiceRepositoryInterface;

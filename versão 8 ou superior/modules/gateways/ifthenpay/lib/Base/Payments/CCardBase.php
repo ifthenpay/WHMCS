@@ -14,8 +14,6 @@ use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\SmartyDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\GatewayDataBuilder;
 use WHMCS\Module\Gateway\Ifthenpay\Builders\PaymentDataBuilder;
-use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ClientRepositoryInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\CurrencieRepositoryInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\StatusInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;

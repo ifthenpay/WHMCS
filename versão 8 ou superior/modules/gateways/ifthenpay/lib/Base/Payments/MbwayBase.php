@@ -62,7 +62,6 @@ class MbwayBase extends PaymentBase
             'status' => 'pending'
         ];
         $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
-        //$this->paymentRepository->create($paymentData);
         $this->logSavePaymentDataInDatabase($paymentData);
     }
 
@@ -74,7 +73,6 @@ class MbwayBase extends PaymentBase
             'order_id' => $this->paymentDefaultData->orderId, 
             'status' => 'pending'
         ];
-        //$this->paymentRepository->updatePaymentByOrderId($paymentData, $this->paymentDefaultData->orderId);
         $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
         $this->logSavePaymentDataInDatabase($paymentData, 'update');
     }

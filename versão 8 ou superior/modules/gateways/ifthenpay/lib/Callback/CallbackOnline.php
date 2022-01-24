@@ -33,7 +33,6 @@ class CallbackOnline extends CallbackProcess implements CallbackProcessInterface
                     ]
                 );
                 $this->whmcsInvoiceHistory
-                    //->loadWhmcsFunctions()
                     ->setInvoiceId($GATEWAY['name'], $this->paymentData['order_id']);
                 $invoiceid = $this->whmcsInvoiceHistory->getInvoiceId();
 

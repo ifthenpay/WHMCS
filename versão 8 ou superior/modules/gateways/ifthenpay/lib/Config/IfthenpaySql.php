@@ -169,10 +169,6 @@ class IfthenpaySql extends IfthenpayInstall
 
     public function uninstall(): void
     {
-        /*if ($this->userPaymentMethods) {
-            $this->deleteIfthenpaySql();
-            $this->deleteShopSql();
-        }
-        $this->deleteIfthenpayLogSql();*/
+        //void
     }
 }

@@ -7,10 +7,6 @@ namespace WHMCS\Module\Gateway\Ifthenpay\Callback;
 use WHMCS\Module\Gateway\Ifthenpay\Callback\CallbackProcess;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Callback\CallbackProcessInterface;
 
-/*if (!defined("WHMCS")) {
-    die("This file cannot be accessed directly");
-}*/
-
 class CallbackOffline extends CallbackProcess implements CallbackProcessInterface
 {
     public function process(): void
@@ -43,7 +39,6 @@ class CallbackOffline extends CallbackProcess implements CallbackProcessInterfac
                     );
                     $amount = $this->request['valor'];
                     $this->whmcsInvoiceHistory
-                        //->loadWhmcsFunctions()
                         ->setTransactionId($this->paymentData)
                         ->setInvoiceId($GATEWAY['name'], $this->paymentData['order_id'])
                         ->processInvoice($amount, $this->paymentData);

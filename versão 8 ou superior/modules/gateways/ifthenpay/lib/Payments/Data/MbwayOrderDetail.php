@@ -24,7 +24,7 @@ class MbwayOrderDetail extends MbwayBase implements OrderDetailInterface
             $this->utility->getSystemUrl() . 'modules/gateways/ifthenpay/server/resendMbwayNotification.php?action=resendMbwayNotification&orderId=' . 
                 $this->paymentDefaultData->orderId . '&mbwayTelemovel=' . $this->paymentDataFromDb['telemovel'] .
                 '&orderTotalPay=' . $this->paymentDefaultData->totalToPay . '&filename=' . $this->params['filename'] . '&userToken=' . 
-                    $this->token->saveUserToken($this->paymentMethod, 'resendMbwayNotification') . '&paymentMethod=mbway'
+                    $this->token->saveUserToken($this->paymentMethod, 'resendMbwayNotification') . '&paymentMethod=mbway&pA=resendMbwayNotification'
         );
         $this->smartyDefaultData->setMbwayCountdownShow(isset($_COOKIE['mbwayCountdownShow']) ? $_COOKIE['mbwayCountdownShow'] : 'false');
         $this->smartyDefaultData->setPhoneMbwayLang(\Lang::trans('phoneMbway'));

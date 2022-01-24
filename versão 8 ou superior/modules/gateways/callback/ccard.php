@@ -17,16 +17,9 @@ try {
         'requestData' => $_GET,
         'isCallback' => true
     ])->init(function() use ($ioc) {
-        if ($_GET['chave'] && $_GET['requestId'] && $_GET['orderId']) {
-            return $ioc->make(CallbackStrategy::class)->execute('offline', Gateway::CCARD);    
-        } else {
-            return $ioc->make(CallbackStrategy::class)->execute('online', Gateway::CCARD);
-        }
-        
+        return $ioc->make(CallbackStrategy::class)->execute('online', Gateway::CCARD);
     });
 } catch (\Throwable $th) {
     header('HTTP/1.0 400 Bad Request');
     die($th->getMessage());
 }
-
-

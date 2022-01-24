@@ -43,7 +43,6 @@ class MultibancoBase extends PaymentBase
         ];
         $paymentData = $this->addIdPedidoAndValidadeToDatabaseData($paymentData);
         $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
-        //$this->paymentRepository->create($paymentData);
         $this->logSavePaymentDataInDatabase($paymentData);
     }
 

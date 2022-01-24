@@ -48,7 +48,7 @@ class PaymentFactory extends Factory
             case Gateway::CCARD:
                 return new CCard($this->data, $this->orderId, $this->valor, $this->dataBuilder, $this->webService);
             default:
-                throw new Exception("Unknown Payment Class");
+                throw new \Exception("Unknown Payment Class");
         }
     }
 

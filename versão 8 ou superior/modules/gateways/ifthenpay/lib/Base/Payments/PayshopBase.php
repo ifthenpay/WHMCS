@@ -46,7 +46,6 @@ class PayshopBase extends PaymentBase
             'status' => 'pending'
         ];
         $this->paymentRepository->createOrUpdate(['order_id' => $this->paymentDefaultData->orderId], $paymentData);
-        //$this->paymentRepository->updatePaymentByOrderId($paymentData, $this->paymentDefaultData->orderId);
         $this->logSavePaymentDataInDatabase($paymentData, 'update');
     }
 }

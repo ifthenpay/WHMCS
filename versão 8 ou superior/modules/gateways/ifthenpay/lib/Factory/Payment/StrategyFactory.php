@@ -16,8 +16,6 @@ use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\UtilityInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Factory\Repository\RepositoryFactory;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\TokenExtraInterface;
 use WHMCS\Module\Gateway\Ifthenpay\Contracts\Utility\ConvertEurosInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ClientRepositoryInterface;
-use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\CurrencieRepositoryInterface;
 
 if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");

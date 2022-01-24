@@ -8,7 +8,6 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-use Smarty;
 use WHMCS\Module\Gateway\ifthenpay\Forms\ConfigForm;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\ifthenpay\Forms\Composite\Elements\Input;

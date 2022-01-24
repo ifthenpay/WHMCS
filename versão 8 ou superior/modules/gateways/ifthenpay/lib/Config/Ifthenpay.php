@@ -16,7 +16,6 @@ use WHMCS\Module\Gateway\ifthenpay\Utility\Token;
 use WHMCS\Module\Gateway\ifthenpay\Utility\Status;
 use WHMCS\Module\Gateway\ifthenpay\Utility\Utility;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
-use WHMCS\Module\Gateway\Ifthenpay\Callback\Callback;
 use WHMCS\Module\Gateway\Ifthenpay\Request\WebService;
 use WHMCS\Module\Gateway\ifthenpay\Utility\TokenExtra;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;

@@ -38,6 +38,7 @@ class UpdatePaymentReturnFactory extends StrategyFactory
                     $this->utility,
                     $this->repositoryFactory,
                     $this->ifthenpayLogger,
+                    $this->tokenInterface,
                     $this->smartyDefaultData
                 );
             case Gateway::PAYSHOP:
