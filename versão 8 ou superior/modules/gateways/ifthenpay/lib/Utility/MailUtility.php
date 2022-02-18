@@ -62,7 +62,7 @@ class MailUtility implements MailInterface
     {
         $this->message->setType('admin');
         $this->message->setSubject($this->subject);
-        $this->message->addRecipient("to", 'ricardocarvalho@ifthenpay.com', 'Ifthenpay');
+        $this->message->addRecipient("to", 'suporte@ifthenpay.com', 'Ifthenpay');
         $this->message->setBodyAndPlainText(implode(" ", $this->messageBody));
     }
 
