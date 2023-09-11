@@ -1,6 +1,7 @@
 <?php
 
-if (!defined("WHMCS")) die("This file cannot be accessed directly");
+if (!defined("WHMCS"))
+	die("This file cannot be accessed directly");
 
 $_ADMINLANG['locale'] = "pt_PT";
 
@@ -5838,8 +5839,8 @@ $_ADMINLANG['validationCom']['topHalfUtility'] = "Top Half Utility";
 //ifthenpay lang
 $_ADMINLANG['sandboxMode'] = "Modo Sandbox";
 $_ADMINLANG['sandboxModeDescription'] = "Selecione para ativar o modo sandbox";
-$_ADMINLANG['callbackActivate'] = "Activar Callback";  
-$_ADMINLANG['callbackActivateDescription'] = "Selecione para ativar o callback"; 
+$_ADMINLANG['callbackActivate'] = "Activar Callback";
+$_ADMINLANG['callbackActivateDescription'] = "Selecione para ativar o callback";
 $_ADMINLANG['callbackActivated'] = "Callback Activado";
 $_ADMINLANG['callbackNotActivated'] = "Callback não está Ativado";
 $_ADMINLANG['antiPhishingKey'] = "Chave Anti-Phishing: <strong>";
@@ -5865,13 +5866,13 @@ $_ADMINLANG['cancelCCardOrder'] = "Cancelar Encomenda Cartão de Crédito";
 $_ADMINLANG['cancelCCardOrderDescription'] = "Selecione para cancelar automaticamente as encomendas por cartão de crédito se o pagamento tiver expirado.";
 $_ADMINLANG['cancelPayshopOrder'] = "Cancelar Encomenda Payshop";
 $_ADMINLANG['cancelPayshopOrderDescription'] = "Selecione para cancelar automaticamente as encomendas por payshop se a referência tiver expirado.";
-$_ADMINLANG['chooseMbwayKey'] = "Escolha a Mbway key"; 
+$_ADMINLANG['chooseMbwayKey'] = "Escolha a Mbway key";
 $_ADMINLANG['multibancoEntity'] = 'Entidade';
 $_ADMINLANG['multibancoEntityDescription'] = 'Escolha a Entidade';
 $_ADMINLANG['multibancoSubEntity'] = 'Sub Entidade';
 $_ADMINLANG['multibancoSubEntityDescription'] = 'Escolha a Sub Entidade';
 $_ADMINLANG['choosePayshopKey'] = "Escolha a Payshop key";
-$_ADMINLANG['payshopValidaty'] = "Validade"; 
+$_ADMINLANG['payshopValidaty'] = "Validade";
 $_ADMINLANG['payshopValidatyDescription'] = "Escolha o número de dias, deixe em branco se não quiser validade";
 $_ADMINLANG['chooseCcardKey'] = "Escolha a CCard key";
 $_ADMINLANG['creditCardAlias'] = "Cartão de Crédito (Ifthenpay)";
@@ -5883,10 +5884,24 @@ $_ADMINLANG['creditCardInvalidMethod'] = 'Não é possível gerar pagamento por 
 $_ADMINLANG['notMultibancoDeadline'] = "Não tem validade na sua conta Multibanco?";
 $_ADMINLANG['requestMultibancoDeadline'] = 'Solicite validade na sua conta Multibanco.';
 $_ADMINLANG['multibancoDeadline'] = 'Multibanco Validade';
-$_ADMINLANG['multibancoDeadlineDescription'] = 'Escolha a validade';
+$_ADMINLANG['multibancoDeadlineDescription'] = 'Escolha o número de dias, escolha "Sem Validade" se não quiser validade';
 $_ADMINLANG['multibancoDynamicSendNotificationSuccess'] = 'Email a solicitar validade na sua conta Multibanco enviado com sucesso.';
 $_ADMINLANG['multibancoDynamicSendNotificationError'] = "Error ao enviar o email a solicitar a validade na sua conta Multibanco.";
 $_ADMINLANG['addNewAccountSendNotificationSuccess'] = 'Email a solicitar adicionar nova conta ao contrato enviado com sucesso.';
 $_ADMINLANG['addNewAccountSendNotificationError'] = 'Erro ao enviar o email a solicitar adicionar nova conta ao contrato.';
 $_ADMINLANG['showPaymentLogo'] = 'Mostrar Logotipo do Pagamento no Checkout';
 $_ADMINLANG['showPaymentLogoDescription'] = 'Ative esta opção para mostrar o logotipo do método de pagamento durante o chekout';
+
+$_ADMINLANG['configMsgBackofficeKeyRequired'] = 'Chave de Backoffice é obrigatória.';
+$_ADMINLANG['configMsgBackofficeKeyFormatInvalid'] = 'Formato da Chave de Backoffice não é válido.';
+$_ADMINLANG['configMsgMbwayKeyRequired'] = 'Chave MB WAY é obrigatória.';
+$_ADMINLANG['configMsgCcardKeyRequired'] = 'Chave de Cartão de Crédito é obrigatória.';
+$_ADMINLANG['configMsgMultibancoEntityRequired'] = 'Entidade é obrigatória.';
+$_ADMINLANG['configMsgMultibancoSubEntityRequired'] = 'Sub-Entidade é obrigatória.';
+$_ADMINLANG['configMsgPayshopKeyRequired'] = 'Chave Payshop é obrigatória.';
+$_ADMINLANG['configMsgPayshopDeadlineFormatInvalid'] = 'Formato da validade não é válio.';
+
+$_ADMINLANG['configMultibancoDynamicEntityName'] = 'Referências Dinâmicas de Multibanco';
+$_ADMINLANG['configMultibancoNoDeadlineName'] = 'Sem Validade';
+
+$_ADMINLANG['callbackNotActivatedTooltip'] = 'Coloque um visto na opção Ativar Callback acima, para permitir a atualização do estado do pedido após o recebimento do pagamento da encomenda.';

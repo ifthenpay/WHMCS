@@ -1,0 +1,46 @@
+#ifthenpayUpgradeModuleDiv {
+  text-align: center;
+}
+
+#ifthenpayUpgradeModuleDiv img {
+  width: 5%;
+  margin-top: 10px;
+}
+
+#ifthenpayUpgradeModuleDiv h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+#ifthenpayUpgradeModuleDiv .bulletPoints {
+  margin-left: 30px;
+}
+
+#ifthenpayUpgradeModuleDiv .bulletPoints h3 {
+  font-weight: bold;
+  color: black;
+}
+
+#ifthenpayUpgradeModuleDiv #downloadUpdateModuleIfthenpay {
+  width: 30%;
+  margin: 15px auto;
+}
+
+.ifthenpay_callback_badge {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.ifthenpay_callback_badge.green {
+  background-color: #5cb85c;
+}
+
+.ifthenpay_callback_badge.red {
+  background-color: #d9534f;
+}
+
+.ifthenpay_version {
+  color: #666666;
+}
+

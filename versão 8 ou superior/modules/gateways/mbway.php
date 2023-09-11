@@ -1,10 +1,12 @@
 <?php
 
 if (!defined("WHMCS")) {
-    die("This file cannot be accessed directly");
+	die("This file cannot be accessed directly");
 }
 
 use WHMCS\Session;
+use WHMCS\Exception\Module\InvalidConfiguration;
+
 use WHMCS\Module\Gateway\Ifthenpay\Config\Ifthenpay;
 use WHMCS\Module\Gateway\Ifthenpay\Payments\Gateway;
 use WHMCS\Module\Gateway\Ifthenpay\Log\IfthenpayLogger;
@@ -28,10 +30,10 @@ use WHMCS\Module\Gateway\Ifthenpay\Contracts\Repositories\ConfigGatewaysReposito
  */
 function mbway_MetaData()
 {
-    return array(
-        'DisplayName' => 'MB WAY',
-        'APIVersion' => '1.1', // Use API Version 1.1
-    );
+	return array(
+		'DisplayName' => 'MB WAY',
+		'APIVersion' => '1.1', // Use API Version 1.1
+	);
 }
 
 /**
@@ -57,80 +59,112 @@ function mbway_MetaData()
 
 function mbway_config()
 {
-    try {
-        $ioc = new Ifthenpay(Gateway::MBWAY);
-        $ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
-        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MBWAY)->getLogger();
-       return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
-    } catch (\Throwable $th) {
-        if($th instanceof BackOfficeException) {
-            $ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => Gateway::MBWAY, 'setting' => 'backofficeKey']);
-            $ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
-            Session::setAndRelease("ConfigurationError", $th->getMessage());
-            $redirect = "error=mbway#m_mbway";
-            redir($redirect);
-        }
-        $ifthenpayLogger->alert($th->getMessage(), ['exception' => $th]);
-    }
+	try {
+		$ioc = new Ifthenpay(Gateway::MBWAY);
+		$ifthenpayLogger = $ioc->getIoc()->make(IfthenpayLogger::class);
+		$ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_BACKOFFICE_CONFIG_MBWAY)->getLogger();
+		return $ioc->getIoc()->make(IfthenpayConfigForms::class)->buildForm();
+	} catch (\Throwable $th) {
+		if ($th instanceof BackOfficeException) {
+			$ioc->getIoc()->make(ConfigGatewaysRepositoryInterface::class)->deleteWhere(['gateway' => Gateway::MBWAY, 'setting' => 'backofficeKey']);
+			$ifthenpayLogger->error($th->getMessage(), ['exception' => $th]);
+			Session::setAndRelease("ConfigurationError", $th->getMessage());
+			$redirect = "error=mbway#m_mbway";
+			redir($redirect);
+		}
+		$ifthenpayLogger->alert($th->getMessage(), ['exception' => $th]);
+	}
 }
-function mbway_link($params) {
-    try {
-        $ifthenpayContainer = (new Ifthenpay(Gateway::MBWAY))->getIoc();
-        $ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
-        $ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
-        $utility = $ifthenpayContainer->make(UtilityInterface::class);
-        $mix = $ifthenpayContainer->make(MixInterface::class);
-        $systemUrl = $utility->getSystemUrl();
-        $ifthenpayData = [
-            'systemUrl' => $systemUrl,
-            'lang' => [
-                'mbwayPhoneRequired' => Lang::trans('mbwayPhoneRequired'),
-                'mbwayPhoneInvalid' => Lang::trans('mbwayPhoneInvalid'),
-            ]
-        ];
-        $token = $ifthenpayContainer->make(TokenInterface::class);
-        $orderId = $params['invoiceid'];
-        $ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . '
-            modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&userToken=' . 
-            $token->saveUserToken(Gateway::MBWAY, 'cancelMbwayOrder') . '&paymentMethod=' . Gateway::MBWAY . '&orderId=' . $orderId;
-        $ifthenpayData['cancelMbwayOrderUrl'] = preg_replace('/\s+/', '', $ifthenpayData['cancelMbwayOrderUrl']);
-        $ifthenpayData['orderId'] = $orderId;
-        $ifthenpayData = json_encode($ifthenpayData);
-        $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod(Gateway::MBWAY)->setParams($params);
-        $code = '';
-        if ($_GET['id']) {
-            $code .= '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
-                <script type="text/javascript">var ifthenpayData='. $ifthenpayData . '</script>
-                <script src="'. $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>
-                <form action="viewinvoice.php?id='. $orderId . '" method="POST" id="formIfthenpayMbway"><div class="field required" id="ifthenpayMbwayPhoneDiv">
+
+function mbway_config_validate($params)
+{
+
+	try {
+
+		// has backofficeKey?
+		if (!isset($params['backofficeKey']) || (isset($params['backofficeKey']) && empty($params['backofficeKey']))) {
+			throw new \Exception(\AdminLang::trans('configMsgBackofficeKeyRequired'));
+		}
+
+		// is backofficeKey format valid?
+		if (!preg_match('/^\d{4}-\d{4}-\d{4}-\d{4}$/', $params['backofficeKey'])) {
+			throw new \Exception(\AdminLang::trans('configMsgBackofficeKeyFormatInvalid'));
+		}
+
+		// is backofficeKey valid?
+		$ifthenpayModuleApp = new Ifthenpay();
+		$gateway = $ifthenpayModuleApp->getIoc()->make(Gateway::class);
+		$gateway->authenticate($params['backofficeKey']); //throws exception if invalid
+
+		// is mbwayKey valid?
+		if (isset($params['mbwayKey']) && $params['mbwayKey'] == 'empty') {
+			throw new \Exception(\AdminLang::trans('configMsgMbwayKeyRequired'));
+		}
+
+	} catch (\Exception $error) {
+		throw new InvalidConfiguration($error->getMessage());
+	}
+}
+
+
+
+function mbway_link($params)
+{
+	try {
+		$ifthenpayContainer = (new Ifthenpay(Gateway::MBWAY))->getIoc();
+		$ifthenpayLogger = $ifthenpayContainer->make(IfthenpayLogger::class);
+		$ifthenpayLogger = $ifthenpayLogger->setChannel($ifthenpayLogger::CHANNEL_PAYMENTS)->getLogger();
+		$utility = $ifthenpayContainer->make(UtilityInterface::class);
+		$mix = $ifthenpayContainer->make(MixInterface::class);
+		$systemUrl = $utility->getSystemUrl();
+		$ifthenpayData = [
+			'systemUrl' => $systemUrl,
+			'lang' => [
+				'mbwayPhoneRequired' => Lang::trans('mbwayPhoneRequired'),
+				'mbwayPhoneInvalid' => Lang::trans('mbwayPhoneInvalid'),
+			]
+		];
+		$token = $ifthenpayContainer->make(TokenInterface::class);
+		$orderId = $params['invoiceid'];
+		$ifthenpayData['cancelMbwayOrderUrl'] = $ifthenpayData['systemUrl'] . '
+            modules/gateways/ifthenpay/server/cancelMbwayOrder.php?action=cancelMbwayOrder&userToken=' .
+			$token->saveUserToken(Gateway::MBWAY, 'cancelMbwayOrder') . '&paymentMethod=' . Gateway::MBWAY . '&orderId=' . $orderId;
+		$ifthenpayData['cancelMbwayOrderUrl'] = preg_replace('/\s+/', '', $ifthenpayData['cancelMbwayOrderUrl']);
+		$ifthenpayData['orderId'] = $orderId;
+		$ifthenpayData = json_encode($ifthenpayData);
+		$ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod(Gateway::MBWAY)->setParams($params);
+		$code = '';
+		if ($_GET['id']) {
+			$code .= '<link rel="stylesheet" href="' . $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
+                <script type="text/javascript">var ifthenpayData=' . $ifthenpayData . '</script>
+                <script src="' . $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>
+                <form action="viewinvoice.php?id=' . $orderId . '" method="POST" id="formIfthenpayMbway"><div class="field required" id="ifthenpayMbwayPhoneDiv">
                     <div class="control input-container">
-                    <img src="'. $systemUrl .'/modules/gateways/ifthenpay/svg/mbway.svg" class="icon" alt="mbway logo">
-                    <input name="mbwayPhoneNumber" class="text input-field" type="number" id="phone_number" placeholder="'. \Lang::trans('mbwayPhoneNumber') .'"  required>
+                    <img src="' . $systemUrl . '/modules/gateways/ifthenpay/svg/mbway.svg" class="icon" alt="mbway logo">
+                    <input name="mbwayPhoneNumber" class="text input-field" type="number" id="phone_number" placeholder="' . \Lang::trans('mbwayPhoneNumber') . '"  required>
                     <input type="submit" value="' . $params['langpaynow'] . '" id="mbwayPhoneBtnSubmit" class="btn btn-danger">
                 </div></div></form>';
-        }
-        
-        if (isset($_POST['mbwayPhoneNumber'])) {
-            $ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod(Gateway::MBWAY)->setParams($params)->execute();
-            $code = '<link rel="stylesheet" href="'. $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
-            <script type="text/javascript">var ifthenpayData='. $ifthenpayData . '</script>
-            <script src="'. $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>';
-        }
-        return $code;
-    } catch (\Throwable $th) {
-        logTransaction(Gateway::MBWAY, $th->getMessage(), "Error", $params);
-        $ifthenpayLogger->error('error processing payment - ' . $th->getMessage(), [
-                'paymentMethod' => Gateway::MBWAY,
-                'requestPost' => $_POST,
-                'cookie' => $_COOKIE,
-                'params' => $params,
-                'exception' => $th
-            ]
-        );
-        return '<div class=\"alert alert-danger\">' . $th->getMessage() . '</div>';
-    }
+		}
+
+		if (isset($_POST['mbwayPhoneNumber'])) {
+			$ifthenpayContainer->make(PaymentFacade::class)->setPaymentMethod(Gateway::MBWAY)->setParams($params)->execute();
+			$code = '<link rel="stylesheet" href="' . $utility->getCssUrl() . '/' . $mix->create('ifthenpayViewInvoice.css') . '">
+            <script type="text/javascript">var ifthenpayData=' . $ifthenpayData . '</script>
+            <script src="' . $utility->getJsUrl() . '/' . $mix->create('invoiceViewPage.js') . '" type="text/javascript"></script>';
+		}
+		return $code;
+	} catch (\Throwable $th) {
+		logTransaction(Gateway::MBWAY, $th->getMessage(), "Error", $params);
+		$ifthenpayLogger->error(
+			'error processing payment - ' . $th->getMessage(),
+			[
+				'paymentMethod' => Gateway::MBWAY,
+				'requestPost' => $_POST,
+				'cookie' => $_COOKIE,
+				'params' => $params,
+				'exception' => $th
+			]
+		);
+		return '<div class=\"alert alert-danger\">' . $th->getMessage() . '</div>';
+	}
 }
-
-
-
-

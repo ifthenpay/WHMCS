@@ -1,6 +1,7 @@
 <?php
 
-if (!defined("WHMCS")) die("This file cannot be accessed directly");
+if (!defined("WHMCS"))
+	die("This file cannot be accessed directly");
 
 $_ADMINLANG['locale'] = "en_GB";
 
@@ -5838,8 +5839,8 @@ $_ADMINLANG['validationCom']['topHalfUtility'] = "Top Half Utility";
 //ifthenpay lang
 $_ADMINLANG['sandboxMode'] = "Sandbox Mode";
 $_ADMINLANG['sandboxModeDescription'] = "Tick to enable sandbox mode";
-$_ADMINLANG['callbackActivate'] = "Activate Callback";  
-$_ADMINLANG['callbackActivateDescription'] = "Tick to activate callback"; 
+$_ADMINLANG['callbackActivate'] = "Activate Callback";
+$_ADMINLANG['callbackActivateDescription'] = "Tick to activate callback";
 $_ADMINLANG['callbackActivated'] = "Callback Activated";
 $_ADMINLANG['callbackNotActivated'] = "Callback not Activated";
 $_ADMINLANG['antiPhishingKey'] = "Anti-Phishing Key: <strong>";
@@ -5858,20 +5859,20 @@ $_ADMINLANG['updateAccount'] = "Update Account";
 $_ADMINLANG['backofficeKey'] = "Backoffice Key";
 $_ADMINLANG['backofficeKeyDescription'] = "Enter your backoffice key provided by Ifthenpay";
 $_ADMINLANG['cancelMbwayOrder'] = "Cancel MB WAY Order";
-$_ADMINLANG['cancelMbwayOrderDescription'] = "Tick to automaticly cancel MB WAY orders if notification expired.";
+$_ADMINLANG['cancelMbwayOrderDescription'] = "Tick to automaticaly cancel MB WAY orders if notification expired.";
 $_ADMINLANG['cancelMultibancoOrder'] = "Cancel Multibanco Order";
-$_ADMINLANG['cancelMultibancoOrderDescription'] = "Tick to automaticly cancel Multibanco orders if reference expired.";
+$_ADMINLANG['cancelMultibancoOrderDescription'] = "Tick to automaticaly cancel Multibanco orders if reference expired.";
 $_ADMINLANG['cancelPayshopOrder'] = "Cancel Payshop Order";
-$_ADMINLANG['cancelPayshopOrderDescription'] = "Tick to automaticly cancel Payshop orders if reference expired.";
+$_ADMINLANG['cancelPayshopOrderDescription'] = "Tick to automaticaly cancel Payshop orders if reference expired.";
 $_ADMINLANG['cancelCCardOrder'] = "Cancel Credit Card Order";
-$_ADMINLANG['cancelCCardOrderDescription'] = "Tick to automaticly cancel Credit Card orders if reference expired.";
-$_ADMINLANG['chooseMbwayKey'] = "Choose Mbway key"; 
+$_ADMINLANG['cancelCCardOrderDescription'] = "Tick to automaticaly cancel Credit Card orders if reference expired.";
+$_ADMINLANG['chooseMbwayKey'] = "Choose Mbway key";
 $_ADMINLANG['multibancoEntity'] = 'Entity';
 $_ADMINLANG['multibancoEntityDescription'] = 'Choose Entity';
 $_ADMINLANG['multibancoSubEntity'] = 'Sub Entity';
 $_ADMINLANG['multibancoSubEntityDescription'] = 'Choose Sub Entity';
 $_ADMINLANG['choosePayshopKey'] = "Choose Payshop key";
-$_ADMINLANG['payshopValidaty'] = "Validity"; 
+$_ADMINLANG['payshopValidaty'] = "Validity";
 $_ADMINLANG['payshopValidatyDescription'] = "Choose the number of days, leave empty if you do not want validity";
 $_ADMINLANG['chooseCcardKey'] = "Choose CCard key";
 $_ADMINLANG['creditCardAlias'] = "Credit Card (Ifthenpay)";
@@ -5883,10 +5884,24 @@ $_ADMINLANG['creditCardInvalidMethod'] = 'Is not possible to generate payments b
 $_ADMINLANG['notMultibancoDeadline'] = 'No Deadline in Multibanco Account?';
 $_ADMINLANG['requestMultibancoDeadline'] = 'Request Multibanco deadline.';
 $_ADMINLANG['multibancoDeadline'] = 'Multibanco Deadline';
-$_ADMINLANG['multibancoDeadlineDescription'] = 'Choose Deadline';
+$_ADMINLANG['multibancoDeadlineDescription'] = 'Choose the number of days, choose "No Deadline" if you do not want deadline';
 $_ADMINLANG['multibancoDynamicSendNotificationSuccess'] = 'Request Multibanco deadline email sent with success.';
 $_ADMINLANG['multibancoDynamicSendNotificationError'] = "Error sending email requesting Multibanco deadline.";
 $_ADMINLANG['addNewAccountSendNotificationSuccess'] = 'Request new account email sent with success.';
 $_ADMINLANG['addNewAccountSendNotificationError'] = 'Error sending email requesting new account.';
 $_ADMINLANG['showPaymentLogo'] = 'Show Payment Icon on Checkout';
 $_ADMINLANG['showPaymentLogoDescription'] = 'Enable this option to show payment method icon during checkout';
+
+$_ADMINLANG['configMsgBackofficeKeyRequired'] = 'Backoffice Key is required.';
+$_ADMINLANG['configMsgBackofficeKeyFormatInvalid'] = 'Backoffice Key format is invalid.';
+$_ADMINLANG['configMsgMbwayKeyRequired'] = 'Mbway Key is required.';
+$_ADMINLANG['configMsgCcardKeyRequired'] = 'Credit Card Key is required.';
+$_ADMINLANG['configMsgMultibancoEntityRequired'] = 'Entity is required.';
+$_ADMINLANG['configMsgMultibancoSubEntityRequired'] = 'Sub Entity is required.';
+$_ADMINLANG['configMsgPayshopKeyRequired'] = 'Payshop Key is required.';
+$_ADMINLANG['configMsgPayshopDeadlineFormatInvalid'] = 'Deadline format is not valid';
+
+$_ADMINLANG['configMultibancoDynamicEntityName'] = 'Multibanco Dynamic References';
+$_ADMINLANG['configMultibancoNoDeadlineName'] = 'No Deadline';
+
+$_ADMINLANG['callbackNotActivatedTooltip'] = 'Tick the Activate Callback option above, to enable order status update after recieving order payment.';

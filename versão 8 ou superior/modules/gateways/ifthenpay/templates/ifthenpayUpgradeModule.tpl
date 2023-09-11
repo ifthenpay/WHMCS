@@ -8,6 +8,6 @@
         <a href="{$moduleUpgradeUrlDownload}" download id="downloadUpdateModuleIfthenpay" class="btn btn-danger btn-lg btn-block" target="_blank">{$downloadUpdateIfthenpay}</a>
     {else}
         <img src="{$updatedModuleIcon}" alt="update system icon">
-        <h2>{$ifthenpayNoUpdate}</h2>
+        <h2>{$ifthenpayNoUpdate}<span class="ifthenpay_version"> (v{$ifthenpayModuleVersion})</span></h2>
     {/if}
 </div>
