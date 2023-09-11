@@ -5,7 +5,7 @@ The following manual was created for version 1.3.0 of the ifthenpay extension, d
 Download versions of the ifthenpay extension for WHMCS.
 |                            | WHMCS 8                                                                                             |
 |----------------------------|-----------------------------------------------------------------------------------------------------|
-| Link to download installer | [ifthenpay v1.3.0](https://github.com/ifthenpay/WHMCS/releases/download/v1.3.0/ifthenpay.ocmod.zip) |
+| Link to download installer | [ifthenpay v1.3.0](https://github.com/ifthenpay/WHMCS/releases/download/1.3.0/ifthenpay.zip) |
 
 </br>
 </br>
@@ -83,12 +83,12 @@ Use the table below to check the compatibility of the Ifthenpay extension with y
 
 
 # Installation
-Download the installation file of the ifthenpay module for WHMCS 8 from the GitHub page [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases/tag/v1.3.0).
+Download the installation file of the ifthenpay module for WHMCS 8 from the GitHub page [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases).
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version8/assets/download_installer.png)
 </br>
 
 Unzip the downloaded file, and paste the contents to the root of your online store.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version8/assets/upload_ocmodzip.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version8/assets/upload_files.png)
 </br>
 
 After uploading the files, access the admin back office of your online store and go to Setup (1) -> Apps & Integrations (2) -> Browse (3) -> Payments (4).
