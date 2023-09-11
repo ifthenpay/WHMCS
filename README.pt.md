@@ -5,7 +5,7 @@ O seguinte manual foi criado para a versão 1.3.0 da extensão ifthenpay para o 
 Download de versões da extensão ifthenpay para WHMCS.
 |                            | WHMCS 8                                                                                             |
 |----------------------------|-----------------------------------------------------------------------------------------------------|
-| Link para descarregar os ficheiros de instalação | [ifthenpay v1.3.0](https://github.com/ifthenpay/WHMCS/releases/download/v1.3.0/ifthenpay.zip) |
+| Link para descarregar os ficheiros de instalação | [ifthenpay v1.3.0](https://github.com/ifthenpay/WHMCS/releases/download/1.3.0/ifthenpay.zip) |
 
 </br>
 </br>
@@ -83,12 +83,12 @@ Use a tabela abaixo para verificar a compatibilidade do extensão ifthenpay com 
 
 
 # Instalação
-Descarregue o ficheiro de instalação do módulo ifthenpay para o WHMCS 8 a partir da página do GitHub [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases/tag/v1.3.0).
+Descarregue o ficheiro de instalação do módulo ifthenpay para o WHMCS 8 a partir da página do GitHub [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases).
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version8/assets/download_installer.png)
 </br>
 
 Descompacte o ficheiro descarregado e cole o seu conteúdo na raiz da sua loja online.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version8/assets/upload_ocmodzip.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version8/assets/upload_files.png)
 </br>
 
 Após fazer o upload dos ficheiros, aceda ao painel de administração da sua loja online e vá para Configuração (1) -> Aplicações e Integrações (2) -> Procurar (3) -> Pagamentos (4).
