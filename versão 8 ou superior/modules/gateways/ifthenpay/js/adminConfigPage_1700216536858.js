@@ -331,8 +331,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var interval = 200; // Interval in milliseconds
 
         var count = 0;
-        buttonElement.prop('disabled', true); // disable submit button
-
+        setTimeout(function () {
+          buttonElement.prop('disabled', true); // disable submit button
+        }, 0);
         clearInterval(window.iftp_SaveInterval);
         window.iftp_SaveInterval = setInterval(function () {
           if ($("#growls").find(".growl-notice").length > 0) {
