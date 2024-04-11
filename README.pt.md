@@ -1,11 +1,11 @@
 # Atenção
-O seguinte manual foi criado para a versão 1.3.0 da extensão ifthenpay para o WHMCS 8.
+O seguinte manual foi criado para a versão 1.3.1 da extensão ifthenpay para o WHMCS 8.
 
 
 Download de versões da extensão ifthenpay para WHMCS.
 |                            | WHMCS 8                                                                                             |
 |----------------------------|-----------------------------------------------------------------------------------------------------|
-| Link para descarregar os ficheiros de instalação | [ifthenpay v1.3.0](https://github.com/ifthenpay/WHMCS/releases/download/1.3.0/ifthenpay.zip) |
+| Link para descarregar os ficheiros de instalação | [ifthenpay v1.3.1](https://github.com/ifthenpay/WHMCS/releases/download/1.3.1/ifthenpay.zip) |
 
 </br>
 </br>
@@ -75,9 +75,9 @@ Para suporte, por favor crie um ticked para suporte em [Suporte ifthenpay](https
 # Compatibilidade
 
 Use a tabela abaixo para verificar a compatibilidade do extensão ifthenpay com a sua loja online:
-|                           | WHMCS 8 [8.1.0 - 8.7.3] |
+|                           | WHMCS 8 [8.1.0 - 8.8.0] |
 |---------------------------|-----------------------------|
-| ifthenpay v1.3.0          | Compatível                  |
+| ifthenpay v1.3.1          | Compatível                  |
 
 </br>
 
