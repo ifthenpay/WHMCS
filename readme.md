@@ -215,6 +215,8 @@ The image below shows an example of a minimally functional configuration using a
 
 4.  **Cancel Multibanco Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron.
 
+</br>
+
 ## MB WAY
 
 The MB WAY payment method utilizes a mobile phone number provided by the consumer and generates a payment request within the MB WAY smartphone application. The consumer can then accept or decline the payment.
@@ -708,6 +710,7 @@ Fill in your credit card details (1)(number, expiration date and CW), and click 
 ### Success and return to store
 
 The payment contract was successful, the user can now return to the shop by either waiting for an automatic redirect or clicking the "sair" button.
+
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
 
 </br>
