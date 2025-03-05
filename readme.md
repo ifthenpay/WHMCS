@@ -23,7 +23,7 @@ Download Ifthenpay module for WHMCS.
 
 # Ifthenpay payment module for WHMCS 8
 
-Read in ![Portuguese](/_dev/readme/assets/pt.png) [Portuguese](readme.pt.md), and ![English](/_dev/readme/assets/en.png) [English](readme.md)
+Read in ![Portuguese](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/pt.png) [Portuguese](readme.pt.md), and ![English](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/en.png) [English](readme.md)
 
 [1. Introduction](#introduction)
 
@@ -71,7 +71,7 @@ Read in ![Portuguese](/_dev/readme/assets/pt.png) [Portuguese](readme.pt.md), an
 
 This is ifthenpay's payment gateway module for WHMCS platform, that provides the following payment methods:
 
-![ifthenpay](/_dev/readme/assets/payment_methods_banner.png)
+![ifthenpay](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/payment_methods_banner.png)
 </br>
 
 **Multibanco** is a Portuguese payment method that allows the consumer to pay through a bank reference. It enables the generation of payment references that the consumer can use to pay for their order at an ATM (Multibanco) or through an online home banking service.
@@ -115,23 +115,23 @@ Follow the table below to verify Ifthenpay's module compatibility with your WHMC
 ⚠️ **Attention**: If you are updating from versions between 1.0.0 and 1.3.1 to version 8.0.0 and above, please refer to the [Upgrade from older versions](#upgrade-from-older-versions) section.
 
 Download the latest version of ifthenpay's module installation file from the GitHub releases page [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases).
-![img](/_dev/readme/assets/download_installer.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/download_installer.png)
 </br>
 
 Unzip the downloaded file, and paste the contents in the root of your WHMCS platform.
-![img](/_dev/readme/assets/installation_upload_files.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/installation_upload_files.png)
 </br>
 
 After uploading the files, access the admin back office of your online store and go to Setup (1) -> Apps & Integrations (2) -> Browse (3) -> Payments (4).
-![img](/_dev/readme/assets/installation_backoffice_payments.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/installation_backoffice_payments.png)
 </br>
 
 Scroll down and search for the ifthenpay's payment methods that should now be available for activation.
-![img](/_dev/readme/assets/Installation_available_payment_methods.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/Installation_available_payment_methods.png)
 </br>
 
 Click on the card of the payment method that you wish to enable (e.g., Multibanco) and click on Activate (1).
-![img](/_dev/readme/assets/installation_activate_method.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/installation_activate_method.png)
 </br>
 
 # Configuration
@@ -158,7 +158,7 @@ Upon inputting a valid Backoffice Key, the Entity and Sub-Entity are automatical
 
 The image below shows an example of a minimally functional configuration using a static type Multibanco account.
 
-![img](/_dev/readme/assets/configuration_multibanco_static.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_multibanco_static.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store;
@@ -180,7 +180,7 @@ Click on Save (13) to save the changes.
 
 The image below shows an example of a minimally functional configuration using a dynamic type Multibanco account.
 
-![img](/_dev/readme/assets/configuration_multibanco_dynamic.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_multibanco_dynamic.png)
 </br>
 
 1.  **Entity** - Select an Entity, "Dynamic Reference" for using dynamic type multibanco account. You can only choose one of the Entities associated with the Backoffice Key;
@@ -205,7 +205,7 @@ The image below shows an example of a minimally functional configuration.
 
 The image below shows an example of a minimally functional configuration.
 
-![img](/_dev/readme/assets/configuration_mbway.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_mbway.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store.
@@ -233,7 +233,7 @@ Upon inputting a valid Backoffice Key, the Credit Card Keys are automatically lo
 
 The image below shows an example of a minimally functional configuration.
 
-![img](/_dev/readme/assets/configuration_ccard.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_ccard.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store;
@@ -258,7 +258,7 @@ Upon inputting a valid Backoffice Key, the Payshop Keys are automatically loaded
 
 The image below shows an example of a minimally functional configuration.
 
-![img](/_dev/readme/assets/configuration_payshop.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_payshop.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store;
@@ -285,7 +285,7 @@ Upon inputting a valid Backoffice Key, the Cofidis Pay Keys are automatically lo
 
 The image below shows an example of a minimally functional configuration.
 
-![img](/_dev/readme/assets/configuration_cofidis.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_cofidis.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store;
@@ -311,7 +311,7 @@ Upon inputting a valid Backoffice Key, the Pix Keys are automatically loaded.
 
 The image below shows an example of a minimally functional configuration.
 
-![img](/_dev/readme/assets/configuration_pix.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_pix.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store;
@@ -337,7 +337,7 @@ Upon inputting a valid Backoffice Key, the Ifthenpay Gateway Keys are automatica
 
 The image below shows an example of a minimally functional configuration.
 
-![img](/_dev/readme/assets/configuration_ifthenpaygateway.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_ifthenpaygateway.png)
 </br>
 
 1. **Show on Order Form** - When enabled, displays this payment method option at the checkout of your store;
@@ -371,7 +371,7 @@ Click on Save (11) to save the changes.
 
 On the Apps & Integrations->Payments page, by clicking any of the ifthenpay payment methods card you can find a Support link (1) that redirects you to the ifthenpay support page, where you can create a support ticket.
 For your convenience, you can also access this user manual by clicking on the Instructions link (2), which will redirect you to the GitHub page where you can find the user manual.
-![img](/_dev/readme/assets/other_support.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/other_support.png)
 </br>
 
 ## Request additional account
@@ -379,7 +379,7 @@ For your convenience, you can also access this user manual by clicking on the In
 If you already have an ifthenpay account but haven't contracted a needed payment method, you can place an automatic request with ifthenpay.
 The response time for this request is 1 to 2 business days, with the exception of the Credit Card payment method, which might exceed this time due to validation requirements.
 To request the creation of an additional account, access the configuration page of the payment method you wish to contract and input your backoffice key (1), if you don't have any acount for that payment method, a dialog window will popup asking if you wish to request an account for that payment method, you can then click the ok button (2) to send an automatic email requesting that payment method account creation.
-![img](/_dev/readme/assets/request_account.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/request_account.png)
 </br>
 
 As a result, the ifthenpay team will add the payment method to your account, updating the list of available payment methods in your extension.
@@ -403,7 +403,7 @@ To reset, click the "Reset" button (1) and confirm the action by clicking the "O
 
 **Attention, this action will clear the current payment method configuration.**
 
-![img](/_dev/readme/assets/reset_configuration.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/reset_configuration.png)
 </br>
 
 ## Callback
@@ -416,7 +416,7 @@ As mentioned in the configurations above, to activate the Callback, access the e
 
 After activating the Callback, you don't need to take any further action. The Callback is active and functioning.
 
-![img](/_dev/readme/assets/callback.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/callback.png)
 </br>
 
 ## Cronjob
@@ -486,23 +486,23 @@ After uploading the files, access the admin back office and go to Setup (1) -> A
 
 The image below shows the newer payment methods distinguishable by the "V2" sufix.
 Taking Credit Card as example, we will activate the newer version "Ifthenpay Credit Card V2" (1) to later replace the older version (2).
-![img](/_dev/readme/assets/upgrade_from_older_payments.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/upgrade_from_older_payments.png)
 </br>
 
 Activate the payment method, Credit Card in this case by clicking the "Activate" button (1).
-![img](/_dev/readme/assets/upgrade_from_older_activate.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/upgrade_from_older_activate.png)
 </br>
 
 Configure the payment method (1) (refer to [Configuration](#configuration) for other methods) and click the "Save Changes" button (2).
-![img](/_dev/readme/assets/upgrade_from_older_configure.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/upgrade_from_older_configure.png)
 </br>
 
 Go to the older method, it will show abnormal icon sizes, since it should have lost the CSS styling when replacing the hooks file during the installation of the newer version. Click "Deactivate" button (1).
-![img](/_dev/readme/assets/upgrade_from_older_older_method.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/upgrade_from_older_older_method.png)
 </br>
 
 Expand the select box (1) and select the equivalent payment method to replace with (2), should have the same name if not change, and click the "Deactivate" button (3).
-![img](/_dev/readme/assets/upgrade_from_older_deactivate_older.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/upgrade_from_older_deactivate_older.png)
 </br>
 
 Now repeat for other payment methods you may need.
@@ -518,15 +518,15 @@ The following describes the consumer user experience when using ifthenpay paymen
 On the checkout page, the consumer can choose the payment method.
 If the show payment icon is disabled, the payment method name will be displayed.
 The payment method name can be edited in the configuration page in the field "Display Name".
-![img](/_dev/readme/assets/ux_checkout_select_payment_text.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/ux_checkout_select_payment_text.png)
 </br>
 
 If the configuration option "Show Payment Icon on Checkout" is enabled, the icon will be displayed in place of the payment title.
-![img](/_dev/readme/assets/ux_checkout_select_payment_icon.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/ux_checkout_select_payment_icon.png)
 </br>
 
 The payment method Ifthenpay Gateway provides an aditional option to show the icons of the payment methods that will be available inside the ifthenpay gateway page. By selecting the option "ON - show composite icon" in the "Show Payment Icon on Checkout" field.
-![img](/_dev/readme/assets/ux_checkout_select_payment_icon_composite.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/ux_checkout_select_payment_icon_composite.png)
 </br>
 
 When the user selects a payment method and clicks the "Complete Order" button he will be redirected to the invoice page.
@@ -537,57 +537,57 @@ The Multibanco payment details will be displayed with entity, reference, deadlin
 </br>
 
 **Note**: In the case of assigning a static Multibanco account or Multibanco with Dynamic References without setting an expiry date, the payment deadline will not be displayed.
-![img](/_dev/readme/assets/paying_multibanco_details.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_multibanco_details.png)
 
 </br>
 
 ## Paying with MB WAY
 
 The MB WAY mobile phone form will be displayed, the user must select the correct country code (1), input a valid number (2) that is already associated with the MB WAY App and click the "Pay" button (3).
-![img](/_dev/readme/assets/paying_mbway_form.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_form.png)
 </br>
 
 If the configuration option "Show MB WAY Countdown" is disabled, the user will be displayed a simple message, and the consumer will receive a notification in the MB WAY App to authorize the payment.
-![img](/_dev/readme/assets/paying_mbway_details_no_countdown.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_no_countdown.png)
 </br>
 
 If the configuration option "Show MB WAY Countdown" is enabled, a countdown timer will be displayed, and the consumer will receive a notification in the MB WAY App to authorize the payment.
 If the countdown reaches zero, the consumer can click on the "Resend Mbway notification" button to receive a new notification in the MB WAY app.
-![img](/_dev/readme/assets/paying_mbway_details_countdown.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_countdown.png)
 </br>
 
 When using the countdown, the invoice page will update in accordance with the consumer actions or any errors that might happen.
 
 The payment confirmed status will be displayed after the consumer confirms the payment in their MB WAY App.
-![img](/_dev/readme/assets/paying_mbway_details_paid.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_paid.png)
 </br>
 
 The expired status will be displayed after reaching the end of the countdown.
-![img](/_dev/readme/assets/paying_mbway_details_expired.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_expired.png)
 </br>
 
 The rejected by user status will be displayed after the consumer refuses payment in their MB WAY App.
-![img](/_dev/readme/assets/paying_mbway_details_rejected_by_user.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_rejected_by_user.png)
 </br>
 
 The refused status will be displayed after a verification from MB WAY returns an error related to MB WAY App association.
-![img](/_dev/readme/assets/paying_mbway_details_refused.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_refused.png)
 </br>
 
 The error status will be displayed after inputing an invalid phone number, or an error as occurred either on MB WAY or ifthenpay.
-![img](/_dev/readme/assets/paying_mbway_details_error.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_error.png)
 </br>
 
 ## Paying with Credit Card
 
 A "Pay" button (1) will be displayed, which the consumer must click to be redirected to the Credit Card page.
-![img](/_dev/readme/assets/paying_ccard_form.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ccard_form.png)
 </br>
 
 User will be redirected to the Credit Card gateway page.
 Fill in the credit card details, card number (1), expiration date (2), security code (3), Name on Card (4), and click on Pay (5).
 You can go back (6), returning to the checkout page.
-![img](/_dev/readme/assets/paying_ccard_gateway_page.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ccard_gateway_page.png)
 </br>
 
 ## Paying with Payshop
@@ -596,14 +596,14 @@ The Payshop payment details will be displayed with reference, deadline and the a
 </br>
 
 **Note**: In the case of configuring payshop method without setting an expiry date, the payment deadline will not be displayed.
-![img](/_dev/readme/assets/paying_payshop_details.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_payshop_details.png)
 
 </br>
 
 ## Paying with Cofidis Pay
 
 A "Pay" button (1) will be displayed, which the consumer must click to be redirected to the Cofidis Pay page.
-![img](/_dev/readme/assets/paying_cofidis_form.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_form.png)
 </br>
 
 User will be redirected to the Cofidis Pay page, in which he will have to go through a number of steps to conclude.
@@ -611,14 +611,14 @@ User will be redirected to the Cofidis Pay page, in which he will have to go thr
 ### Login/Registration
 
 Here, the user may login (1) or, if he does not have an account, sign up with Cofidis Pay (2)
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_1.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_1.png)
 </br>
 
 ### Installments and Personal Information
 
 Choose number of installments, and edit billing and personal data if necessary.
 
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_2.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_2.png)
 
 1. Select the number of installments you wish;
 2. Verify the summary of the the payment plan;
@@ -630,37 +630,37 @@ Choose number of installments, and edit billing and personal data if necessary.
 ### Terms And Conditions
 
 Read the Terms and Conditions, select "Li e autorizo" (1) to accept, and click "Avançar" (2) button to proceed.
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_3.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_3.png)
 </br>
 
 ### Agreement formalization
 
 Click "Enviar Código" (1) to send an authentication code to you phone.
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_4.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_4.png)
 </br>
 
 ### Agreement formalization authentication code
 
 Input the authentication code received on phone (1), and click the button "Confirmar Código" (2) to proceed.
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_5.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_5.png)
 </br>
 
 ### Summary and Payment
 
 Fill in your credit card details (1)(number, expiration date and CW), and click "Validar" button (2);
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_6.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
 </br>
 
 ### Success and return to store
 
 The payment contract was successfull, the user can now return to the shop by either waiting for an automatic redirect or clicking the "sair" button.
-![img](/_dev/readme/assets/paying_cofidis_gateway_page_6.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
 </br>
 
 ## Paying with Pix
 
 The Pix form will be displayed, the user must input their name (1), CPF (2), email (3), and click the "Pay" button (4).
-![img](/_dev/readme/assets/paying_pix_form.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_pix_form.png)
 </br>
 
 User will be redirected to the Pix page.
@@ -668,23 +668,23 @@ Here it is possible to proceed with payment with one of two options:
 
 - Reading QR code (1) with mobile phone;
 - Copy the Pix code (2) and pay with online banking; Important Note: In order to be redirected back to the store after paying, this page must be left open. If closed the consumer will still be able to pay, as long as he has already read the Pix code, he will only not be redirected back to the store.
-  ![img](/_dev/readme/assets/paying_pix_gateway_page.png)
+  ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_pix_gateway_page.png)
   </br>
 
 After being redirected back to store, the user may be displayed a message informing the success of the operation, but
 verification of transaction is in progress.
-![img](/_dev/readme/assets/paying_pix_gateway_return.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_pix_gateway_return.png)
 </br>
 
 ## Paying with Ifthenpay Gateway
 
 A "Pay" button (1) will be displayed, which the consumer must click to be redirected to the ifthenpay gateway page.
-![img](/_dev/readme/assets/paying_ifthenpaygateway_form.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ifthenpaygateway_form.png)
 </br>
 
 User will be redirected to the ifthenpay gateway page.
 Here the user can verify the amount and select one of the payment methods available in the gateway page.
-![img](/_dev/readme/assets/paying_ifthenpaygateway_gateway_page_1.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ifthenpaygateway_gateway_page_1.png)
 </br>
 
 Choosing a payment method,
@@ -692,7 +692,7 @@ When choosing an offline payment method like Multibanco or Payshop, the user mus
 </br>
 
 When choosing an online payment method like MB WAY, Credit Card, Pix, Google Pay, and Apple Pay, the user must follow the instructions in the gateway and fill the necessary fields to proceed. When finished the, click "Concluir" button (2) to return to shop.
-![img](/_dev/readme/assets/paying_ifthenpaygateway_gateway_page_2.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ifthenpaygateway_gateway_page_2.png)
 </br>
 
 
