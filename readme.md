@@ -115,7 +115,7 @@ Follow the table below to verify Ifthenpay's module compatibility with your WHMC
 ⚠️ **Attention**: If you are updating from versions between 1.0.0 and 1.3.1 to version 8.0.0 and above, please refer to the [Upgrade from older versions](#upgrade-from-older-versions) section.
 
 Download the latest version of ifthenpay's module installation file from the GitHub releases page [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases).
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/download_installer.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/installation_download_installer.png)
 </br>
 
 Unzip the downloaded file, and paste the contents in the root of your WHMCS platform.
@@ -168,8 +168,8 @@ The image below shows an example of a minimally functional configuration using a
 5. **Entity** - Select an Entity, any numeric entity for using static type multibanco account. You can only choose one of the Entities associated with the Backoffice Key;
 6. **Sub-entity** - Select a Sub-Entity. You can only choose one of the Sub-Entities associated with the Entity chosen earlier;
 7. **Deadline** - (optional) Only available for dynamic type accounts.
-8. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it;
-9. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it;
+8. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it;
+9. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 10. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon.
 11. **Cancel Multibanco Order** - (optional) Only available for dynamic type accounts;
 12. **Callback** (optional) Enable to activate Callback, by selecting this option the order state will update when a payment is received;
@@ -213,8 +213,8 @@ The image below shows an example of a minimally functional configuration.
 3. **Version** - Displays current version and checks if installed version is up to date with latest release.
 4. **Backoffice Key** - Input your ifthenpay Backoffice Key to load available MB WAY Keys. Backoffice Key is provided upon contract completion and consists of sets of four digits separated by a hyphen (-), e.g. 1111-1111-1111-1111.
 5. **MB WAY Key** - Select a Key. You can only choose one of the Keys associated with the Backoffice Key.
-6. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it;
-7. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it;
+6. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it;
+7. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 8. **App Notification Description** - (optional) Modify this string if you wish. Use the string "{{invoice_id}}" to pass the invoice number in the description;
 9. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon;
 10. **Show MB WAY Countdown** - (optional) when enabled, will display a countdown in the invoice page and will give feedback of user action (payment completed, refused, error). You may wish to keep this option disable if you are using a third-party checkout module that may conflict with the countdown;
@@ -241,8 +241,8 @@ The image below shows an example of a minimally functional configuration.
 3. **Version** - Displays current version and checks if installed version is up to date with latest release;
 4. **Backoffice Key** - Input your ifthenpay Backoffice Key to load available Credit Card Keys. Backoffice Key is provided upon contract completion and consists of sets of four digits separated by a hyphen (-), e.g. 1111-1111-1111-1111;
 5. **Credit Card Key** - Select a Key. You can only choose one of the Keys associated with the Backoffice Key.
-6. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it;
-7. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it;
+6. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it;
+7. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 8. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon.
 9. **Cancel Credit Card Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron;
 
@@ -267,8 +267,8 @@ The image below shows an example of a minimally functional configuration.
 4. **Backoffice Key** - Input your ifthenpay Backoffice Key to load available Payshop Keys. Backoffice Key is provided upon contract completion and consists of sets of four digits separated by a hyphen (-), e.g. 1111-1111-1111-1111;
 5. **Payshop Key** - Select a Key. You can only choose one of the Keys associated with the Backoffice Key.
 6. **Deadline** - (optional) Input the number of days to deadline for the Payshop reference. From 1 to 99 days, leave empty if you don't want it to expire.
-7. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it;
-8. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it;
+7. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it;
+8. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 9. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon.
 10. **Cancel Payshop Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron;
 11. **Callback** (optional) Enable to activate Callback, by selecting this option the order state will update when a payment is received;
@@ -293,8 +293,8 @@ The image below shows an example of a minimally functional configuration.
 3. **Version** - Displays current version and checks if installed version is up to date with latest release;
 4. **Backoffice Key** - Input your ifthenpay Backoffice Key to load available Cofidis Pay Keys. Backoffice Key is provided upon contract completion and consists of sets of four digits separated by a hyphen (-), e.g. 1111-1111-1111-1111;
 5. **Cofidis Pay Key** - Select a Key. You can only choose one of the Keys associated with the Backoffice Key.
-6. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it. Important Notice: On Cofidis Key selection, this input is updated with value configured in ifthenpay's backoffice, and when editing, it can not be lesser than the value specified in ifthenpay's backoffice;
-7. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it. Important Notice: On Cofidis Key selection, this input is updated with value configured in ifthenpay's backoffice, and when editing, it can not be greater than the value specified in ifthenpay's backoffice;
+6. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it. Important Notice: On Cofidis Key selection, this input is updated with value configured in ifthenpay's backoffice, and when editing, it can not be lesser than the value specified in ifthenpay's backoffice;
+7. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it. Important Notice: On Cofidis Key selection, this input is updated with value configured in ifthenpay's backoffice, and when editing, it can not be greater than the value specified in ifthenpay's backoffice;
 8. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon.
 9. **Cancel Cofidis Pay Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron;
 10. **Callback** (optional) Enable to activate Callback, by selecting this option the order state will update when a payment is received;
@@ -319,8 +319,8 @@ The image below shows an example of a minimally functional configuration.
 3. **Version** - Displays current version and checks if installed version is up to date with latest release;
 4. **Backoffice Key** - Input your ifthenpay Backoffice Key to load available Pix Keys. Backoffice Key is provided upon contract completion and consists of sets of four digits separated by a hyphen (-), e.g. 1111-1111-1111-1111;
 5. **Pix Key** - Select a Key. You can only choose one of the Keys associated with the Backoffice Key.
-6. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it;
-7. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it;
+6. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it;
+7. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 8. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon.
 9. **Cancel Pix Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron;
 10. **Callback** (optional) Enable to activate Callback, by selecting this option the order state will update when a payment is received;
@@ -350,13 +350,13 @@ The image below shows an example of a minimally functional configuration.
 8. **Gateway Close Button Text** - Text displayed in the "Return to Shop" button in the gateway page;
 9. **Description** - Text displayed under amount, as a description, in the gateway page;
 10. **Deadline** - (optional) Input the number of days to deadline for the Payshop reference. From 1 to 99 days, leave empty if you don't want it to expire.
-11. **Minimum Ammount** - (optional) Input minimum value to only display this payment method for orders values above it;
-12. **Maximum Ammount** - (optional) Input maximum value to only display this payment method for orders values below it;
+11. **Minimum Amount** - (optional) Input minimum value to only display this payment method for orders values above it;
+12. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 13. **Show Payment Icon on Checkout** - Display this payment method logo image on checkout, choose from 3 options:
 
     - OFF - show method title: displays Payment Method Title;
     - ON - show default icon: displays ifthenpay gateway logo;
-    - ON - show composit icon: displays a composite image of all the payment method logos you have selected;
+    - ON - show composite icon: displays a composite image of all the payment method logos you have selected;
 
 14. **Cancel ifthenpay gateway Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron;
 15. **Callback** (optional) Enable to activate Callback, by selecting this option the order state will update when a payment is received;
@@ -378,7 +378,7 @@ For your convenience, you can also access this user manual by clicking on the In
 
 If you already have an ifthenpay account but haven't contracted a needed payment method, you can place an automatic request with ifthenpay.
 The response time for this request is 1 to 2 business days, with the exception of the Credit Card payment method, which might exceed this time due to validation requirements.
-To request the creation of an additional account, access the configuration page of the payment method you wish to contract and input your backoffice key (1), if you don't have any acount for that payment method, a dialog window will popup asking if you wish to request an account for that payment method, you can then click the ok button (2) to send an automatic email requesting that payment method account creation.
+To request the creation of an additional account, access the configuration page of the payment method you wish to contract and input your backoffice key (1), if you don't have any account for that payment method, a dialog window will popup asking if you wish to request an account for that payment method, you can then click the ok button (2) to send an automatic email requesting that payment method account creation.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/request_account.png)
 </br>
 
@@ -421,7 +421,7 @@ After activating the Callback, you don't need to take any further action. The Ca
 
 ## Cronjob
 
-A cron job is a scheduled task that is automatically executed at specific intervals in the system, regularly set to repeat everyday. The ifthenpay extension provides a function that is run when the WHMCS dayly cron job is executed, it checks the payment status and cancel invoices that haven't been paid within the configured time limit. The table below shows the time limit for each payment method, which the cron job checks and cancels invoices that haven't been paid within the time limit. This time limit can be configured only for the Multibanco with Dynamic References, Payshop and Ifthenpay Gateway payment methods.
+A cron job is a scheduled task that is automatically executed at specific intervals in the system, regularly set to repeat everyday. The ifthenpay extension provides a function that is run when the WHMCS daily cron job is executed, it checks the payment status and cancel invoices that haven't been paid within the configured time limit. The table below shows the time limit for each payment method, which the cron job checks and cancels invoices that haven't been paid within the time limit. This time limit can be configured only for the Multibanco with Dynamic References, Payshop and Ifthenpay Gateway payment methods.
 
 | Payment Method     | Payment Deadline               |
 | ------------------ | ------------------------------ |
@@ -447,7 +447,7 @@ The table below shows the log files and their functions.
 
 | File                 | Function                                                           |
 | -------------------- | ------------------------------------------------------------------ |
-| cron.log             | Register logs related to the execution of the cancelation cronjob. |
+| cron.log             | Register logs related to the execution of the cancellation cronjob. |
 | general_logs.log     | Register logs not related to a single payment method.              |
 | multibanco.log       | Register logs related to Multibanco payment method.                |
 | mbway.log            | Register logs related to MB WAY payment method.                    |
@@ -459,7 +459,7 @@ The table below shows the log files and their functions.
 
 ### Log levels
 
-To prevent unnecessarily filling the log files, the module only registers error level events. If there is a need to debug and analyse the lower level events, you may access the config file at `/modules/gateways/ifthenpaylib/lib/Config/Config.php`, and set the log level to info by:
+To prevent unnecessarily filling the log files, the module only registers error level events. If there is a need to debug and analyze the lower level events, you may access the config file at `/modules/gateways/ifthenpaylib/lib/Config/Config.php`, and set the log level to info by:
 
 editing line 12:
 
@@ -475,8 +475,8 @@ into:
 At the time of the writing of this document, the previous (older) version is v1.3.1, the newest version 8.0.0 has some changes that are automatically updated, mainly changes to the database tables of ifthenpay methods.
 
 To make the transition as smooth as possible follow this small guide:
-**Important Note**: Before proceeding, keep in mind that both version of the module can not coexist at the same time, once the newer is activated the older will no longer work properly, and these actions are irreversable without interacting directly with the database.
-You may experience a period where the invoices are either not cancelled automaticaly or updated as paid by the callback, this is due to the difference in parameters from the older to the newer version.
+**Important Note**: Before proceeding, keep in mind that both version of the module can not coexist at the same time, once the newer is activated the older will no longer work properly, and these actions are irreversible without interacting directly with the database.
+You may experience a period where the invoices are either not cancelled automatically or updated as paid by the callback, this is due to the difference in parameters from the older to the newer version.
 
 ## Upload installation files
 Upload module installation files to the root of WHMCS, it will warn you about replacing the hooks files `/includes/hooks/ifthenpay.php`, accept it and proceed.
@@ -484,7 +484,7 @@ Upload module installation files to the root of WHMCS, it will warn you about re
 ## Activate payment methods
 After uploading the files, access the admin back office and go to Setup (1) -> Apps & Integrations (2) -> Browse (3) -> Payments (4).
 
-The image below shows the newer payment methods distinguishable by the "V2" sufix.
+The image below shows the newer payment methods distinguishable by the "V2" suffix.
 Taking Credit Card as example, we will activate the newer version "Ifthenpay Credit Card V2" (1) to later replace the older version (2).
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/upgrade_from_older_payments.png)
 </br>
@@ -525,7 +525,7 @@ If the configuration option "Show Payment Icon on Checkout" is enabled, the icon
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/ux_checkout_select_payment_icon.png)
 </br>
 
-The payment method Ifthenpay Gateway provides an aditional option to show the icons of the payment methods that will be available inside the ifthenpay gateway page. By selecting the option "ON - show composite icon" in the "Show Payment Icon on Checkout" field.
+The payment method Ifthenpay Gateway provides an additional option to show the icons of the payment methods that will be available inside the ifthenpay gateway page. By selecting the option "ON - show composite icon" in the "Show Payment Icon on Checkout" field.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/ux_checkout_select_payment_icon_composite.png)
 </br>
 
@@ -574,7 +574,7 @@ The refused status will be displayed after a verification from MB WAY returns an
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_refused.png)
 </br>
 
-The error status will be displayed after inputing an invalid phone number, or an error as occurred either on MB WAY or ifthenpay.
+The error status will be displayed after inputting an invalid phone number, or an error as occurred either on MB WAY or ifthenpay.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_error.png)
 </br>
 
@@ -653,7 +653,7 @@ Fill in your credit card details (1)(number, expiration date and CW), and click 
 
 ### Success and return to store
 
-The payment contract was successfull, the user can now return to the shop by either waiting for an automatic redirect or clicking the "sair" button.
+The payment contract was successful, the user can now return to the shop by either waiting for an automatic redirect or clicking the "sair" button.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
 </br>
 
@@ -700,7 +700,7 @@ When choosing an online payment method like MB WAY, Credit Card, Pix, Google Pay
 He we will talk about some common problems.
 
 ## Lack of permissions for log files
-You may install the module, and later on, and error gets throwned in the module, having the logger register an event, it may so happen that instead of registering the event, another error is throwned due to inability to register the log.
+You may install the module, and later on, and error gets thrown in the module, having the logger register an event, it may so happen that instead of registering the event, another error is thrown due to inability to register the log.
 The module's logger requires permissions to create, read, and write for the log files, so make sure to give enough permissions to do so.
 
 
