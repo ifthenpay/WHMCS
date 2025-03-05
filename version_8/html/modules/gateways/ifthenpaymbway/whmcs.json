@@ -1,0 +1,29 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpaymbway",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay MB WAY V2",
+        "tagline": "MB WAY payment method",
+        "long": "MB WAY Gateway Module developed by Ifthenpay",
+        "features": [
+			"Send payment notifications to customers MB WAY smartphone app",
+			"Receive automatic payment confirmation"
+        ]
+    },
+    "logo": {
+        "filename": "mbway.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}

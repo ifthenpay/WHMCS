@@ -1,0 +1,30 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpayccard",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay Credit Card V2",
+        "tagline": "Credit Card payment method",
+        "long": "Credit Card Payment Gateway Module developed by Ifthenpay",
+        "features": [
+			"Accept credit card payments",
+            "Redirect customers to credit card payment gateway",
+			"Receive automatic payment confirmation"
+        ]
+    },
+    "logo": {
+        "filename": "ccard.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}

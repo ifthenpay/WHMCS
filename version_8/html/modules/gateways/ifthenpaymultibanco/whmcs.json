@@ -1,0 +1,29 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpaymultibanco",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay Multibanco V2",
+        "tagline": "Multibanco payment method",
+        "long": "Multibanco Gateway Module developed by Ifthenpay",
+        "features": [
+			"Generate Multibanco reference",
+			"Receive automatic payment confirmation"
+        ]
+    },
+    "logo": {
+        "filename": "multibanco.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}

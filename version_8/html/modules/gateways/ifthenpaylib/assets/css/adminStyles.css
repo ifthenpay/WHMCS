@@ -1,0 +1,127 @@
+.ifthenpay_spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #949494;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  transform: rotate(90deg);
+  animation: rotation 1s linear infinite;
+  margin-left: 10px;
+  margin-bottom: 4px;
+  vertical-align: middle;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ifthenpay_hidden {
+  display: none;
+}
+
+.ifthenpay_reset_btn {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-left: 10px;
+  margin-bottom: 4px;
+  vertical-align: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+
+.ifthenpay_validation {
+  color: red;
+}
+
+.ifthenpay_w_400 {
+  width: 400px;
+}
+
+
+/* Callback info */
+.ifthenpay_callback_info th {
+	white-space: nowrap;
+	padding-right: 10px;
+  }
+  
+  .ifthenpay_callback_info th span {
+	margin-left: 8px;
+	display: inline-block;
+  }
+  
+  .ifthenpay_callback_info td span {
+	  word-wrap: anywhere;
+	  text-align: left;
+  }
+  
+
+/* ifthenpaygateway method selection */
+.method_line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 400px;
+}
+
+.method_line:first-of-type {
+  margin-top: 20px;
+}
+
+.method_checkbox {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-width: 160px;
+}
+.method_checkbox label {
+  display: flex;
+}
+
+.method_checkbox input {
+  align-self: center;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.method_checkbox img {
+  max-height: 30px;
+}
+
+.method_select {
+  flex-grow: 1;
+}
+
+.method_select select {
+  box-sizing: border-box;
+}
+
+.request_ifthenpaygateway_method {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 992px) {
+  .method_line {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .method_checkbox {
+    margin-bottom: 8px;
+  }
+
+
+}
+
+.method_line .method_checkbox img {
+  margin-left: 8px;
+}

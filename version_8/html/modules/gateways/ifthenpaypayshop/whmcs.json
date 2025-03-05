@@ -1,0 +1,29 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpaypayshop",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay Payshop V2",
+        "tagline": "Payshop payment method",
+        "long": "Payshop Gateway Module developed by Ifthenpay",
+        "features": [
+			"Generate Payshop reference",
+			"Receive automatic payment confirmation"
+        ]
+    },
+    "logo": {
+        "filename": "payshop.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}
