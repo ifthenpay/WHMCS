@@ -215,6 +215,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional ut
 
 4.  **Cancelar Encomenda Multibanco** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
 
+</br>
+
 ## MB WAY
 
 O método de pagamento MB WAY utiliza um número de telemóvel fornecido pelo consumidor e gera um pedido de pagamento na aplicação MB WAY para smartphone. O consumidor pode então aceitar ou recusar o pagamento.
@@ -702,6 +704,7 @@ Introduza o código de autenticação recebido no telefone (1) e clique no botã
 ### Resumo e Pagamento
 
 Preencha os detalhes do seu cartão de crédito (1) (número, data de expiração e CW) e clique no botão "Validar" (2);
+
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
 
 </br>
