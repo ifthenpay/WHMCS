@@ -1,0 +1,29 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpaycofidis",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay Cofidis Pay V2",
+        "tagline": "Cofidis Pay payment method",
+        "long": "Cofidis Pay Gateway Module developed by Ifthenpay",
+        "features": [
+			"Allow you customers to pay in instalments",
+			"Receive automatic payment confirmation"
+        ]
+    },
+    "logo": {
+        "filename": "cofidis.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpaygateway",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay Gateway V2",
+        "tagline": "Ifthenpay Gateway payment method",
+        "long": "Ifthenpay Gateway Module developed by Ifthenpay",
+        "features": [
+			"Allow you customers to pay using the ifthenpay gateway page",
+			"Receive automatic payment confirmation"
+        ]
+    },
+    "logo": {
+        "filename": "ifthenpaygateway.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}

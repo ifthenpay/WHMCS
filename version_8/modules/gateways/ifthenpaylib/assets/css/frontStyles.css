@@ -1,0 +1,181 @@
+/* ----------------------------- payment details ---------------------------- */
+
+
+.ifthenpay_details_container {
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.ifthenpay_details_title {
+	display: flex;
+    align-items: center;
+	justify-content: center;
+}
+
+.ifthenpay_details_title span {
+    font-size: 1.25rem;
+    font-weight: bold;
+	margin-right: 0.5rem;
+}
+
+.ifthenpay_details_body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+	justify-content: center;
+    gap: 0.5rem;
+}
+
+.ifthenpay_details {
+	width: 240px;
+}
+
+.ifthenpay_details li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+}
+
+.ifthenpay_details_header {
+    display: flex;
+    align-items: center; /* Vertically center items */
+    gap: 8px; /* Adds spacing between the span and img */
+}
+
+.ifthenpay_details_header span {
+    font-size: 1.25rem;
+    font-weight: bold;
+	margin-right: 0.2rem;
+}
+
+
+
+/* -------------------------- invoice payment form -------------------------- */
+
+
+.ifthenpay_form_title {
+	padding: 8px;
+}
+
+.ifthenpay_w_10_rem {
+	width: 10rem;
+}
+
+.ifthenpay_w_6_rem {
+	width: 6rem;
+}
+
+.ifthenpay_form_title {
+	display: flex;
+    align-items: center;
+	justify-content: center;
+}
+
+.ifthenpay_form_title span {
+    font-size: 1.25rem;
+    font-weight: bold;
+	margin-right: 0.5rem;
+}
+
+.ifthenpay_mbway_form div {
+	display: flex;
+    align-items: center;
+	justify-content: center;
+}
+
+/* mbway */
+
+.ifthenpay_spinner {
+	width: 20px;
+	height: 20px;
+	border: 3px solid #949494;
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	transform: rotate(90deg);
+	animation: rotation 1s linear infinite;
+	margin-left: 10px;
+	margin-bottom: 4px;
+	vertical-align: middle;
+  }
+  
+  @keyframes rotation {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
+	}
+  }
+
+.ifthenpay_mbway_form div img {
+	height: 200px;
+}
+
+#ifthenpay_mbway_status .ifthenpay_m_t_20 {
+	margin-top:20px;
+}
+
+#ifthenpay_mbway_status h5{
+	margin-top:10px;
+}
+
+#ifthenpay_mbway_countdown {
+	font-size: 5rem;
+	color:#c00;
+	font-weight: 700;
+}
+
+
+/* pix */
+
+.ifthenpay_pix_form div {
+    display: flex;
+    flex-direction: column;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.ifthenpay_pix_form label {
+    display: inline-block;
+	text-align: left;
+	margin: 0;
+}
+
+.ifthenpay_pix_form input {
+	margin-bottom: 4px;
+}
+
+.ifthenpay_pix_form button {
+    margin-top: 12px;
+}
+
+
+.ifthenpay_pix_form .validation_message {
+	text-align: left;
+	font-size: small;
+	color: #c00;
+}
+
+.ifthenpay_color_green {
+	color:green;
+}
+
+.ifthenpay_mb_0{
+	margin-bottom: 0px;
+}
+
+
+/* cofidis */
+
+.ifthenpay_cofidis_form_info p {
+	font-size: 12px;
+	text-align: justify;
+}
+
+.ifthenpay_cofidis_form_info p.ifthenpay_cofidis_form_info_title {
+	font-size: 14px;
+	padding-top: 8px;
+	text-align: center;
+}

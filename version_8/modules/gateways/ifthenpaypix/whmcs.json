@@ -1,0 +1,31 @@
+{
+    "schema": "1.0",
+    "type": "whmcs-gateways",
+    "name": "ifthenpaypix",
+    "license": "MIT",
+    "category": "payments",
+    "description": {
+        "name": "Ifthenpay Pix V2",
+        "tagline": "Pix payment method",
+        "long": "Pix Gateway Module developed by Ifthenpay",
+        "features": [
+			"Accept payments through Pix payment method",
+			"Redirect customers to Pix payment gateway",
+			"Receive automatic payment confirmation"
+        ]
+
+    },
+    "logo": {
+        "filename": "pix.png"
+    },
+    "support": {
+        "support_url": "https:\/\/helpdesk.ifthenpay.com\/pt-PT\/support\/home\/",
+        "docs_url": "https:\/\/github.com\/ifthenpay\/WHMCS\/"
+    },
+    "authors": [
+        {
+            "name": "ifthenpay",
+            "homepage": "https:\/\/www.ifthenpay.com\/"
+        }
+    ]
+}
