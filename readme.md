@@ -106,7 +106,7 @@ For support, please create a support ticket at [Support ifthenpay](https://helpd
 ## WHMCS
 
 Follow the table below to verify Ifthenpay's module compatibility with your WHMCS platform version.
-| Ifthenpay Module version| Versão WHMCS 5, 6 e 7 | Versão WHMCS 8 |
+| Ifthenpay Module version| Version WHMCS 5, 6 e 7 | Version WHMCS 8 |
 |---------------------------|----------------|--------------------------------|
 | Ifthenpay v1.0.0 to v1.3.1 | ❌ Non compatible | ✅ Compatible |
 | Ifthenpay v8.0.0 | ❌ Non compatible | ✅ Compatible |
