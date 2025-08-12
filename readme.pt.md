@@ -119,7 +119,7 @@ Siga a tabela abaixo para verificar a compatibilidade do módulo da Ifthenpay co
 | Versão do Módulo Ifthenpay | PHP 7.4 | PHP 8.1 | PHP 8.2 | PHP 8.3 |
 |---------------------------|----------------|--------------|---|---------------|
 | Ifthenpay v1.0.0 a v1.3.1 | ✅ | ✅ | ⚠️ Não testado | ⚠️ Não testado |
-| Ifthenpay v8.0.0 | ✅ | ⚠️ Não testado | ⚠️ Não testado | ✅ |
+| Ifthenpay v8.0.0 | ❌ Não compatível | ⚠️ Não testado | ⚠️ Não testado | ✅ |
 
 </br>
 
