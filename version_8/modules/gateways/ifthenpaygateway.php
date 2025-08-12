@@ -47,6 +47,19 @@ function ifthenpaygateway_config_validate($params)
 		throw new InvalidConfiguration(IftpLang::trans('msg_invalid_key'));
 	}
 
+	$paymentMethods = $_POST[Config::CF_IFTHENPAYGATEWAY_PAYMENT_METHODS] ?? [];
+	$hasSelectedMethod = false;
+	foreach ($paymentMethods as $key => $value) {
+
+		if (isset($value['is_active']) && $value['is_active'] === '1') {
+			$hasSelectedMethod = true;
+			break;
+		}
+	}
+	if (!$hasSelectedMethod) {
+		throw new InvalidConfiguration(IftpLang::trans('msg_invalid_gateway_methods'));
+	}
+
 	if ((isset($params[Config::CF_DEADLINE])) && $params[Config::CF_DEADLINE] != '' && !preg_match('/^[1-9]\d{0,3}$/', $params[Config::CF_DEADLINE])) {
 		throw new InvalidConfiguration(IftpLang::trans('msg_invalid_deadline'));
 	}
@@ -72,7 +85,7 @@ function ifthenpaygateway_config_validate($params)
 		throw new InvalidConfiguration(IftpLang::trans('msg_invalid_ifthenpaygateway_description'));
 	}
 
-	
+
 	// btn close
 	if (isset($params[Config::CF_IFTHENPAYGATEWAY_CLOSE_BTN_LABEL]) && $params[Config::CF_IFTHENPAYGATEWAY_CLOSE_BTN_LABEL] != '' && strlen($params[Config::CF_IFTHENPAYGATEWAY_CLOSE_BTN_LABEL]) > 50) {
 		throw new InvalidConfiguration(IftpLang::trans('msg_invalid_ifthenpaygateway_close_btn'));

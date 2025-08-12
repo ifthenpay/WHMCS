@@ -140,6 +140,8 @@ return [
 	'msg_error_updating_ifthenpaygateway_database' => 'Erro ao atualizar tabela da base de dados, para mais informação verifique o ficheiro ifthenpaygateway em modules/gateways/ifthenpaylib/lib/Log/logs/ifthenpaygateway.log.',
 	'msg_invalid_ifthenpaygateway_description' => 'Descrição Inválida, não pode ter mais de 200 caracteres.',
 	'msg_invalid_ifthenpaygateway_close_btn' => 'Texto do botão Fechar da Gateway Inválido, não pode ter mais de 50 caracteres.',
+	'msg_invalid_gateway_methods' => 'Sem métodos de pagamento de gateway selecionados.',
+
 
 
 	/* ---------------------------- Admin Pix ---------------------------- */

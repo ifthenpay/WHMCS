@@ -140,6 +140,7 @@ return [
 	'msg_error_updating_ifthenpaygateway_database' => 'Error updating ifthenpaygateway database table, for more information check the file ifthenpaygateway at modules/gateways/ifthenpaylib/lib/Log/logs/ifthenpaygateway.log.',
 	'msg_invalid_ifthenpaygateway_description' => 'Invalid Description, can not have more than 200 characters.',
 	'msg_invalid_ifthenpaygateway_close_btn' => 'Invalid Close Button Label, can not have more than 50 characters.',
+	'msg_invalid_gateway_methods' => 'No gateway payment methods selected.',
 
 
 	/* ---------------------------- Admin Pix ---------------------------- */
@@ -184,7 +185,7 @@ return [
 	'cofidis_desc_line_4' => 'Pay for your order in installments without interest or charges using your debit or credit card.',
 	'cofidis_desc_line_5' => 'Payment of installments will be made to the customer\'s debit or credit card through a payment solution based on a factoring contract between Cofidis and the Merchant. Find out more at Cofidis, registered with Banco de Portugal under number 921.',
 
-	
+
 
 	/* --------------------------- Front Payment mbway -------------------------- */
 

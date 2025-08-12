@@ -136,8 +136,9 @@ return [
 	'msg_no_ifthenpaygateway_accounts_found' => 'No se encontraron cuentas de Ifthenpay Gateway para su Clave de Backoffice.',
 	'msg_request_new_gateway_method' => '¿Desea solicitar un Método de Gateway {%method%}?',
 	'msg_error_updating_ifthenpaygateway_database' => 'Error al actualizar la tabla de la base de datos de ifthenpaygateway, para obtener más información, consulte el archivo ifthenpaygateway en modules/gateways/ifthenpaylib/lib/Log/logs/ifthenpaygateway.log.',
-    'msg_invalid_ifthenpaygateway_description' => 'Descripción Inválida, no puede tener más de 200 caracteres.',
-    'msg_invalid_ifthenpaygateway_close_btn' => 'Texto del Botón Cerrar Gateway Inválida, no puede tener más de 50 caracteres.',
+	'msg_invalid_ifthenpaygateway_description' => 'Descripción Inválida, no puede tener más de 200 caracteres.',
+	'msg_invalid_ifthenpaygateway_close_btn' => 'Texto del Botón Cerrar Gateway Inválida, no puede tener más de 50 caracteres.',
+	'msg_invalid_gateway_methods' => 'No se seleccionaron métodos de pago.',
 
 
 	/* ---------------------------- Admin Pix ---------------------------- */
@@ -182,7 +183,7 @@ return [
 	'cofidis_desc_line_4' => 'Pague su pedido en cuotas sin intereses ni cargos a través de su tarjeta de débito o crédito.',
 	'cofidis_desc_line_5' => 'El pago de las cuotas se efectuará en la tarjeta de débito o crédito del cliente a través de una solución de pago basada en un contrato de factoring entre Cofidis y el Comerciante. Infórmese en Cofidis, registrada en el Banco de Portugal con el n.º 921.',
 
-	
+
 
 	/* --------------------------- Front Payment mbway -------------------------- */
 
