@@ -15,7 +15,7 @@ This manual was created for version 8.0.0 of the Ifthenpay module, developed for
 Download Ifthenpay module for WHMCS.
 | | WHMCS 8 |
 |----------------------------|-----------------------------------------------------------------------------------------------------|
-| Download Installer Files | [ifthenpay v8.0.0](https://github.com/ifthenpay/WHMCS/releases/download/8.0.0/ifthenpay.zip) |
+| Download Installer Files | [ifthenpay v8.0.1](https://github.com/ifthenpay/WHMCS/releases/download/8.0.1/ifthenpay.zip) |
 
 **Disclaimer**: This module version is intended for either a fresh installation of **WHMCS 8** or an upgrade from **Ifthenpay v1.3.1**. Ifthenpay is **not responsible** for any issues arising from migration errors.
 
@@ -109,7 +109,7 @@ Follow the table below to verify Ifthenpay's module compatibility with your WHMC
 | Ifthenpay Module version| Version WHMCS 5, 6 e 7 | Version WHMCS 8 |
 |---------------------------|----------------|--------------------------------|
 | Ifthenpay v1.0.0 to v1.3.1 | ❌ Non compatible | ✅ Compatible |
-| Ifthenpay v8.0.0 | ❌ Non compatible | ✅ Compatible |
+| Ifthenpay v8.0.0 to v8.0.1 | ❌ Non compatible | ✅ Compatible |
 
 </br>
 
@@ -119,7 +119,7 @@ Follow the table below to verify Ifthenpay's module compatibility with your PHP 
 | Ifthenpay Module version| PHP 7.4 | PHP 8.1 | PHP 8.2 | PHP 8.3 |
 |---------------------------|----------------|--------------|---|---------------|
 | Ifthenpay v1.0.0 to v1.3.1 | ✅ | ✅ | ⚠️ Untested | ⚠️ Untested |
-| Ifthenpay v8.0.0 | ❌ Non compatible | ⚠️ Untested | ⚠️ Untested | ✅ |
+| Ifthenpay v8.0.0 to v8.0.1 | ❌ Non compatible | ⚠️ Untested | ⚠️ Untested | ✅ |
 
 </br>
 
