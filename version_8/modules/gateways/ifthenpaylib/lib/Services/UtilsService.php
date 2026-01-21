@@ -65,7 +65,7 @@ class UtilsService
 				->where('id', $_SESSION['adminid'])
 				->value('language');
 
-			if ($language) {
+			if (!$language) {
 				$language = 'english';
 			}
 			return $language;

@@ -413,20 +413,19 @@ class MultibancoService
 		}
 
 
-		// has order record
-		$order = OrderRepository::getOrderByInvoiceId($storedData['order_id']);
-
-		if (empty($order)) {
-			IfthenpayLog::info(Config::MULTIBANCO, 'validateCallback - Order not found. ERROR code: ' . Config::CB_ERROR_ORDER_NOT_FOUND, ['request' => $request, 'storedData' => $storedData]);
-			throw new \Exception("Error", Config::CB_ERROR_ORDER_NOT_FOUND);
+		// has incoice record
+		$invoice = OrderRepository::getInvoiceById($storedData['order_id']);
+		if (empty($invoice)) {
+			IfthenpayLog::info(Config::MULTIBANCO, 'validateCallback - Invoice not found. ERROR code: ' . Config::CB_ERROR_INVOICE_NOT_FOUND, ['request' => $request, 'storedData' => $storedData]);
+			throw new \Exception("Error", Config::CB_ERROR_INVOICE_NOT_FOUND);
 		}
 
 
 		// has valid amount
-		$orderAmount = floatval($order['amount'] ? $order['amount'] : $order['total']);
+		$invoiceAmount = floatval($invoice['total'] ? $invoice['total'] : $invoice['subtotal']);
 		$requestAmount = floatval($request[Config::CB_AMOUNT] ?? 0); // defaults to zero if missing
-		if (round($orderAmount, 2) !== round($requestAmount, 2)) {
-			IfthenpayLog::info(Config::MULTIBANCO, 'validateCallback - Invalid amount. ERROR code: ' . Config::CB_ERROR_INVALID_AMOUNT, ['request' => $request, 'orderAmount' => $orderAmount]);
+		if (round($invoiceAmount, 2) !== round($requestAmount, 2)) {
+			IfthenpayLog::info(Config::MULTIBANCO, 'validateCallback - Invalid amount. ERROR code: ' . Config::CB_ERROR_INVALID_AMOUNT, ['request' => $request, 'invoiceAmount' => $invoiceAmount]);
 			throw new \Exception("Error", Config::CB_ERROR_INVALID_AMOUNT);
 		}
 	}

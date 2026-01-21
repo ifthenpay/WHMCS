@@ -317,7 +317,7 @@ class IfthenpayService
 			$params['pm'] = Config::MULTIBANCO;
 		}
 
-		if (isset($params[Config::CB_ORDER_ID]) && IfthenpaygatewayService::hasPaymentRecordByInvoiceId($params[Config::CB_ORDER_ID])) {
+		if (isset($params[Config::CB_ORDER_ID]) && !empty(GatewaySetting::getForGateway(Config::IFTHENPAYGATEWAY_MODULE_CODE)) && IfthenpaygatewayService::hasPaymentRecordByInvoiceId($params[Config::CB_ORDER_ID])) {
 			IfthenpaygatewayService::handleCallback($params);
 			return;
 		}

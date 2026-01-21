@@ -7,7 +7,7 @@ namespace WHMCS\Module\Gateway\ifthenpaylib\Config;
 
 final class Config
 {
-	public const MODULE_VERSION = '8.0.0';
+	public const MODULE_VERSION = '8.0.1';
 
 	public const LOG_LEVEL = self::LOG_LEVEL_ERROR;
 	public const LOG_LEVEL_INFO = 5;
@@ -170,7 +170,7 @@ final class Config
 	public const CF_IFTHENPAYGATEWAY_PAYMENT_METHODS = 'paymentMethods';
 	public const CF_IFTHENPAYGATEWAY_DEFAULT_PAYMENT = 'defaultPaymentMethod';
 	public const CF_IFTHENPAYGATEWAY_CLOSE_BTN_LABEL = 'closeBtnLabel';
-	public const CF_IFTHENPAYGATEWAY_DESCRIPTION = 'description';	
+	public const CF_IFTHENPAYGATEWAY_DESCRIPTION = 'description';
 	public const CF_IFTHENPAYGATEWAY_FRONT_ICON = 'frontIcon';
 	public const CF_IFTHENPAYGATEWAY_GATEWAY_PAYMENT_METHODS = 'gatewayPaymentMethods';
 
@@ -198,7 +198,7 @@ final class Config
 	public const CB_ERROR_INVALID_PAYMENT_METHOD = 20;
 	public const CB_ERROR_CALLBACK_NOT_ACTIVE = 30;
 	public const CB_ERROR_INVALID_ANTIPHISHING_KEY = 40;
-	public const CB_ERROR_ORDER_NOT_FOUND = 50;
+	public const CB_ERROR_INVOICE_NOT_FOUND = 50;
 	public const CB_ERROR_INVALID_AMOUNT = 60;
 	public const CB_ERROR_UNCONFIGURED_METHOD = 70;
 	public const CB_ERROR_INVALID_SECRET = 80;
