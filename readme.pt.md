@@ -10,14 +10,14 @@
 
 # ⚠️ Atenção
 
-Este manual foi criado para a versão 8.0.0 do módulo Ifthenpay, desenvolvida para WHMCS 8.
+Este manual foi criado para a versão 8.0.0 do módulo Ifthenpay, desenvolvida para WHMCS 8 e 9.
 
 Descarregue o módulo Ifthenpay para WHMCS.
-| | WHMCS 8 |
+| | WHMCS 8 e 9 |
 |----------------------------|-----------------------------------------------------------------------------------------------------|
-| Descarregar Ficheiros do Instalador | [ifthenpay v8.0.1](https://github.com/ifthenpay/WHMCS/releases/download/8.0.1/ifthenpay.zip) |
+| Descarregar Ficheiros do Instalador | [ifthenpay v8.0.2](https://github.com/ifthenpay/WHMCS/releases/download/8.0.2/ifthenpay.zip) |
 
-**Aviso**: Esta versão do módulo destina-se a uma instalação nova do **WHMCS 8** ou a uma atualização da **Ifthenpay v1.3.1**. A Ifthenpay **não se responsabiliza** por quaisquer problemas decorrentes de erros de migração.
+**Aviso**: Esta versão do módulo destina-se a uma instalação nova do **WHMCS 8-9** ou a uma atualização da **Ifthenpay v1.3.1**. A Ifthenpay **não se responsabiliza** por quaisquer problemas decorrentes de erros de migração.
 
 </br>
 
@@ -46,6 +46,7 @@ Ler em ![Português](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/ass
 - [Suporte](#suporte)
 - [Pedir conta adicional](#pedir-conta-adicional)
 - [Limpar Configuração](#limpar-configuração)
+- [Recarregar Contas](#recarregar-contas)
 - [Callback](#callback)
 - [Cronjob](#cronjob)
 - [Logs](#logs)
@@ -106,10 +107,10 @@ Para suporte, por favor crie um ticket de suporte em [Suporte ifthenpay](https:/
 ## WHMCS
 
 Siga a tabela abaixo para verificar a compatibilidade do módulo da Ifthenpay com a versão da sua plataforma WHMCS.
-| Versão do Módulo Ifthenpay | Versão WHMCS 5, 6 e 7 | Versão WHMCS 8 |
-|---------------------------|----------------|--------------------------------|
-| Ifthenpay v1.0.0 a v1.3.1 | ❌ Não compatível | ✅ Compatível |
-| Ifthenpay v8.0.0 a v8.0.1 | ❌ Não compatível | ✅ Compatível |
+| Versão do Módulo Ifthenpay | Versão WHMCS 5, 6 e 7 | Versão WHMCS 8 | Versão WHMCS 9 |
+|---------------------------|----------------|--------------------------------|----------------|
+| Ifthenpay v1.0.0 a v1.3.1 | ❌ Não compatível | ✅ Compatível | ⚠️ Não testado |
+| Ifthenpay v8.0.0 a v8.0.2 | ❌ Não compatível | ✅ Compatível | ✅ Compatível |
 
 </br>
 
@@ -119,13 +120,13 @@ Siga a tabela abaixo para verificar a compatibilidade do módulo da Ifthenpay co
 | Versão do Módulo Ifthenpay | PHP 7.4 | PHP 8.1 | PHP 8.2 | PHP 8.3 |
 |---------------------------|----------------|--------------|---|---------------|
 | Ifthenpay v1.0.0 a v1.3.1 | ✅ | ✅ | ⚠️ Não testado | ⚠️ Não testado |
-| Ifthenpay v8.0.0 a v8.0.1 | ❌ Não compatível | ⚠️ Não testado | ⚠️ Não testado | ✅ |
+| Ifthenpay v8.0.0 a v8.0.2 | ❌ Não compatível | ⚠️ Não testado | ⚠️ Não testado | ✅ |
 
 </br>
 
 # Instalação
 
-⚠️ **Atenção**: Se estiver a atualizar da versão 1.0.0 até 1.3.1 para a versão 8.0.0 ou superior, consulte a secção [Atualizar de versões mais antigas](#atualizar-de-versoes-mais-antigas).
+⚠️ **Atenção**: Se estiver a atualizar da versão 1.0.0 até 1.3.1 para a versão 8.0.0 ou superior, consulte a secção [Atualizar de versões antigas](#atualizar-de-versões-antigas).
 
 Descarregue o ficheiro de instalação da versão mais recente do módulo da ifthenpay na página de "releases" do GitHub [ifthenpay-whmcs](https://github.com/ifthenpay/WHMCS/releases).
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/installation_download_installer.png)
@@ -187,8 +188,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional ut
 5. **Entidade** - Selecione uma Entidade, qualquer entidade numérica para utilizar uma conta multibanco de tipo estático. Só pode escolher uma das Entidades associadas à Chave de Backoffice;
 6. **Sub-entidade** - Selecione uma Sub-Entidade. Só pode escolher uma das Sub-Entidades associadas à Entidade escolhida anteriormente;
 7. **Validade** - (opcional) Apenas disponível para contas de tipo dinâmico.
-8. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste;
-9. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste;
+8. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste;
+9. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste;
 10. **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone.
 11. **Cancelar Encomenda Multibanco** - (opcional) Apenas disponível para contas de tipo dinâmico;
 12. **Callback** (opcional) Ative para ativar o Callback, ao selecionar esta opção o estado da encomenda será atualizado quando um pagamento for recebido;
@@ -233,8 +234,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
 3. **Versão** - Exibe a versão atual e verifica se a versão instalada está atualizada com a versão mais recente.
 4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves MB WAY disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111.
 5. **Chave MB WAY** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
-6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste;
-7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste;
+6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste;
+7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste;
 8.  **Descrição da Notificação da App** - (opcional) Modifique esta string se desejar. Use a string "{{invoice_id}}" para passar o número da fatura na descrição;
 9.  **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone;
 10. **Exibir Contagem Decrescente MB WAY** - (opcional) quando ativado, exibirá uma contagem decrescente na página da fatura e dará feedback da ação do utilizador (pagamento concluído, recusado, erro). Poderá querer manter esta opção desativada se estiver a utilizar um módulo de checkout de terceiros que possa entrar em conflito com a contagem decrescente;
@@ -247,7 +248,7 @@ Clique em Guardar (13) para guardar as alterações.
 
 ## Cartão de Crédito
 
-O método de pagamento Cartão de Crédito permite o pagamento com Visa ou Mastercard através do gateway ifthenpay.
+O método de pagamento Cartão de Crédito permite o pagamento com Visa ou Mastercard através da gateway ifthenpay.
 Ao introduzir uma Chave de Backoffice válida, as Chaves de Cartão de Crédito são carregadas automaticamente.
 </br>
 
@@ -261,8 +262,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
 3. **Versão** - Exibe a versão atual e verifica se a versão instalada está atualizada com a versão mais recente;
 4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves de Cartão de Crédito disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
 5. **Chave de Cartão de Crédito** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
-6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste;
-7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste;
+6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste;
+7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste;
 8. **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone.
 9.  **Cancelar Encomenda de Cartão de Crédito** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
 
@@ -287,8 +288,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
 4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves Payshop disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
 5. **Chave Payshop** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
 6. **Validade** - (opcional) Introduza o número de dias para o prazo da referência Payshop. De 1 a 99 dias, deixe vazio se não quiser que expire.
-7. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste;
-8. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste;
+7. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste;
+8. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste;
 9. **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone.
 10. **Cancelar Encomenda Payshop** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
 11. **Callback** (opcional) Ative para ativar o Callback, ao selecionar esta opção o estado da encomenda será atualizado quando um pagamento for recebido;
@@ -313,8 +314,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
 3. **Versão** - Exibe a versão atual e verifica se a versão instalada está atualizada com a versão mais recente;
 4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves Cofidis Pay disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
 5. **Chave Cofidis Pay** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
-6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste. Aviso Importante: Ao selecionar a Chave Cofidis, esta entrada é atualizada com o valor configurado no backoffice da ifthenpay e, ao editar, não pode ser inferior ao valor especificado no backoffice da ifthenpay;
-7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste. Aviso Importante: Ao selecionar a Chave Cofidis, esta entrada é atualizada com o valor configurado no backoffice da ifthenpay e, ao editar, não pode ser superior ao valor especificado no backoffice da ifthenpay;
+6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste. Aviso Importante: Ao selecionar a Chave Cofidis, esta entrada é atualizada com o valor configurado no backoffice da ifthenpay e, ao editar, não pode ser inferior ao valor especificado no backoffice da ifthenpay;
+7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste. Aviso Importante: Ao selecionar a Chave Cofidis, esta entrada é atualizada com o valor configurado no backoffice da ifthenpay e, ao editar, não pode ser superior ao valor especificado no backoffice da ifthenpay;
 8. **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone.
 9. **Cancelar Encomenda Cofidis Pay** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
 10. **Callback** (opcional) Ative para ativar o Callback, ao selecionar esta opção o estado da encomenda será atualizado quando um pagamento for recebido;
@@ -325,7 +326,7 @@ Clique em Guardar (11) para guardar as alterações.
 
 ## Pix
 
-O método de pagamento Pix permite o pagamento com CPF através do gateway ifthenpay.
+O método de pagamento Pix permite o pagamento com CPF através da gateway ifthenpay.
 Ao introduzir uma Chave de Backoffice válida, as Chaves Pix são carregadas automaticamente.
 </br>
 
@@ -339,8 +340,8 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
 3. **Versão** - Exibe a versão atual e verifica se a versão instalada está atualizada com a versão mais recente;
 4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves Pix disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
 5. **Chave Pix** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
-6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste;
-7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste;
+6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste;
+7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste;
 8. **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone.
 9. **Cancelar Encomenda Pix** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
 10. **Callback** (opcional) Ative para ativar o Callback, ao selecionar esta opção o estado da encomenda será atualizado quando um pagamento for recebido;
@@ -352,7 +353,7 @@ Clique em Guardar (11) para guardar as alterações.
 ## Gateway Ifthenpay
 
 O método de pagamento Gateway Ifthenpay permite que o consumidor seja redirecionado para uma página de gateway de pagamento onde é possível selecionar qualquer um dos métodos de pagamento acima para pagar a encomenda.
-Ao introduzir uma Chave de Backoffice válida, as Chaves do Gateway Ifthenpay são carregadas automaticamente.
+Ao introduzir uma Chave de Backoffice válida, as Chaves da Gateway Ifthenpay são carregadas automaticamente.
 </br>
 
 A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
@@ -363,22 +364,22 @@ A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
 1. **Show on Order Form** - Quando ativado, exibe esta opção de método de pagamento no checkout da sua loja;
 2. **Display Name** - O nome do método de pagamento que aparece ao consumidor durante o checkout;
 3. **Versão** - Exibe a versão atual e verifica se a versão instalada está atualizada com a versão mais recente;
-4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves do gateway ifthenpay disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
-5. **Chave do gateway ifthenpay** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
-6. **Métodos de Pagamento** - Clique na checkbox à esquerda de cada método de pagamento para mostrar/ocultar esse método de pagamento na página do gateway e escolha a conta do método de pagamento na caixa de seleção à direita do mesmo. Se não existirem contas criadas para um determinado método de pagamento, um botão substituirá a caixa de seleção, que poderá utilizar para solicitar a criação dessa conta.
-7. **Método de Pagamento Padrão** - Selecione um Método de Pagamento que será selecionado na página do gateway por padrão.
-8. **Texto do Botão Fechar do Gateway** - Texto exibido no botão "Regressar à Loja" na página do gateway;
-9. **Descrição** - Texto exibido abaixo do valor, como uma descrição, na página do gateway;
+4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves da gateway ifthenpay disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
+5. **Chave da gateway ifthenpay** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
+6. **Métodos de Pagamento** - Clique na checkbox à esquerda de cada método de pagamento para mostrar/ocultar esse método de pagamento na página da gateway e escolha a conta do método de pagamento na caixa de seleção à direita do mesmo. Se não existirem contas criadas para um determinado método de pagamento, um botão substituirá a caixa de seleção, que poderá utilizar para solicitar a criação dessa conta.
+7. **Método de Pagamento Padrão** - Selecione um Método de Pagamento que será selecionado na página da gateway por padrão.
+8. **Texto do Botão Fechar da Gateway** - Texto exibido no botão "Regressar à Loja" na página da gateway;
+9. **Descrição** - Texto exibido abaixo do valor, como uma descrição, na página da gateway;
 10. **Validade** - (opcional) Introduza o número de dias para o prazo da referência Payshop. De 1 a 99 dias, deixe vazio se não quiser que expire.
-11. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas encomenda com valores de acima deste;
-12. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas encomenda com valores de abaixo deste;
+11. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste;
+12. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste;
 13. **Exibir Ícone de Pagamento no Checkout** - Exibe a imagem do logótipo deste método de pagamento no checkout, escolha entre 3 opções:
 
     - DESLIGADO - mostrar título do método: exibe o Título do Método de Pagamento;
-    - LIGADO - mostrar ícone padrão: exibe o logótipo do gateway ifthenpay;
+    - LIGADO - mostrar ícone padrão: exibe o logótipo da gateway ifthenpay;
     - LIGADO - mostrar ícone composto: exibe uma imagem composta de todos os logótipos dos métodos de pagamento que selecionou;
 
-14. **Cancelar Encomenda do gateway ifthenpay** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
+14. **Cancelar Encomenda da gateway ifthenpay** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
 15. **Callback** (opcional) Ative para ativar o Callback, ao selecionar esta opção o estado da encomenda será atualizado quando um pagamento for recebido;
 
 Clique em Guardar (16) para guardar as alterações.
@@ -426,6 +427,20 @@ Para repor, clique no botão "Repor" (1) e confirme a ação clicando no botão 
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/reset_configuration.png)
 
 </br>
+
+## Recarregar Contas
+
+Funcionalidade de qualidade de vida que permite recarregar as contas associadas à chave de backoffice atualmente configurada, sem perder a configuração guardada.
+Isto é útil se adicionou novas contas à sua Chave de Backoffice existente e pretende atualizar a lista disponível, sem ter de repor a configuração atual.
+
+Após configurar com sucesso um método de pagamento pela primeira vez, a Chave de Backoffice ficará bloqueada e será apresentado um botão "Atualizar" ao lado da mesma.
+Para atualizar, clique no botão "Atualizar" (1) e confirme a ação clicando no botão "OK" (2).
+Esta ação apenas recarrega as contas associadas à sua chave de backoffice.
+
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/refresh_accounts.png)
+
+</br>
+
 
 ## Callback
 
@@ -563,7 +578,7 @@ Se a opção de configuração "Exibir Ícone de Pagamento no Checkout" estiver 
 
 </br>
 
-O método de pagamento Gateway Ifthenpay fornece uma opção adicional para mostrar os ícones dos métodos de pagamento que estarão disponíveis dentro da página do gateway ifthenpay. Ao selecionar a opção "ON - mostrar ícone composito" no campo "Exibir Ícone de Pagamento no Checkout".
+O método de pagamento Gateway Ifthenpay fornece uma opção adicional para mostrar os ícones dos métodos de pagamento que estarão disponíveis dentro da página da gateway ifthenpay. Ao selecionar a opção "ON - mostrar ícone composto" no campo "Exibir Ícone de Pagamento no Checkout".
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/ux_checkout_select_payment_icon_composite.png)
 
 </br>
@@ -712,7 +727,7 @@ Preencha os detalhes do seu cartão de crédito (1) (número, data de expiraçã
 ### Sucesso e regresso à loja
 
 O contrato de pagamento foi bem-sucedido, o utilizador pode agora regressar à loja, esperando por um redirecionamento automático ou clicando no botão "sair".
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_7.png)
 
 </br>
 
@@ -741,13 +756,13 @@ Após ser redirecionado de volta para a loja, o utilizador poderá ver uma mensa
 
 ## Pagar com Ifthenpay Gateway
 
-Será exibido um botão "Pagar" (1), no qual o consumidor deve clicar para ser redirecionado para a página do gateway ifthenpay.
+Será exibido um botão "Pagar" (1), no qual o consumidor deve clicar para ser redirecionado para a página da gateway ifthenpay.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ifthenpaygateway_form.png)
 
 </br>
 
-O utilizador será redirecionado para a página do gateway ifthenpay.
-Aqui, o utilizador pode verificar o valor e selecionar um dos métodos de pagamento disponíveis na página do gateway.
+O utilizador será redirecionado para a página da gateway ifthenpay.
+Aqui, o utilizador pode verificar o valor e selecionar um dos métodos de pagamento disponíveis na página da gateway.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ifthenpaygateway_gateway_page_1.png)
 
 </br>
@@ -755,7 +770,7 @@ Aqui, o utilizador pode verificar o valor e selecionar um dos métodos de pagame
 Ao escolher um método de pagamento offline como Multibanco ou Payshop, o utilizador deve anotar os detalhes de pagamento e clicar no botão "Concluir" (2), ou utilizar a aplicação de home banking para pagar imediatamente e confirmar o pagamento clicando no botão "Confirmo o Pagamento" (3).
 </br>
 
-Ao escolher um método de pagamento online como MB WAY, Cartão de Crédito, Pix, Google Pay e Apple Pay, o utilizador deve seguir as instruções no gateway e preencher os campos necessários para prosseguir. Quando terminar, clique no botão "Concluir" (2) para regressar à loja.
+Ao escolher um método de pagamento online como MB WAY, Cartão de Crédito, Pix, Google Pay e Apple Pay, o utilizador deve seguir as instruções na gateway e preencher os campos necessários para prosseguir. Quando terminar, clique no botão "Concluir" (2) para regressar à loja.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_ifthenpaygateway_gateway_page_2.png)
 
 </br>
