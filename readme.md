@@ -10,14 +10,14 @@
 
 # ⚠️ Attention
 
-This manual was created for version 8.0.0 of the Ifthenpay module, developed for WHMCS 8.
+This manual was created for version 8.0.0 of the Ifthenpay module, developed for WHMCS 8 and 9.
 
 Download Ifthenpay module for WHMCS.
-| | WHMCS 8 |
-|----------------------------|-----------------------------------------------------------------------------------------------------|
-| Download Installer Files | [ifthenpay v8.0.1](https://github.com/ifthenpay/WHMCS/releases/download/8.0.1/ifthenpay.zip) |
+|                          | WHMCS 8 and 9                                                                                |
+|--------------------------|----------------------------------------------------------------------------------------------|
+| Download Installer Files | [ifthenpay v8.0.2](https://github.com/ifthenpay/WHMCS/releases/download/8.0.2/ifthenpay.zip) |
 
-**Disclaimer**: This module version is intended for either a fresh installation of **WHMCS 8** or an upgrade from **Ifthenpay v1.3.1**. Ifthenpay is **not responsible** for any issues arising from migration errors.
+**Disclaimer**: This module version is intended for either a fresh installation of **WHMCS 8-9** or an upgrade from **Ifthenpay v1.3.1**. Ifthenpay is **not responsible** for any issues arising from migration errors.
 
 </br>
 
@@ -37,7 +37,7 @@ Read in ![Portuguese](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/as
 - [MB WAY](#mb-way)
 - [Credit Card](#credit-card)
 - [Payshop](#payshop)
-- [Cofidis Pay](#cofidis-Pay)
+- [Cofidis Pay](#cofidis-pay)
 - [Pix](#pix)
 - [Ifthenpay Gateway](#ifthenpay-gateway)
 
@@ -46,6 +46,7 @@ Read in ![Portuguese](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/as
 - [Support](#support)
 - [Request additional account](#request-additional-account)
 - [Reset Configuration](#reset-configuration)
+- [Refresh Accounts](#refresh-accounts)
 - [Callback](#callback)
 - [Cronjob](#cronjob)
 - [Logs](#logs)
@@ -106,20 +107,20 @@ For support, please create a support ticket at [Support ifthenpay](https://helpd
 ## WHMCS
 
 Follow the table below to verify Ifthenpay's module compatibility with your WHMCS platform version.
-| Ifthenpay Module version| Version WHMCS 5, 6 e 7 | Version WHMCS 8 |
-|---------------------------|----------------|--------------------------------|
-| Ifthenpay v1.0.0 to v1.3.1 | ❌ Non compatible | ✅ Compatible |
-| Ifthenpay v8.0.0 to v8.0.1 | ❌ Non compatible | ✅ Compatible |
+| Ifthenpay Module version   | Version WHMCS 5, 6 and 7 | Version WHMCS 8 | Version WHMCS 9 |
+|----------------------------|------------------------|-----------------|-----------------|
+| Ifthenpay v1.0.0 to v1.3.1 | ❌ Not compatible       | ✅ Compatible    | ⚠️ Untested     |
+| Ifthenpay v8.0.0 to v8.0.2 | ❌ Not compatible       | ✅ Compatible    | ✅ Compatible    |
 
 </br>
 
 ## PHP
 
 Follow the table below to verify Ifthenpay's module compatibility with your PHP language version.
-| Ifthenpay Module version| PHP 7.4 | PHP 8.1 | PHP 8.2 | PHP 8.3 |
-|---------------------------|----------------|--------------|---|---------------|
-| Ifthenpay v1.0.0 to v1.3.1 | ✅ | ✅ | ⚠️ Untested | ⚠️ Untested |
-| Ifthenpay v8.0.0 to v8.0.1 | ❌ Non compatible | ⚠️ Untested | ⚠️ Untested | ✅ |
+| Ifthenpay Module version   | PHP 7.4          | PHP 8.1     | PHP 8.2     | PHP 8.3     |
+|----------------------------|------------------|-------------|-------------|-------------|
+| Ifthenpay v1.0.0 to v1.3.1 | ✅                | ✅           | ⚠️ Untested | ⚠️ Untested |
+| Ifthenpay v8.0.0 to v8.0.2 | ❌ Not compatible | ⚠️ Untested | ⚠️ Untested | ✅           |
 
 </br>
 
@@ -237,7 +238,7 @@ The image below shows an example of a minimally functional configuration.
 7. **Maximum Amount** - (optional) Input maximum value to only display this payment method for orders values below it;
 8. **App Notification Description** - (optional) Modify this string if you wish. Use the string "{{invoice_id}}" to pass the invoice number in the description;
 9. **Show Payment Icon on Checkout** - (optional) When enabled, replaces the payment method Display Name presented in checkout with its respective icon;
-10. **Show MB WAY Countdown** - (optional) when enabled, will display a countdown in the invoice page and will give feedback of user action (payment completed, refused, error). You may wish to keep this option disable if you are using a third-party checkout module that may conflict with the countdown;
+10. **Show MB WAY Countdown** - (optional) when enabled, will display a countdown in the invoice page and will give feedback of user action (payment completed, refused, error). You may wish to keep this option disabled if you are using a third-party checkout module that may conflict with the countdown;
 11. **Cancel MB WAY Order** - (optional) When enabled, allows the order cancellation cron job to run for this specific method. The cancellation cron job executes with the WHMCS daily cron;
 12. **Callback** (optional) Enable to activate Callback, by selecting this option the order state will update when a payment is received;
 
@@ -427,6 +428,19 @@ To reset, click the "Reset" button (1) and confirm the action by clicking the "O
 
 </br>
 
+## Refresh Accounts
+
+Quality of life functionality that lets you reload the accounts associated with the currently configured backoffice key without losing the saved configuration.
+This is useful if you have added new accounts to your existing Backoffice Key and want to update the available list without having to reset the current configuration.
+
+After successfully configuring a payment method once, the Backoffice Key will become locked and a "Refresh" button will be displayed next to it.
+To refresh, click the "Refresh" button (1) and confirm the action by clicking the "OK" button (2).
+This action only reloads the accounts associated with your backoffice key.
+
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/refresh_accounts.png)
+
+</br>
+
 ## Callback
 
 **IMPORTANT:** Only the Multibanco, MB WAY, Payshop, Cofidis Pay, Pix, and Ifthenpay Gateway payment methods allow activation of the Callback. The Credit Card method changes the order status automatically without using the Callback.
@@ -446,7 +460,7 @@ After activating the Callback, you don't need to take any further action. The Ca
 A cron job is a scheduled task that is automatically executed at specific intervals in the system, regularly set to repeat everyday. The ifthenpay extension provides a function that is run when the WHMCS daily cron job is executed, it checks the payment status and cancel invoices that haven't been paid within the configured time limit. The table below shows the time limit for each payment method, which the cron job checks and cancels invoices that haven't been paid within the time limit. This time limit can be configured only for the Multibanco with Dynamic References, Payshop and Ifthenpay Gateway payment methods.
 
 | Payment Method     | Payment Deadline               |
-| ------------------ | ------------------------------ |
+|--------------------|--------------------------------|
 | Multibanco         | No deadline                    |
 | Dynamic Multibanco | Configurable from 0 to n days  |
 | MB WAY             | 30 minutes                     |
@@ -468,7 +482,7 @@ This module has its own log coverage, and the resulting log files can be found a
 The table below shows the log files and their functions.
 
 | File                 | Function                                                            |
-| -------------------- | ------------------------------------------------------------------- |
+|----------------------|---------------------------------------------------------------------|
 | cron.log             | Register logs related to the execution of the cancellation cronjob. |
 | general_logs.log     | Register logs not related to a single payment method.               |
 | multibanco.log       | Register logs related to Multibanco payment method.                 |
@@ -620,7 +634,7 @@ The refused status will be displayed after a verification from MB WAY returns an
 
 </br>
 
-The error status will be displayed after inputting an invalid phone number, or an error as occurred either on MB WAY or ifthenpay.
+The error status will be displayed after inputting an invalid phone number, or an error has occurred either on MB WAY or ifthenpay.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_mbway_details_error.png)
 
 </br>
@@ -672,7 +686,7 @@ Choose number of installments, and edit billing and personal data if necessary.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_2.png)
 
 1. Select the number of installments you wish;
-2. Verify the summary of the the payment plan;
+2. Verify the summary of the payment plan;
 3. Fill in your personal and billing data;
 4. Upload identification files;
 5. Click "Avançar" to continue;
@@ -688,7 +702,7 @@ Read the Terms and Conditions, select "Li e autorizo" (1) to accept, and click "
 
 ### Agreement formalization
 
-Click "Enviar Código" (1) to send an authentication code to you phone.
+Click "Enviar Código" (1) to send an authentication code to your phone.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_4.png)
 
 </br>
@@ -711,7 +725,7 @@ Fill in your credit card details (1)(number, expiration date and CW), and click 
 
 The payment contract was successful, the user can now return to the shop by either waiting for an automatic redirect or clicking the "sair" button.
 
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
+![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_7.png)
 
 </br>
 
@@ -762,7 +776,7 @@ When choosing an online payment method like MB WAY, Credit Card, Pix, Google Pay
 
 # Troubleshoot
 
-He we will talk about some common problems.
+Here we will talk about some common problems.
 
 ## Lack of permissions for log files
 
