@@ -12,6 +12,7 @@ return [
 	'module_up_to_date' => 'O seu módulo está atualizado.',
 	'backoffice_key' => 'Chave Backoffice',
 	'reset' => 'Reset',
+	'refresh' => 'Recarregar',
 	'callback' => 'Callback',
 	'callback_desc' => 'Selecione para ativar o Callback.',
 	'show_payment_icon' => 'Exibir Ícone de Pagamento no Checkout',
@@ -31,6 +32,7 @@ return [
 	'cofidis_max_amount_desc' => 'Exibe método de pagamento apenas para pedidos com valor total superior ao valor inserido. O valor inserido não pode ser inferior ao valor definido no backoffice ifthenpay.',
 	'none' => 'None',
 	'msg_are_sure_reset_config' => 'Esta ação irá apagar a configuração atual deste método de pagamento, confirme para continuar,',
+	'msg_are_sure_refresh_accounts' => 'Esta ação irá atualizar as contas disponíveis para este método de pagamento, confirme para continuar.',
 
 
 

@@ -54,6 +54,34 @@ class IfthenpaygatewayService
 
 
 
+	public static function refreshAccounts(): bool
+	{
+		try {
+			$backofficeKey = GatewaySetting::getValue(Config::IFTHENPAYGATEWAY_MODULE_CODE, Config::CF_BACKOFFICE_KEY) ?? '';
+
+			if ($backofficeKey == '') {
+				throw new \Exception("Error refreshing accounts, missing backoffice key.", 1);
+			}
+
+			$accounts = self::getKeysByBackofficKey($backofficeKey);
+
+			if (empty($accounts)) {
+				throw new \Exception("Error refreshing accounts, no accounts found.", 1);
+			}
+
+			GatewaySetting::setValue(Config::IFTHENPAYGATEWAY_MODULE_CODE, Config::CF_ACCOUNTS, json_encode($accounts));
+
+			IfthenpayLog::info(Config::IFTHENPAYGATEWAY, 'Accounts refreshed successfully.', ['accounts' => $accounts]);
+
+			return true;
+		} catch (\Throwable $th) {
+			IfthenpayLog::error(Config::IFTHENPAYGATEWAY, 'Unexpected error refreshing accounts', $th->__toString());
+			return false;
+		}
+	}
+
+
+
 	public static function bulkActivateCallback(string $backofficeKey, string $storedPaymentMethods, array $paymentMethods, bool $forceActivation = false): void
 	{
 		try {
@@ -434,9 +462,9 @@ class IfthenpaygatewayService
 	{
 		// has required params
 		if (
-			(!isset($request[Config::CB_ANTIPHISHING_KEY]) || $request[Config::CB_ANTIPHISHING_KEY] == '') &&
-			(!isset($request[Config::CB_PAYMENT_METHOD]) || $request[Config::CB_PAYMENT_METHOD] == '') &&
-			(!isset($request[Config::CB_AMOUNT]) || $request[Config::CB_AMOUNT] == '') &&
+			(!isset($request[Config::CB_ANTIPHISHING_KEY]) || $request[Config::CB_ANTIPHISHING_KEY] == '') ||
+			(!isset($request[Config::CB_PAYMENT_METHOD]) || $request[Config::CB_PAYMENT_METHOD] == '') ||
+			(!isset($request[Config::CB_AMOUNT]) || $request[Config::CB_AMOUNT] == '') ||
 			(!isset($request[Config::CB_ORDER_ID]) || $request[Config::CB_ORDER_ID] == '')
 		) {
 			IfthenpayLog::info(Config::IFTHENPAYGATEWAY, 'validateCallback - Invalid request params. ERROR code: ' . Config::CB_ERROR_INVALID_PARAMS);

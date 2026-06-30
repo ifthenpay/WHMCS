@@ -70,7 +70,7 @@ class IfthenpayService
 		$versionData = self::getLatestModuleVersionJson();
 
 		if (!isset($versionData['version'])) {
-			return IftpLang::trans('your_current_version') . ' <b>' . $currentVersion . '<b>';
+			return IftpLang::trans('your_current_version') . ' <b>' . $currentVersion . '</b>';
 		}
 
 		if ($currentVersion && version_compare($versionData['version'], $currentVersion, '>')) {
@@ -271,6 +271,10 @@ class IfthenpayService
 			[]
 		);
 
+		if (!is_array($response) || empty($response)) {
+			return [];
+		}
+
 		if ($response[0]['Entidade'] == '' && empty($response[0]['SubEntidade'])) {
 			return [];
 		}
@@ -297,6 +301,7 @@ class IfthenpayService
 			}
 		} catch (\Throwable $th) {
 			IfthenpayLog::error('general_logs', 'Error getting gateway keys', $th->__toString());
+			return [];
 		}
 
 		return $response;

@@ -50,6 +50,7 @@ add_hook('AdminAreaFooterOutput', 1, function ($vars) {
 				'msg_no_ifthenpaygateway_accounts_found' => IftpLang::trans('msg_no_ifthenpaygateway_accounts_found'),
 				'msg_request_new_gateway_method' => IftpLang::trans('msg_request_new_gateway_method'),
 				'msg_are_sure_reset_config' => IftpLang::trans('msg_are_sure_reset_config'),
+				'msg_are_sure_refresh_accounts' => IftpLang::trans('msg_are_sure_refresh_accounts'),
 			];
 
 			$ifthenpayTranslations = 'var ifthenpaytranslations = ' . json_encode($phpVars);

@@ -12,6 +12,7 @@ return [
 	'module_up_to_date' => 'Your module is up to date.',
 	'backoffice_key' => 'Backoffice Key',
 	'reset' => 'Reset',
+	'refresh' => 'Refresh',
 	'callback' => 'Callback',
 	'callback_desc' => 'Enable to activate Callback.',
 	'show_payment_icon' => 'Show Payment Icon on Checkout',
@@ -31,6 +32,7 @@ return [
 	'cofidis_max_amount_desc' => 'Only display this payment method for orders with total value less than inserted value. Inputted value can not be greater than defined value in ifthenpay backoffice.',
 	'none' => 'None',
 	'msg_are_sure_reset_config' => 'This action will clear this payment method\'s current configuration, please confirm to proceed.',
+	'msg_are_sure_refresh_accounts' => 'This action will refresh this payment method\'s current accounts, please confirm to proceed.',
 
 
 

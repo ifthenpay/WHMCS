@@ -19,6 +19,7 @@ class IfthenpayConfig {
 	async init() {
 
 		this.addEventListener_resetBtnClick();
+		this.addEventListener_refreshAccountsBtnClick();
 	}
 
 
@@ -71,6 +72,55 @@ class IfthenpayConfig {
 		return [];
 	}
 
+
+
+	addEventListener_refreshAccountsBtnClick() {
+		this.refreshButtons = document.querySelectorAll('.ifthenpay_refresh_btn') || null;
+		if (!this.refreshButtons) return;
+
+		this.refreshButtons.forEach(button => {
+			button.addEventListener('click', async () => {
+
+				if (!button.dataset.method) {
+					return
+				}
+
+				const method = button.dataset.method;
+				const userConfirmed = window.confirm(IftpLang.trans('msg_are_sure_refresh_accounts'));
+				if (userConfirmed) {
+					Utils.addSpinner(button);
+					await this.refreshAccounts(method);
+					Utils.removeSpinner(button);
+				}
+			});
+		});
+
+	}
+
+
+
+	async refreshAccounts(method) {
+		try {
+			const response = await fetch("../modules/gateways/ifthenpaylib/controllers/refreshAccounts.php", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+				body: new URLSearchParams({ 'paymentMethod': method }),
+			});
+
+			const result = await response.json();
+			if (result.success) {
+				location.reload();
+			} else {
+				console.error("Error: unable to reset config.");
+			}
+		} catch (error) {
+			console.error("Error: unable to reset config.");
+		}
+
+		return [];
+	}
 
 }
 

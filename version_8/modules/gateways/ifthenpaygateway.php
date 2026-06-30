@@ -144,7 +144,7 @@ function ifthenpaygateway_config($params)
 {
 	try {
 
-		$resetBtn = isset($params[Config::CF_BACKOFFICE_KEY]) ? '<button type="button" class="btn btn-danger ifthenpay_reset_btn" data-method="' . Config::IFTHENPAYGATEWAY . '">' . IftpLang::trans('reset') . '</button>' : '';
+		$resetBtn = isset($params[Config::CF_BACKOFFICE_KEY]) ? '<button type="button" class="btn btn-danger ifthenpay_reset_btn ifthenpay_action_btn" data-method="' . Config::IFTHENPAYGATEWAY . '">' . IftpLang::trans('reset') . '</button> <button type="button" class="btn btn-info ifthenpay_refresh_btn ifthenpay_action_btn" data-method="' . Config::IFTHENPAYGATEWAY . '">' . IftpLang::trans('refresh') . '</button>' : '';
 
 		$backofficeKeyReadOnly = $resetBtn != '' ? true : false;
 

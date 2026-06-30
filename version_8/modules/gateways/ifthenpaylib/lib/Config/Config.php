@@ -7,7 +7,7 @@ namespace WHMCS\Module\Gateway\ifthenpaylib\Config;
 
 final class Config
 {
-	public const MODULE_VERSION = '8.0.1';
+	public const MODULE_VERSION = '8.0.2';
 
 	public const LOG_LEVEL = self::LOG_LEVEL_ERROR;
 	public const LOG_LEVEL_INFO = 5;

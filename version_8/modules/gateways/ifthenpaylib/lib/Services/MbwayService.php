@@ -51,6 +51,34 @@ class MbwayService
 
 
 
+	public static function refreshAccounts(): bool
+	{
+		try {
+			$backofficeKey = GatewaySetting::getValue(Config::MBWAY_MODULE_CODE, Config::CF_BACKOFFICE_KEY) ?? '';
+
+			if ($backofficeKey == '') {
+				throw new \Exception("Error refreshing accounts, missing backoffice key.", 1);
+			}
+
+			$accounts = self::getKeysByBackofficKey($backofficeKey);
+
+			if (empty($accounts)) {
+				throw new \Exception("Error refreshing accounts, no accounts found.", 1);
+			}
+
+			GatewaySetting::setValue(Config::MBWAY_MODULE_CODE, Config::CF_ACCOUNTS, json_encode($accounts));
+
+			IfthenpayLog::info(Config::MBWAY, 'Accounts refreshed successfully.', ['accounts' => $accounts]);
+
+			return true;
+		} catch (\Throwable $th) {
+			IfthenpayLog::error(Config::MBWAY, 'Unexpected error refreshing accounts', $th->__toString());
+			return false;
+		}
+	}
+
+
+
 	public static function activateCallback(string $backofficeKey, string $key): void
 	{
 		$antiPhishingKey = md5((string) rand());
@@ -481,9 +509,9 @@ class MbwayService
 
 		// has required params
 		if (
-			(!isset($request[Config::CB_ANTIPHISHING_KEY]) || $request[Config::CB_ANTIPHISHING_KEY] == '') &&
-			(!isset($request[Config::CB_PAYMENT_METHOD]) || $request[Config::CB_PAYMENT_METHOD] == '') &&
-			(!isset($request[Config::CB_AMOUNT]) || $request[Config::CB_AMOUNT] == '') &&
+			(!isset($request[Config::CB_ANTIPHISHING_KEY]) || $request[Config::CB_ANTIPHISHING_KEY] == '') ||
+			(!isset($request[Config::CB_PAYMENT_METHOD]) || $request[Config::CB_PAYMENT_METHOD] == '') ||
+			(!isset($request[Config::CB_AMOUNT]) || $request[Config::CB_AMOUNT] == '') ||
 			!isset($request[Config::CB_TRANSACTION_ID])
 		) {
 			IfthenpayLog::info(Config::MBWAY, 'validateCallback - Invalid request params. ERROR code: ' . Config::CB_ERROR_INVALID_PARAMS);

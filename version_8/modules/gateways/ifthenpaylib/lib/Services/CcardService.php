@@ -41,7 +41,35 @@ class CcardService
 			}
 			return $keysData;
 		} catch (\Throwable $th) {
-			IfthenpayLog::error(Config::CCARD, 'Error getting keys by backofficeKey', $th->__toString);
+			IfthenpayLog::error(Config::CCARD, 'Error getting keys by backofficeKey', $th->__toString());
+		}
+	}
+
+
+
+	public static function refreshAccounts(): bool
+	{
+		try {
+			$backofficeKey = GatewaySetting::getValue(Config::CCARD_MODULE_CODE, Config::CF_BACKOFFICE_KEY) ?? '';
+
+			if ($backofficeKey == '') {
+				throw new \Exception("Error refreshing accounts, missing backoffice key.", 1);
+			}
+
+			$accounts = self::getKeysByBackofficKey($backofficeKey);
+
+			if (empty($accounts)) {
+				throw new \Exception("Error refreshing accounts, no accounts found.", 1);
+			}
+
+			GatewaySetting::setValue(Config::CCARD_MODULE_CODE, Config::CF_ACCOUNTS, json_encode($accounts));
+
+			IfthenpayLog::info(Config::CCARD, 'Accounts refreshed successfully.', ['accounts' => $accounts]);
+
+			return true;
+		} catch (\Throwable $th) {
+			IfthenpayLog::error(Config::CCARD, 'Unexpected error refreshing accounts', $th->__toString());
+			return false;
 		}
 	}
 
