@@ -4,7 +4,6 @@ require_once(__DIR__ . '/../../../../init.php');
 
 use WHMCS\Module\Gateway\ifthenpaylib\Config\Config;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\CcardService;
-use WHMCS\Module\Gateway\ifthenpaylib\Services\CofidisService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\IfthenpaygatewayService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\MbwayService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\MultibancoService;
@@ -38,9 +37,6 @@ try {
 			break;
 		case Config::CCARD:
 			$result = CcardService::refreshAccounts();
-			break;
-		case Config::COFIDIS:
-			$result = CofidisService::refreshAccounts();
 			break;
 		case Config::PIX:
 			$result = PixService::refreshAccounts();

@@ -5,7 +5,6 @@ require_once(__DIR__ . '/../../../../init.php');
 
 use WHMCS\Module\Gateway\ifthenpaylib\Config\Config;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\CcardService;
-use WHMCS\Module\Gateway\ifthenpaylib\Services\CofidisService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\IfthenpaygatewayService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\MbwayService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\MultibancoService;
@@ -41,9 +40,6 @@ try {
 			break;
 		case Config::CCARD:
 			$data = CcardService::getKeysByBackofficKey($_POST['backofficeKey']);
-			break;
-		case Config::COFIDIS:
-			$data = CofidisService::getKeysByBackofficKey($_POST['backofficeKey']);
 			break;
 		case Config::PIX:
 			$data = PixService::getKeysByBackofficKey($_POST['backofficeKey']);

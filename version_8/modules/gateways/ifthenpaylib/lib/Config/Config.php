@@ -7,7 +7,7 @@ namespace WHMCS\Module\Gateway\ifthenpaylib\Config;
 
 final class Config
 {
-	public const MODULE_VERSION = '8.0.2';
+	public const MODULE_VERSION = '8.0.3';
 
 	public const LOG_LEVEL = self::LOG_LEVEL_ERROR;
 	public const LOG_LEVEL_INFO = 5;
@@ -25,7 +25,6 @@ final class Config
 	public const PAYSHOP_MODULE_CODE = 'ifthenpaypayshop';
 	public const MBWAY_MODULE_CODE = 'ifthenpaymbway';
 	public const CCARD_MODULE_CODE = 'ifthenpayccard';
-	public const COFIDIS_MODULE_CODE = 'ifthenpaycofidis';
 	public const PIX_MODULE_CODE = 'ifthenpaypix';
 	public const IFTHENPAYGATEWAY_MODULE_CODE = 'ifthenpaygateway';
 
@@ -47,9 +46,6 @@ final class Config
 	public const CCARD = 'ccard';
 	public const CCARD_NAME = 'Credit Card';
 
-	public const COFIDIS = 'cofidis';
-	public const COFIDIS_NAME = 'Cofidis Pay';
-
 	public const PIX = 'pix';
 	public const PIX_NAME = 'Pix';
 
@@ -61,7 +57,6 @@ final class Config
 		Self::PAYSHOP_MODULE_CODE,
 		Self::MBWAY_MODULE_CODE,
 		Self::CCARD_MODULE_CODE,
-		Self::COFIDIS_MODULE_CODE,
 		Self::PIX_MODULE_CODE,
 		Self::IFTHENPAYGATEWAY_MODULE_CODE
 	];
@@ -92,7 +87,6 @@ final class Config
 	public const PAYSHOP_TABLE = 'ifthenpay_' . self::PAYSHOP;
 	public const MBWAY_TABLE = 'ifthenpay_' . self::MBWAY;
 	public const CCARD_TABLE = 'ifthenpay_' . self::CCARD;
-	public const COFIDIS_TABLE = 'ifthenpay_' . self::COFIDIS;
 	public const PIX_TABLE = 'ifthenpay_' . self::PIX;
 	public const IFTHENPAYGATEWAY_TABLE = 'ifthenpay_gateway';
 
@@ -142,20 +136,6 @@ final class Config
 
 	public const CF_CCARD_KEY = 'key';
 
-
-
-	/* ------------------------ cofidis config values ------------------------ */
-
-	public const CF_COFIDIS_KEY = 'key';
-
-	// Cofidis status
-	public const COFIDIS_STATUS_INITIATED = 'INITIATED';  // (pending)
-	public const COFIDIS_STATUS_CANCELED = 'CANCELED'; // 1 (canceled)
-	public const COFIDIS_STATUS_PENDING_INVOICE = 'PENDING_INVOICE'; // approved but must wait validation, can still fail (pending)
-	public const COFIDIS_STATUS_NOT_APPROVED = 'NOT_APPROVED'; // (after pending invoice) (failed)
-	public const COFIDIS_STATUS_FINANCED = 'FINANCED'; // (after pending invoice) this means installment contract is accepted (processed)
-	public const COFIDIS_STATUS_EXPIRED = 'EXPIRED'; // (expired)
-	public const COFIDIS_STATUS_TECHNICAL_ERROR = 'TECHNICAL_ERROR'; // (failed)
 
 
 	/* ------------------------ pix config values ------------------------ */
@@ -228,7 +208,6 @@ final class Config
 	public const MULTIBANCO_CALLBACK_STRING = '?ec={ec}&mv={mv}&apk=[ANTI_PHISHING_KEY]&oid=[ID]&ent=[ENTITY]&ref=[REFERENCE]&val=[AMOUNT]&fee=[FEE]&pm=[PAYMENT_METHOD]';
 	public const PAYSHOP_CALLBACK_STRING = '?ec={ec}&mv={mv}&apk=[ANTI_PHISHING_KEY]&oid=[ID]&tid=[REQUEST_ID]&ref=[REFERENCE]&val=[AMOUNT]&fee=[FEE]&pm=[PAYMENT_METHOD]';
 	public const MBWAY_CALLBACK_STRING = '?ec={ec}&mv={mv}&apk=[ANTI_PHISHING_KEY]&oid=[ID]&tid=[REQUEST_ID]&val=[AMOUNT]&fee=[FEE]&pm=[PAYMENT_METHOD]';
-	public const COFIDIS_CALLBACK_STRING = '?ec={ec}&mv={mv}&apk=[ANTI_PHISHING_KEY]&oid=[ID]&tid=[REQUEST_ID]&val=[AMOUNT]&fee=[FEE]&pm=[PAYMENT_METHOD]';
 	public const PIX_CALLBACK_STRING = '?ec={ec}&mv={mv}&apk=[ANTI_PHISHING_KEY]&oid=[ID]&tid=[REQUEST_ID]&val=[AMOUNT]&fee=[FEE]&pm=[PAYMENT_METHOD]';
 	public const IFTHENPAYGATEWAY_CALLBACK_STRING = '?ec={ec}&mv={mv}&apk=[ANTI_PHISHING_KEY]&oid=[ID]&ent=[ENTITY]&ref=[REFERENCE]&tid=[REQUEST_ID]&val=[AMOUNT]&fee=[FEE]&pm=[PAYMENT_METHOD]';
 
@@ -236,7 +215,6 @@ final class Config
 
 	/* ------------------------ whmcs custom controllers ------------------------ */
 
-	public const COFIDIS_RETURN_URL_STRING = 'modules/gateways/ifthenpaylib/controllers/returnfromcofidis.php?order_id=[ORDER_ID]';
 	public const PIX_RETURN_URL_STRING = 'modules/gateways/ifthenpaylib/controllers/returnfrompix.php?order_id=[ORDER_ID]';
 
 
@@ -260,13 +238,7 @@ final class Config
 
 	public const API_URL_CCARD_SET_REQUEST = 'https://api.ifthenpay.com/creditcard/init/';
 
-	public const API_URL_COFIDIS_SET_REQUEST = 'https://api.ifthenpay.com/cofidis/init/';
-
 	public const API_URL_GET_MBWAY_STATUS = 'https://api.ifthenpay.com/spg/payment/mbway/status';
-
-	public const API_URL_COFIDIS_GET_MAX_MIN_AMOUNT = 'https://ifthenpay.com/api/cofidis/limits/';
-
-	public const API_URL_COFIDIS_GET_PAYMENT_STATUS = 'https://ifthenpay.com/api/cofidis/status';
 
 	public const API_URL_IFTHENPAYGATEWAY_SET_REQUEST = 'https://api.ifthenpay.com/gateway/pinpay/';
 

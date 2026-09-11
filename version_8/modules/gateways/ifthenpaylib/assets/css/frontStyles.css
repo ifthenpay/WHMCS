@@ -165,17 +165,3 @@
 .ifthenpay_mb_0{
 	margin-bottom: 0px;
 }
-
-
-/* cofidis */
-
-.ifthenpay_cofidis_form_info p {
-	font-size: 12px;
-	text-align: justify;
-}
-
-.ifthenpay_cofidis_form_info p.ifthenpay_cofidis_form_info_title {
-	font-size: 14px;
-	padding-top: 8px;
-	text-align: center;
-}

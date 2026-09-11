@@ -276,28 +276,6 @@ class Sql
 
 
 
-	public static function createCofidisTable(): void
-	{
-		$schema = Capsule::schema();
-		$schema->create(
-			Config::COFIDIS_TABLE,
-			function ($table) {
-				/** @var \Illuminate\Database\Schema\Blueprint $table */
-				$table->increments('id');
-				$table->string('order_id', 50);
-				$table->string('amount', 12);
-				$table->string('transaction_id', 50)->nullable();
-				$table->string('status', 20);
-				$table->index('transaction_id');
-				$table->timestamps();
-			}
-		);
-
-		IfthenpayLog::info(Config::COFIDIS, 'Ifthenpay Cofidis payments Table created with success.');
-	}
-
-
-
 	public static function createPixTable(): void
 	{
 		$schema = Capsule::schema();

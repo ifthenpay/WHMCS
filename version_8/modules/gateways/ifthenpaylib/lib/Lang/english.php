@@ -28,8 +28,6 @@ return [
 	'max_amount' => 'Maximum Amount',
 	'min_amount_desc' => 'Only display this payment method for orders with total value greater than inserted value. Leave empty to always display this payment method.',
 	'max_amount_desc' => 'Only display this payment method for orders with total value less than inserted value. Leave empty to always display this payment method.',
-	'cofidis_min_amount_desc' => 'Only display this payment method for orders with total value greater than inserted value. Inputted value can not be less than defined value in ifthenpay backoffice.',
-	'cofidis_max_amount_desc' => 'Only display this payment method for orders with total value less than inserted value. Inputted value can not be greater than defined value in ifthenpay backoffice.',
 	'none' => 'None',
 	'msg_are_sure_reset_config' => 'This action will clear this payment method\'s current configuration, please confirm to proceed.',
 	'msg_are_sure_refresh_accounts' => 'This action will refresh this payment method\'s current accounts, please confirm to proceed.',
@@ -106,18 +104,6 @@ return [
 
 
 
-	/* ---------------------------- Admin Cofidis ---------------------------- */
-
-	'cofidis_key' => 'Cofidis Pay Key',
-	'msg_invalid_cofidis_key' => 'Invalid Cofidis Pay Key',
-	'cancel_cofidis' => 'Cancel Cofidis Pay Order',
-	'cancel_cofidis_desc' => 'Enable to automatically cancel Cofidis Pay orders if not paid 60 minutes after creation. Executes together with daily cron.',
-	'msg_no_cofidis_accounts_found' => 'No Cofidis accounts found for your Backoffice Key.',
-	'msg_error_updating_cofidis_database' => 'Error updating cofidis database table, for more information check the file cofidis at modules/gateways/ifthenpaylib/lib/Log/logs/cofidis.log.',
-	'msg_invalid_minimum_amount_ifthenpay' => 'Invalid minimum amount value, must be greater or equal than value defined in ifthenpay backoffice.',
-	'msg_invalid_maximum_amount_ifthenpay' => 'Invalid minimum amount value, must be lesser or equal than value defined in ifthenpay backoffice.',
-
-
 
 	/* ---------------------------- Admin ifthenpaygateway ---------------------------- */
 
@@ -162,7 +148,6 @@ return [
 	'mbway' => 'MB WAY',
 	'payshop' => 'Payshop',
 	'ccard' => 'Credit Card',
-	'cofidis' => 'Cofidis Pay',
 	'pix' => 'Pix',
 	'ifthenpaygateway' => 'Ifthenpay Gateway',
 
@@ -178,14 +163,6 @@ return [
 	'wait_for_payment_verification' => 'Verification is in progress.',
 
 
-
-	/* --------------------------- Front Payment cofidis -------------------------- */
-
-	'cofidis_desc_line_1' => 'COFIDIS PAY',
-	'cofidis_desc_line_2' => ' - up to 12 interest-free installments',
-	'cofidis_desc_line_3' => 'You will be redirected to a secure page to make the payment.',
-	'cofidis_desc_line_4' => 'Pay for your order in installments without interest or charges using your debit or credit card.',
-	'cofidis_desc_line_5' => 'Payment of installments will be made to the customer\'s debit or credit card through a payment solution based on a factoring contract between Cofidis and the Merchant. Find out more at Cofidis, registered with Banco de Portugal under number 921.',
 
 
 

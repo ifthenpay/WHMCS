@@ -28,8 +28,6 @@ return [
 	'max_amount' => 'Valor Máximo',
 	'min_amount_desc' => 'Exibe método de pagamento apenas para pedidos com valor total superior ao valor inserido. Deixe vazio para exibir sempre.',
 	'max_amount_desc' => 'Exibe método de pagamento apenas para pedidos com valor total inferior ao valor inserido. Deixe vazio para exibir sempre.',
-	'cofidis_min_amount_desc' => 'Exibe método de pagamento apenas para pedidos com valor total superior ao valor inserido. O valor inserido não pode ser inferior ao valor definido no backoffice ifthenpay.',
-	'cofidis_max_amount_desc' => 'Exibe método de pagamento apenas para pedidos com valor total superior ao valor inserido. O valor inserido não pode ser inferior ao valor definido no backoffice ifthenpay.',
 	'none' => 'None',
 	'msg_are_sure_reset_config' => 'Esta ação irá apagar a configuração atual deste método de pagamento, confirme para continuar,',
 	'msg_are_sure_refresh_accounts' => 'Esta ação irá atualizar as contas disponíveis para este método de pagamento, confirme para continuar.',
@@ -106,18 +104,6 @@ return [
 
 
 
-	/* ---------------------------- Admin Cofidis ---------------------------- */
-
-	'cofidis_key' => 'Chave Cofidis Pay',
-	'msg_invalid_cofidis_key' => 'Chave Cofidis Pay inválida',
-	'cancel_cofidis' => 'Cancelar Encomenda por Cofidis Pay',
-	'cancel_cofidis_desc' => 'Selecione para cancelar automaticamente encomendas por Cofidis Pay se não forem pagas 60 minutos após a sua criação. Executa juntamente com o cron diário.',
-	'msg_no_cofidis_accounts_found' => 'Não foram encontradas contas de Cofidis Pay para a sua Chave de Backoffice.',
-	'msg_error_updating_cofidis_database' => 'Erro ao atualizar tabela da base de dados, para mais informação verifique o ficheiro cofidis em modules/gateways/ifthenpaylib/lib/Log/logs/cofidis.log.',
-	'msg_invalid_minimum_amount_ifthenpay' => 'Valor Mínimo Inválido, deve ser maior ou igual ao valor definido no backoffice ifthenpay.',
-	'msg_invalid_maximum_amount_ifthenpay' => 'Valor Máximo Inválido, deve ser menor ou igual ao valor definido no backoffice ifthenpay.',
-
-
 
 	/* ---------------------------- Admin ifthenpaygateway ---------------------------- */
 
@@ -163,7 +149,6 @@ return [
 	'mbway' => 'MB WAY',
 	'payshop' => 'Payshop',
 	'ccard' => 'Cartão de Crédito',
-	'cofidis' => 'Cofidis Pay',
 	'pix' => 'Pix',
 	'ifthenpaygateway' => 'Ifthenpay Gateway',
 
@@ -179,14 +164,6 @@ return [
 	'wait_for_payment_verification' => 'Está a decorrer a verificação do pagamento.',
 
 
-
-	/* --------------------------- Front Payment cofidis -------------------------- */
-
-	'cofidis_desc_line_1' => 'COFIDIS PAY',
-	'cofidis_desc_line_2' => ' - até 12 prestações sem juros',
-	'cofidis_desc_line_3' => 'Será redirecionado para uma página segura a fim de efetuar o pagamento.',
-	'cofidis_desc_line_4' => 'Pague a sua encomenda em prestações sem juros nem encargos através do seu cartão de débito ou crédito.',
-	'cofidis_desc_line_5' => 'O pagamento das prestações será efetuado no cartão de débito ou crédito do cliente através de solução de pagamento assente em contrato de factoring entre a Cofidis e o Comerciante. Informe-se na Cofidis, registada no Banco de Portugal com o n 921.',
 
 
 

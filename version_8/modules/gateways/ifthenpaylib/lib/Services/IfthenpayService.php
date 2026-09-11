@@ -152,9 +152,6 @@ class IfthenpayService
 						case Config::CCARD:
 							unset($gatewayArray['ifthenpay' . Config::CCARD]);
 							break;
-						case Config::COFIDIS:
-							unset($gatewayArray['ifthenpay' . Config::COFIDIS]);
-							break;
 						case Config::PIX:
 							unset($gatewayArray['ifthenpay' . Config::PIX]);
 							break;
@@ -200,11 +197,6 @@ class IfthenpayService
 				) {
 					$gatewayArray[$key]['name'] = '<img src="' . UtilsService::addCacheBuster(UtilsService::getUrl(UtilsService::pathToAssetImage('ccard_option.png'))) . '"height="30" title="' . Config::CCARD_NAME . '">';
 				} else if (
-					$key == Config::COFIDIS_MODULE_CODE &&
-					GatewaySetting::getValue(Config::COFIDIS_MODULE_CODE, Config::CF_SHOWICON) == 'on'
-				) {
-					$gatewayArray[$key]['name'] = '<img src="' . UtilsService::addCacheBuster(UtilsService::getUrl(UtilsService::pathToAssetImage('cofidis_option.png'))) . '"height="30" title="' . Config::COFIDIS_NAME . '">';
-				} else if (
 					$key == Config::PIX_MODULE_CODE &&
 					GatewaySetting::getValue(Config::PIX_MODULE_CODE, Config::CF_SHOWICON) == 'on'
 				) {
@@ -244,10 +236,6 @@ class IfthenpayService
 
 		if (GatewaySetting::getValue(Config::CCARD_MODULE_CODE, 'type') && GatewaySetting::getValue(Config::CCARD_MODULE_CODE, Config::CF_CAN_CANCEL) == 'on') {
 			CcardService::cancelExpiredPayments();
-		}
-
-		if (GatewaySetting::getValue(Config::COFIDIS_MODULE_CODE, 'type') && GatewaySetting::getValue(Config::COFIDIS_MODULE_CODE, Config::CF_CAN_CANCEL) == 'on') {
-			CofidisService::cancelExpiredPayments();
 		}
 
 		if (GatewaySetting::getValue(Config::PIX_MODULE_CODE, 'type') && GatewaySetting::getValue(Config::PIX_MODULE_CODE, Config::CF_CAN_CANCEL) == 'on') {
@@ -339,9 +327,6 @@ class IfthenpayService
 				break;
 			case Config::CCARD:
 				CcardService::handleCallback($params);
-				break;
-			case Config::COFIDIS:
-				CofidisService::handleCallback($params);
 				break;
 			case Config::PIX:
 				PixService::handleCallback($params);

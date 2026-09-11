@@ -8,7 +8,6 @@ use WHMCS\Module\Gateway\ifthenpaylib\Services\MultibancoService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\PayshopService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\MbwayService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\CcardService;
-use WHMCS\Module\Gateway\ifthenpaylib\Services\CofidisService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\IfthenpaygatewayService;
 use WHMCS\Module\Gateway\ifthenpaylib\Services\PixService;
 use WHMCS\Module\Gateway\ifthenpaylib\Log\IfthenpayLog;
@@ -42,9 +41,6 @@ try {
 			break;
 		case Config::CCARD:
 			CcardService::resetConfig();
-			break;
-		case Config::COFIDIS:
-			CofidisService::resetConfig();
 			break;
 		case Config::PIX:
 			PixService::resetConfig();
