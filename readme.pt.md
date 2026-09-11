@@ -15,7 +15,7 @@ Este manual foi criado para a versão 8.0.0 do módulo Ifthenpay, desenvolvida p
 Descarregue o módulo Ifthenpay para WHMCS.
 | | WHMCS 8 e 9 |
 |----------------------------|-----------------------------------------------------------------------------------------------------|
-| Descarregar Ficheiros do Instalador | [ifthenpay v8.0.2](https://github.com/ifthenpay/WHMCS/releases/download/8.0.2/ifthenpay.zip) |
+| Descarregar Ficheiros do Instalador | [ifthenpay v8.0.3](https://github.com/ifthenpay/WHMCS/releases/download/8.0.3/ifthenpay.zip) |
 
 **Aviso**: Esta versão do módulo destina-se a uma instalação nova do **WHMCS 8-9** ou a uma atualização da **Ifthenpay v1.3.1**. A Ifthenpay **não se responsabiliza** por quaisquer problemas decorrentes de erros de migração.
 
@@ -37,7 +37,6 @@ Ler em ![Português](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/ass
 - [MB WAY](#mb-way)
 - [Cartão de Crédito](#cartão-de-crédito)
 - [Payshop](#payshop)
-- [Cofidis Pay](#cofidis-pay)
 - [Pix](#pix)
 - [Gateway Ifthenpay](#gateway-ifthenpay)
 
@@ -58,7 +57,6 @@ Ler em ![Português](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/ass
 - [Pagar com MB WAY](#pagar-com-mb-way)
 - [Pagar com Cartão de Crédito](#pagar-com-cartão-de-crédito)
 - [Pagar com Payshop](#pagar-com-payshop)
-- [Pagar com Cofidis Pay](#pagar-com-cofidis-pay)
 - [Pagar com Pix](#pagar-com-pix)
 - [Pagar com Ifthenpay Gateway](#pagar-com-ifthenpay-gateway)
 
@@ -84,8 +82,6 @@ Este é o módulo de gateway de pagamento da ifthenpay para a plataforma WHMCS, 
 
 **Cartão de Crédito** Esta extensão permite gerar um pagamento através de Visa ou MasterCard, que o consumidor pode usar para pagar a sua encomenda.
 
-**Cofidis Pay** é uma solução de pagamento até 12 prestações sem juros que facilita o pagamento de compras ao dividi-las.
-
 **Pix** é um método de pagamento brasileiro que permite transferências de dinheiro instantâneas e seguras em reais brasileiros. Os pagamentos podem ser feitos através de código QR ou introduzindo a chave Pix do destinatário numa aplicação bancária.
 
 </br>
@@ -110,7 +106,7 @@ Siga a tabela abaixo para verificar a compatibilidade do módulo da Ifthenpay co
 | Versão do Módulo Ifthenpay | Versão WHMCS 5, 6 e 7 | Versão WHMCS 8 | Versão WHMCS 9 |
 |---------------------------|----------------|--------------------------------|----------------|
 | Ifthenpay v1.0.0 a v1.3.1 | ❌ Não compatível | ✅ Compatível | ⚠️ Não testado |
-| Ifthenpay v8.0.0 a v8.0.2 | ❌ Não compatível | ✅ Compatível | ✅ Compatível |
+| Ifthenpay v8.0.0 a v8.0.3 | ❌ Não compatível | ✅ Compatível | ✅ Compatível |
 
 </br>
 
@@ -120,7 +116,7 @@ Siga a tabela abaixo para verificar a compatibilidade do módulo da Ifthenpay co
 | Versão do Módulo Ifthenpay | PHP 7.4 | PHP 8.1 | PHP 8.2 | PHP 8.3 |
 |---------------------------|----------------|--------------|---|---------------|
 | Ifthenpay v1.0.0 a v1.3.1 | ✅ | ✅ | ⚠️ Não testado | ⚠️ Não testado |
-| Ifthenpay v8.0.0 a v8.0.2 | ❌ Não compatível | ⚠️ Não testado | ⚠️ Não testado | ✅ |
+| Ifthenpay v8.0.0 a v8.0.3 | ❌ Não compatível | ⚠️ Não testado | ⚠️ Não testado | ✅ |
 
 </br>
 
@@ -298,29 +294,6 @@ Clique em Guardar (12) para guardar as alterações.
 
 </br>
 
-## Cofidis Pay
-
-O método Cofidis Pay redireciona o utilizador para a página da Cofidis, onde é possível configurar o pagamento num número selecionado de vezes.
-Ao introduzir uma Chave de Backoffice válida, as Chaves Cofidis Pay são carregadas automaticamente.
-</br>
-
-A imagem abaixo mostra um exemplo de uma configuração minimamente funcional.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/configuration_cofidis.png)
-
-</br>
-
-1. **Show on Order Form** - Quando ativado, exibe esta opção de método de pagamento no checkout da sua loja;
-2. **Display Name** - O nome do método de pagamento que aparece ao consumidor durante o checkout;
-3. **Versão** - Exibe a versão atual e verifica se a versão instalada está atualizada com a versão mais recente;
-4. **Chave de Backoffice** - Introduza a sua Chave de Backoffice da ifthenpay para carregar as Chaves Cofidis Pay disponíveis. A Chave de Backoffice é fornecida após a conclusão do contrato e consiste em conjuntos de quatro dígitos separados por um hífen (-), por exemplo, 1111-1111-1111-1111;
-5. **Chave Cofidis Pay** - Selecione uma Chave. Só pode escolher uma das Chaves associadas à Chave de Backoffice.
-6. **Valor Mínimo** - (opcional) Introduza o valor mínimo para exibir este método de pagamento apenas para encomendas com valores acima deste. Aviso Importante: Ao selecionar a Chave Cofidis, esta entrada é atualizada com o valor configurado no backoffice da ifthenpay e, ao editar, não pode ser inferior ao valor especificado no backoffice da ifthenpay;
-7. **Valor Máximo** - (opcional) Introduza o valor máximo para exibir este método de pagamento apenas para encomendas com valores abaixo deste. Aviso Importante: Ao selecionar a Chave Cofidis, esta entrada é atualizada com o valor configurado no backoffice da ifthenpay e, ao editar, não pode ser superior ao valor especificado no backoffice da ifthenpay;
-8. **Exibir Ícone de Pagamento no Checkout** - (opcional) Quando ativado, substitui o Nome de Exibição do método de pagamento apresentado no checkout pelo respetivo ícone.
-9. **Cancelar Encomenda Cofidis Pay** - (opcional) Quando ativado, permite que o cron de cancelamento de encomendas seja executado para este método específico. O cron de cancelamento é executado com o cron diário do WHMCS.
-10. **Callback** (opcional) Ative para ativar o Callback, ao selecionar esta opção o estado da encomenda será atualizado quando um pagamento for recebido;
-
-Clique em Guardar (11) para guardar as alterações.
 
 </br>
 
@@ -444,7 +417,7 @@ Esta ação apenas recarrega as contas associadas à sua chave de backoffice.
 
 ## Callback
 
-**IMPORTANTE:** Apenas os métodos de pagamento Multibanco, MB WAY, Payshop, Cofidis Pay, Pix e Gateway Ifthenpay permitem a ativação do Callback. O método Cartão de Crédito altera o estado da encomenda automaticamente sem utilizar o Callback.
+**IMPORTANTE:** Apenas os métodos de pagamento Multibanco, MB WAY, Payshop, Pix e Gateway Ifthenpay permitem a ativação do Callback. O método Cartão de Crédito altera o estado da encomenda automaticamente sem utilizar o Callback.
 
 O Callback é uma funcionalidade que, quando ativada, permite que a sua loja receba notificações de pagamentos bem-sucedidos. Ao receber um pagamento bem-sucedido para uma fatura, o servidor ifthenpay comunica com a sua loja, alterando o estado da fatura para "Pago". Pode utilizar os pagamentos ifthenpay sem ativar o Callback, mas as suas encomendas não atualizarão automaticamente o seu estado.
 
@@ -467,7 +440,6 @@ Uma tarefa cron é uma tarefa agendada que é executada automaticamente em inter
 | MB WAY                   | 30 minutos                          |
 | Payshop                  | Configurável de 1 a 99 dias         |
 | Cartão de Crédito         | 30 minutos                          |
-| Cofidis                  | 60 minutos                          |
 | Pix                      | 30 minutos                          |
 | Gateway Ifthenpay        | Configurável de 1 a 99 dias         |
 
@@ -490,7 +462,6 @@ A tabela abaixo mostra os ficheiros de log e as suas funções.
 | mbway.log              | Regista os logs relacionados com o método de pagamento MB WAY.    |
 | payshop.log            | Regista os logs relacionados com o método de pagamento Payshop.   |
 | ccard.log              | Regista os logs relacionados com o método de pagamento Cartão de Crédito. |
-| cofidispay.log         | Regista os logs relacionados com o método de pagamento Cofidis Pay. |
 | pix.log                | Regista os logs relacionados com o método de pagamento Pix.     |
 | ifthenpaygateway.log   | Regista os logs relacionados com o método de pagamento Gateway Ifthenpay. |
 
@@ -662,72 +633,6 @@ Os detalhes de pagamento Payshop serão exibidos com a referência, validade e o
 
 **Nota**: No caso de configurar o método payshop sem definir uma data de expiração, o prazo de pagamento não será exibido.
 ![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_payshop_details.png)
-
-</br>
-
-## Pagar com Cofidis Pay
-
-Será exibido um botão "Pagar" (1), no qual o consumidor deve clicar para ser redirecionado para a página do Cofidis Pay.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_form.png)
-
-</br>
-
-O utilizador será redirecionado para a página Cofidis Pay, na qual terá de passar por uma série de passos para concluir.
-
-### Login/Registo
-
-Aqui, o utilizador pode iniciar sessão (1) ou, se não tiver uma conta, registar-se no Cofidis Pay (2).
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_1.png)
-
-</br>
-
-### Prestações e Informações Pessoais
-
-Escolha o número de prestações e edite os dados de faturação e pessoais, se necessário.
-
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_2.png)
-
-1. Selecione o número de prestações que deseja;
-2. Verifique o resumo do plano de pagamento;
-3. Preencha os seus dados pessoais e de faturação;
-4. Carregue os ficheiros de identificação;
-5. Clique em "Avançar" para continuar;
-
-</br>
-
-### Termos e Condições
-
-Leia os Termos e Condições, selecione "Li e autorizo" (1) para aceitar e clique no botão "Avançar" (2) para prosseguir.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_3.png)
-
-</br>
-
-### Formalização do acordo
-
-Clique em "Enviar Código" (1) para enviar um código de autenticação para o seu telefone.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_4.png)
-
-</br>
-
-### Código de autenticação de formalização do acordo
-
-Introduza o código de autenticação recebido no telefone (1) e clique no botão "Confirmar Código" (2) para prosseguir.
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_5.png)
-
-</br>
-
-### Resumo e Pagamento
-
-Preencha os detalhes do seu cartão de crédito (1) (número, data de expiração e CW) e clique no botão "Validar" (2);
-
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_6.png)
-
-</br>
-
-### Sucesso e regresso à loja
-
-O contrato de pagamento foi bem-sucedido, o utilizador pode agora regressar à loja, esperando por um redirecionamento automático ou clicando no botão "sair".
-![img](https://github.com/ifthenpay/WHMCS/raw/assets/version_8/assets/paying_cofidis_gateway_page_7.png)
 
 </br>
 
